@@ -1,7 +1,7 @@
 <script>
-    import MainCanvas from "./lib/MainCanvas.svelte";
-    import SideLeft from "./lib/SideLeft.svelte";
-    import SideRight from "./lib/SideRight.svelte";
+    import MainCanvas from "./ui/MainCanvas.svelte";
+    import SideLeft from "./ui/SideLeft.svelte";
+    import SideRight from "./ui/SideRight.svelte";
 </script>
 
 <main class="flex h-full">

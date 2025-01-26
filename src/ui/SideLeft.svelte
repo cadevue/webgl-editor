@@ -6,7 +6,7 @@
     <div class="flex flex-col gap-8">
         <div class="absolute h-full bg-dark-800 right-0 top-0 w-0.5"></div>
         <div>
-            <h1 class="text-red">WebGL 3D Editor</h1>
+            <h1 class="text-red">WebGL Graphics Editor</h1>
             <p>made by Addin Munawwar</p>
         </div>
         <div>

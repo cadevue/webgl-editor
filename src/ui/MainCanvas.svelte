@@ -1,31 +1,83 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { glContext } from "../context.svelte";
+    import { glContext as ctx } from "@/context.svelte";
+    import { appConfig } from "@/config";
+    import { Shader } from "@/lib/rendering/shader";
+    import { domUtils } from "@/lib/dom/domUtils";
 
-    let containerWidth = 0, containerHeight = 0;
+    let canvas: HTMLCanvasElement;
+    const viewportColor = appConfig.viewportColor;
 
     const initWebGL = () => {
-        if (!glContext.canvas) {
+        if (!canvas) {
             console.error("Canvas not found");
             return;
         }
 
-        glContext.gl = glContext.canvas.getContext("webgl2");
-        if (!glContext.gl) {
+        ctx.gl = canvas.getContext("webgl2");
+        if (!ctx.gl) {
             console.error("WebGL 2 is not supported");
             return;
         }
+
+        const gl = ctx.gl;
+        const vertexSource = `
+            attribute vec2 a_position;
+            void main() {
+                gl_Position = vec4(a_position, 1, 1);
+            }
+        `
+        const fragmentSource = `
+            precision mediump float;
+            void main() {
+                gl_FragColor = vec4(0.8, 0.2, 0.1, 1.0);
+            }
+        `
+
+        const shader = new Shader(vertexSource, fragmentSource);
+
+        const positionAttributeLocation = gl.getAttribLocation(shader.getProgram(), "a_position");
+        const positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        const positions = [
+            -0.5, -0.5,
+             0.0,  0.5,
+             0.5, -0.5
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+        resizeCanvasToDisplaySize();
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+        gl.clearColor(viewportColor[0], viewportColor[1], viewportColor[2], viewportColor[3]);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        shader.bind();
+        gl.enableVertexAttribArray(positionAttributeLocation);
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+        let size = 2;
+        let type = gl.FLOAT;
+        let normalize = false;
+        let stride = 0;
+        let offset = 0;
+        gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset);
+
+        let primitiveType = gl.TRIANGLES;
+        offset = 0;
+        let count = 3;
+        gl.drawArrays(primitiveType, offset, count);
+
+        shader.unbind();
     }
+
+    const resizeCanvasToDisplaySize = () => domUtils.resizeCanvasToDisplaySize(canvas);
 
     onMount(() => {
         initWebGL();
     });
 </script>
 
-<div class="flex-1 h-full overflow-hidden bg-dark-500" id="main-canvas-container"
-    bind:clientWidth={containerWidth} bind:clientHeight={containerHeight}
-> 
-    <canvas id="main-canvas" bind:this={glContext.canvas}
-        width={containerWidth} height={containerHeight}
-    ></canvas>
+<div class="flex-1 h-full overflow-hidden bg-dark-500" id="main-canvas-container"> 
+    <canvas id="main-canvas" bind:this={canvas} class="w-full h-full"></canvas> 
 </div>

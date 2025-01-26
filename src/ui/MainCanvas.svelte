@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { glContext as ctx } from "@/context.svelte";
+    import { glContext as ctx } from "@/context";
     import { appConfig } from "@/config";
     import { Shader } from "@/lib/rendering/shader";
     import { domUtils } from "@/lib/dom/domUtils";

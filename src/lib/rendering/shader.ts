@@ -1,4 +1,4 @@
-import { glContext } from "@/context.svelte";
+import { glContext } from "@/context";
 
 export class Shader {
     private program: WebGLProgram;

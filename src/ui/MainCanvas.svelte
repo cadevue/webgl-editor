@@ -13,8 +13,8 @@
     let canvas: HTMLCanvasElement;
     const viewportColor = appConfig.viewportColor;
 
-    let shader1 : Shader | null = null;
-    let shader2 : Shader | null = null;
+    let anyColorShader : Shader | null = null;
+    let redShader : Shader | null = null;
 
     function initWebGL() {
         if (!canvas) {
@@ -34,7 +34,7 @@
         const gl = renderContext.getWebGLRenderingContext();
 
         /** Shader Initialization */
-        const vertexSource1 = `
+        const anyColorVertexSource = `
             attribute vec4 a_Position;
             attribute vec4 a_Color;
 
@@ -45,7 +45,7 @@
                 v_Color = a_Color;
             }
         `
-        const fragmentSource1 = `
+        const anyColorFragmentSource = `
             precision mediump float;
 
             varying vec4 v_Color;
@@ -54,9 +54,9 @@
                 gl_FragColor = v_Color;
             }
         `
-        shader1 = new Shader(vertexSource1, fragmentSource1);
+        anyColorShader = new Shader(anyColorVertexSource, anyColorFragmentSource);
 
-        const vertexSource2 = `
+        const redVertexSource = `
             attribute vec4 a_Position;
             attribute vec4 a_Color;
 
@@ -66,14 +66,14 @@
                 gl_Position = a_Position;
             }
         `
-        const fragmentSource2 = `
+        const redFragmentSource = `
             precision mediump float;
 
             void main() {
-                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                gl_FragColor = vec4(0.8, 0.2, 0.1, 1.0);
             }
         `
-        shader2 = new Shader(vertexSource2, fragmentSource2);
+        redShader = new Shader(redVertexSource, redFragmentSource);
 
         const rectangle = createRectangle();
         const triangle = createTriangle();
@@ -90,15 +90,15 @@
             /** Draw */
             Renderer.beginScene();
 
-            shader1!.bind();
+            anyColorShader!.bind();
             Renderer.submit(rectangle);
 
-            shader2!.bind();
+            redShader!.bind();
             Renderer.submit(triangle);
 
             Renderer.endScene();
 
-            // requestAnimationFrame(drawScene);
+            requestAnimationFrame(drawScene);
         }
 
         drawScene();
@@ -133,7 +133,7 @@
         const indexBuffer = new IndexBuffer(new Uint16Array(indices));
 
         // Vertex Array
-        shader1!.bind();
+        anyColorShader!.bind();
         const vertexArray = new VertexArray();
 
         // Bind Vertex Array and Buffers
@@ -166,7 +166,7 @@
         const indexBuffer = new IndexBuffer(new Uint16Array(indices));
 
         // Vertex Array
-        shader2!.bind();
+        redShader!.bind();
         const vertexArray = new VertexArray();
 
         // Bind Vertex Array and Buffers

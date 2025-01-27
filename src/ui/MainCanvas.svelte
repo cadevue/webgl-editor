@@ -24,6 +24,8 @@
         }
 
         const gl = ctx.gl;
+
+        /** Shader Initialization */
         const vertexSource = `
             attribute vec4 a_position;
 
@@ -38,10 +40,10 @@
                 gl_FragColor = vec4(0.8, 0.2, 0.1, 1.0);
             }
         `
-
         const shader = new Shader(vertexSource, fragmentSource);
 
-        const positionAttributeLocation = gl.getAttribLocation(shader.getProgram(), "a_position");
+        /** Geometry Definition */
+        // Vertex Buffer
         const positions = [
             -0.5, -0.5,
              0.0,  0.5,
@@ -49,34 +51,41 @@
         ];
         const positionBuffer = new VertexBuffer(new Float32Array(positions));
 
+        // Index Buffer
         const indices = [
             0, 1, 2
         ];
         const indexBuffer = new IndexBuffer(new Uint16Array(indices));
 
+        // Vertex Array
+        const vao = gl.createVertexArray();
+        gl.bindVertexArray(vao);
+
+        /** Render Preparation */
+        // Setting up the viewport
         DOMUtils.resizeCanvasToDisplaySize(canvas);
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-
         gl.clearColor(viewportColor[0], viewportColor[1], viewportColor[2], viewportColor[3]);
         gl.clear(gl.COLOR_BUFFER_BIT);
 
-        shader.bind();
-        gl.enableVertexAttribArray(positionAttributeLocation);
+        // Vertex Buffer Attrib
+        shader.bind(); // Shader to use (must correspond with the layout)
         positionBuffer.bind();
+        const positionAttribLoc = gl.getAttribLocation(shader.getProgram(), "a_position");
+        gl.enableVertexAttribArray(positionAttribLoc);
 
         let size = 2;
         let type = gl.FLOAT;
         let normalize = false;
         let stride = 0;
         let offset = 0;
-        gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset);
+        gl.vertexAttribPointer(positionAttribLoc, size, type, normalize, stride, offset);
 
+        /** Render */
         indexBuffer.bind();
         let primitiveType = gl.TRIANGLES;
         offset = 0;
         gl.drawElements(primitiveType, indexBuffer.getCount(), gl.UNSIGNED_SHORT, offset);
-
-        shader.unbind();
     }
 
     onMount(() => {

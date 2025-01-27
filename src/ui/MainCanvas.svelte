@@ -54,10 +54,10 @@
         /** Geometry Definition */
         // Vertex Buffer
         const positions = [
-            -0.5, -0.5, 1.0, 0.0, 0.0,
-             0.5, -0.5, 1.0, 0.1, 0.1,
-             0.5,  0.5, 1.0, 0.4, 0.2,
-            -0.5,  0.5, 1.0, 0.0, 0.0
+            -0.5, -0.5, 0.8, 0.2, 0.1,
+             0.5, -0.5, 0.8, 0.2, 0.1,
+             0.5,  0.5, 0.8, 0.2, 0.1,
+            -0.5,  0.5, 0.8, 0.2, 0.1,
         ];
         const vertexBuffer = new VertexBuffer(new Float32Array(positions));
 
@@ -71,7 +71,7 @@
         })();
 
         // Index Buffer
-        const indices = [ 0, 1, 2, 0, 2, 3 ];
+        const indices = [ 0, 1, 2, 2, 3, 0 ];
         const indexBuffer = new IndexBuffer(new Uint16Array(indices));
 
         // Vertex Array
@@ -82,21 +82,31 @@
         vertexArray.addVertexBuffer(vertexBuffer);
         vertexArray.setIndexBuffer(indexBuffer);
 
-        /** Render Preparation */
-        // Setting up the viewport
-        DOMUtils.resizeCanvasToDisplaySize(canvas);
-        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-        gl.clearColor(viewportColor[0], viewportColor[1], viewportColor[2], viewportColor[3]);
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        function drawScene() {
+            /** Render Preparation */
+            // Setting up the viewport
+            DOMUtils.resizeCanvasToDisplaySize(canvas);
+            gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+            gl.clearColor(viewportColor[0], viewportColor[1], viewportColor[2], viewportColor[3]);
+            gl.clear(gl.COLOR_BUFFER_BIT);
 
-        // Vertex Buffer Attrib
-        vertexArray.bind();
+            shader.bind();
+            vertexArray.bind();
 
-        /** Draw */
-        indexBuffer.bind();
-        let primitiveType = gl.TRIANGLES;
-        let offset = 0;
-        gl.drawElements(primitiveType, indexBuffer.count, gl.UNSIGNED_SHORT, offset);
+            /** Draw */
+            if (!vertexArray.indexBuffer) {
+                console.error("Cannot draw from vertex array: Index buffer not set");
+                return;
+            }
+
+            let primitiveType = gl.TRIANGLES;
+            let offset = 0;
+            gl.drawElements(primitiveType, vertexArray.indexBuffer.count, gl.UNSIGNED_SHORT, offset);
+
+            requestAnimationFrame(drawScene);
+        }
+
+        drawScene();
     }
 
     onMount(() => {

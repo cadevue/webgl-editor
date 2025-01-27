@@ -2,6 +2,13 @@ import type { IndexBuffer, VertexBuffer } from "./Buffer";
 import { renderContext } from "@/context";
 import { getCountOfShaderDataType, shaderDataTypeToGLType } from "./ShaderType";
 
+// Delete webgl vertex array object when the parent object is garbage collected
+const reg = new FinalizationRegistry((value: WebGLVertexArrayObject) => {
+    const gl = renderContext.getWebGLRenderingContext();
+    gl.deleteVertexArray(value);
+});
+
+/** VERTEX ARRAY */
 export class VertexArray {
     private _vertexArray : WebGLVertexArrayObject;
     private _vertexBuffers: VertexBuffer[];
@@ -13,6 +20,8 @@ export class VertexArray {
         this._vertexArray = gl.createVertexArray();
         this._vertexBuffers = [];
         this._indexBuffer = null;
+
+        reg.register(this, this._vertexArray);
     }
 
     bind() {
@@ -62,4 +71,7 @@ export class VertexArray {
 
         this._indexBuffer = indexBuffer
     }
+
+    get vertexBuffers() { return this._vertexBuffers; }
+    get indexBuffer() { return this._indexBuffer; }
 }

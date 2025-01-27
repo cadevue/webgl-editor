@@ -4,7 +4,8 @@
     import { appConfig } from "@/config";
     import { Shader } from "@/lib/rendering/Shader";
     import { DOMUtils } from "@/lib/dom/DOMUtils";
-    import { VertexBuffer, IndexBuffer, BufferLayout, ShaderDataType, BufferElement } from "@/lib/rendering/Buffer";
+    import { VertexBuffer, IndexBuffer, BufferLayout, BufferElement } from "@/lib/rendering/Buffer";
+    import { getCountOfShaderDataType, ShaderDataType, shaderDataTypeToGLType } from "@/lib/rendering/ShaderType";
 
     let canvas: HTMLCanvasElement;
     const viewportColor = appConfig.viewportColor;
@@ -28,16 +29,22 @@
         /** Shader Initialization */
         const vertexSource = `
             attribute vec4 a_position;
+            attribute vec4 a_color;
+
+            varying vec4 v_color;
 
             void main() {
                 gl_Position = a_position;
+                v_color = a_color;
             }
         `
         const fragmentSource = `
             precision mediump float;
 
+            varying vec4 v_color;
+
             void main() {
-                gl_FragColor = vec4(0.8, 0.2, 0.1, 1.0);
+                gl_FragColor = v_color;
             }
         `
         const shader = new Shader(vertexSource, fragmentSource);
@@ -45,9 +52,9 @@
         /** Geometry Definition */
         // Vertex Buffer
         const positions = [
-            -0.5, -0.5,
-             0.0,  0.5,
-             0.5, -0.5
+            -0.5, -0.5, 1.0, 0.0, 0.0,
+             0.0,  0.5, 0.0, 1.0, 0.0,
+             0.5, -0.5, 0.0, 0.0, 1.0
         ];
         const positionBuffer = new VertexBuffer(new Float32Array(positions));
 
@@ -63,7 +70,9 @@
 
         const layout = new BufferLayout([
             new BufferElement("a_position", ShaderDataType.Float2),
+            new BufferElement("a_color", ShaderDataType.Float3)
         ]);
+
 
         /** Render Preparation */
         // Setting up the viewport
@@ -75,20 +84,28 @@
         // Vertex Buffer Attrib
         shader.bind(); // Shader to use (must correspond with the layout)
         positionBuffer.bind();
-        const positionAttribLoc = gl.getAttribLocation(shader.program, "a_position");
-        gl.enableVertexAttribArray(positionAttribLoc);
+        for (let element of layout.elements) {
+            let attribLoc = gl.getAttribLocation(shader.program, element.name);
+            gl.enableVertexAttribArray(attribLoc);
+            gl.vertexAttribPointer(attribLoc, 
+                getCountOfShaderDataType(element.type), shaderDataTypeToGLType(element.type),
+                element.normalized, layout.stride, element.offset
+            );
+        }
+        // const positionAttribLoc = gl.getAttribLocation(shader.program, "a_position");
+        // gl.enableVertexAttribArray(positionAttribLoc);
 
-        let size = 2;
-        let type = gl.FLOAT;
-        let normalize = false;
-        let stride = 0;
-        let offset = 0;
-        gl.vertexAttribPointer(positionAttribLoc, size, type, normalize, stride, offset);
+        // let size = 2;
+        // let type = gl.FLOAT;
+        // let normalize = false;
+        // let stride = 0;
+        // let offset = 0;
+        // gl.vertexAttribPointer(positionAttribLoc, size, type, normalize, stride, offset);
 
         /** Render */
         indexBuffer.bind();
         let primitiveType = gl.TRIANGLES;
-        offset = 0;
+        let offset = 0;
         gl.drawElements(primitiveType, indexBuffer.count, gl.UNSIGNED_SHORT, offset);
     }
 

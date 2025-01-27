@@ -1,4 +1,5 @@
 import { glContext } from "@/context";
+import { getSizeOfShaderDataType, shaderDataTypeToString, type ShaderDataType } from "./ShaderType";
 
 // Delete webgl buffer when the parent object is garbage collected
 const reg = new FinalizationRegistry((buffer: WebGLBuffer) => {
@@ -8,13 +9,6 @@ const reg = new FinalizationRegistry((buffer: WebGLBuffer) => {
     }
     gl.deleteBuffer(buffer);
 });
-
-export enum ShaderDataType {
-    Float, Float2, Float3, Float4,
-    Mat3, Mat4,
-    Int, Int2, Int3, Int4,
-    Bool
-}
 
 /** BUFFER ELEMENT */
 export class BufferElement {
@@ -28,29 +22,8 @@ export class BufferElement {
         this._name = name;
         this._type = type;
         this._normalized = normalized || false;
-        this._size = BufferElement.sizeOf(type);
+        this._size = getSizeOfShaderDataType(type);
         this._offset = 0; // Will be initialized by the buffer layout
-    }
-
-    private static sizeOf(type: ShaderDataType) {
-        const gl = glContext.gl;
-        if (!gl) {
-            throw new Error("WebGL context not initialized, cannot get size of type");
-        }
-
-        switch (type) {
-            case ShaderDataType.Float:      return 4;
-            case ShaderDataType.Float2:     return 4 * 2;
-            case ShaderDataType.Float3:     return 4 * 3;
-            case ShaderDataType.Float4:     return 4 * 4;
-            case ShaderDataType.Mat3:       return 4 * 3 * 3;
-            case ShaderDataType.Mat4:       return 4 * 4 * 4;
-            case ShaderDataType.Int:        return 4;
-            case ShaderDataType.Int2:       return 4 * 2;
-            case ShaderDataType.Int3:       return 4 * 3;
-            case ShaderDataType.Int4:       return 4 * 4;
-            case ShaderDataType.Bool:       return 1;
-        }
     }
 
     get name()          { return this._name; }
@@ -62,7 +35,7 @@ export class BufferElement {
     set offset(offset: GLuint) { this._offset = offset; }
 
     toString() {
-        return `${this._name}${" ".repeat(12 - this._name.length)}(${ShaderDataType[this._type]})
+        return `${this._name}${" ".repeat(12 - this._name.length)}(${shaderDataTypeToString(this._type)}):
             size: ${this._size}, offset: ${this._offset}`;
     }
 }
@@ -86,6 +59,9 @@ export class BufferLayout {
             offset += element.size;
         }
     }
+
+    get elements() { return this._elements }
+    get stride()   { return this._stride }
 
     toString() {
         return this._elements.map(e => e.toString()).join("\n\n").concat(`\n\nstride: ${this._stride}`);

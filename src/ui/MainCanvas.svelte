@@ -2,8 +2,9 @@
     import { onMount } from "svelte";
     import { glContext as ctx } from "@/context";
     import { appConfig } from "@/config";
-    import { Shader } from "@/lib/rendering/shader";
-    import { DOMUtils } from "@/lib/dom/domUtils";
+    import { Shader } from "@/lib/rendering/Shader";
+    import { DOMUtils } from "@/lib/dom/DOMUtils";
+  import { VertexBuffer } from "@/lib/rendering/Buffer";
 
     let canvas: HTMLCanvasElement;
     const viewportColor = appConfig.viewportColor;
@@ -41,14 +42,12 @@
         const shader = new Shader(vertexSource, fragmentSource);
 
         const positionAttributeLocation = gl.getAttribLocation(shader.getProgram(), "a_position");
-        const positionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         const positions = [
             -0.5, -0.5,
              0.0,  0.5,
              0.5, -0.5
         ];
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+        const positionBuffer = new VertexBuffer(new Float32Array(positions));
 
         DOMUtils.resizeCanvasToDisplaySize(canvas);
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -58,7 +57,7 @@
 
         shader.bind();
         gl.enableVertexAttribArray(positionAttributeLocation);
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        positionBuffer.bind();
 
         let size = 2;
         let type = gl.FLOAT;

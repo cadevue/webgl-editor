@@ -3,7 +3,7 @@
     import { glContext as ctx } from "@/context";
     import { appConfig } from "@/config";
     import { Shader } from "@/lib/rendering/shader";
-    import { domUtils } from "@/lib/dom/domUtils";
+    import { DOMUtils } from "@/lib/dom/domUtils";
 
     let canvas: HTMLCanvasElement;
     const viewportColor = appConfig.viewportColor;
@@ -14,6 +14,8 @@
             return;
         }
 
+        DOMUtils.initCanvas(canvas);
+
         ctx.gl = canvas.getContext("webgl2");
         if (!ctx.gl) {
             console.error("WebGL 2 is not supported");
@@ -22,13 +24,15 @@
 
         const gl = ctx.gl;
         const vertexSource = `
-            attribute vec2 a_position;
+            attribute vec4 a_position;
+
             void main() {
-                gl_Position = vec4(a_position, 1, 1);
+                gl_Position = a_position;
             }
         `
         const fragmentSource = `
             precision mediump float;
+
             void main() {
                 gl_FragColor = vec4(0.8, 0.2, 0.1, 1.0);
             }
@@ -46,7 +50,7 @@
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-        resizeCanvasToDisplaySize();
+        DOMUtils.resizeCanvasToDisplaySize(canvas);
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
         gl.clearColor(viewportColor[0], viewportColor[1], viewportColor[2], viewportColor[3]);
@@ -70,8 +74,6 @@
 
         shader.unbind();
     }
-
-    const resizeCanvasToDisplaySize = () => domUtils.resizeCanvasToDisplaySize(canvas);
 
     onMount(() => {
         initWebGL();

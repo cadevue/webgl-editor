@@ -27,11 +27,13 @@ export class VertexArray {
     bind() {
         const gl = renderContext.getWebGLRenderingContext();
         gl.bindVertexArray(this._vertexArray);
+        this._indexBuffer?.bind();
     }
 
     unbind() {
         const gl = renderContext.getWebGLRenderingContext();
         gl.bindVertexArray(null);
+        this._indexBuffer?.unbind();
     }
 
     addVertexBuffer(vertexBuffer: VertexBuffer) {

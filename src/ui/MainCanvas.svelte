@@ -7,11 +7,16 @@
     import { VertexBuffer, IndexBuffer, BufferLayout, BufferElement } from "@/lib/rendering/Buffer";
     import { ShaderDataType } from "@/lib/rendering/ShaderType";
     import { VertexArray } from "@/lib/rendering/VertexArray";
+    import { RenderCommand } from "@/lib/rendering/RenderCommand";
+    import { Renderer } from "@/lib/rendering/Renderer";
 
     let canvas: HTMLCanvasElement;
     const viewportColor = appConfig.viewportColor;
 
-    const initWebGL = () => {
+    let shader1 : Shader | null = null;
+    let shader2 : Shader | null = null;
+
+    function initWebGL() {
         if (!canvas) {
             console.error("Canvas not found");
             return;
@@ -29,7 +34,7 @@
         const gl = renderContext.getWebGLRenderingContext();
 
         /** Shader Initialization */
-        const vertexSource = `
+        const vertexSource1 = `
             attribute vec4 a_Position;
             attribute vec4 a_Color;
 
@@ -40,7 +45,7 @@
                 v_Color = a_Color;
             }
         `
-        const fragmentSource = `
+        const fragmentSource1 = `
             precision mediump float;
 
             varying vec4 v_Color;
@@ -49,15 +54,68 @@
                 gl_FragColor = v_Color;
             }
         `
-        const shader = new Shader(vertexSource, fragmentSource);
+        shader1 = new Shader(vertexSource1, fragmentSource1);
 
+        const vertexSource2 = `
+            attribute vec4 a_Position;
+            attribute vec4 a_Color;
+
+            varying vec4 v_Color;
+
+            void main() {
+                gl_Position = a_Position;
+            }
+        `
+        const fragmentSource2 = `
+            precision mediump float;
+
+            void main() {
+                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+            }
+        `
+        shader2 = new Shader(vertexSource2, fragmentSource2);
+
+        const rectangle = createRectangle();
+        const triangle = createTriangle();
+
+        RenderCommand.setClearColor(viewportColor[0], viewportColor[1], viewportColor[2], viewportColor[3]);
+
+        function drawScene() {
+            /** Render Preparation */
+            // Setting up the viewport
+            DOMUtils.resizeCanvasToDisplaySize(canvas);
+            RenderCommand.setViewport(0, 0, gl.canvas.width, gl.canvas.height);
+            RenderCommand.clear();
+
+            /** Draw */
+            Renderer.beginScene();
+
+            shader1!.bind();
+            Renderer.submit(rectangle);
+
+            shader2!.bind();
+            Renderer.submit(triangle);
+
+            Renderer.endScene();
+
+            // requestAnimationFrame(drawScene);
+        }
+
+        drawScene();
+    }
+
+    onMount(() => {
+        initWebGL();
+    });
+
+    function createRectangle() {
         /** Geometry Definition */
         // Vertex Buffer
         const positions = [
-            -0.5, -0.5, 0.8, 0.2, 0.1,
-             0.5, -0.5, 0.8, 0.2, 0.1,
-             0.5,  0.5, 0.8, 0.2, 0.1,
-            -0.5,  0.5, 0.8, 0.2, 0.1,
+            -0.5, -0.5, 0.1, 0.1, 0.1,
+             0.5, -0.5, 0.1, 0.1, 0.1,
+             0.5,  0.5, 0.1, 0.1, 0.1,
+            -0.5,  0.5, 0.1, 0.1, 0.1,
         ];
         const vertexBuffer = new VertexBuffer(new Float32Array(positions));
 
@@ -75,43 +133,48 @@
         const indexBuffer = new IndexBuffer(new Uint16Array(indices));
 
         // Vertex Array
-        shader.bind(); // Needed to get the attribute locations and layout validation
+        shader1!.bind();
         const vertexArray = new VertexArray();
 
         // Bind Vertex Array and Buffers
         vertexArray.addVertexBuffer(vertexBuffer);
         vertexArray.setIndexBuffer(indexBuffer);
 
-        function drawScene() {
-            /** Render Preparation */
-            // Setting up the viewport
-            DOMUtils.resizeCanvasToDisplaySize(canvas);
-            gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-            gl.clearColor(viewportColor[0], viewportColor[1], viewportColor[2], viewportColor[3]);
-            gl.clear(gl.COLOR_BUFFER_BIT);
-
-            shader.bind();
-            vertexArray.bind();
-
-            /** Draw */
-            if (!vertexArray.indexBuffer) {
-                console.error("Cannot draw from vertex array: Index buffer not set");
-                return;
-            }
-
-            let primitiveType = gl.TRIANGLES;
-            let offset = 0;
-            gl.drawElements(primitiveType, vertexArray.indexBuffer.count, gl.UNSIGNED_SHORT, offset);
-
-            requestAnimationFrame(drawScene);
-        }
-
-        drawScene();
+        return vertexArray;
     }
 
-    onMount(() => {
-        initWebGL();
-    });
+    function createTriangle() {
+        /** Geometry Definition */
+        // Vertex Buffer
+        const positions = [
+            -0.5, -0.5,
+             0.5, -0.5,
+             0.0,  0.5,
+        ];
+        const vertexBuffer = new VertexBuffer(new Float32Array(positions));
+
+        // Vertex Buffer Layout definition
+        (() => {
+            const layout = new BufferLayout([
+                new BufferElement("a_Position", ShaderDataType.Float2),
+            ]);
+            vertexBuffer.setLayout(layout);
+        })();
+
+        // Index Buffer
+        const indices = [ 0, 1, 2 ];
+        const indexBuffer = new IndexBuffer(new Uint16Array(indices));
+
+        // Vertex Array
+        shader2!.bind();
+        const vertexArray = new VertexArray();
+
+        // Bind Vertex Array and Buffers
+        vertexArray.addVertexBuffer(vertexBuffer);
+        vertexArray.setIndexBuffer(indexBuffer);
+
+        return vertexArray;
+    }
 </script>
 
 <div class="flex-1 h-full overflow-hidden bg-dark-500" id="main-canvas-container"> 

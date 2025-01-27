@@ -16,14 +16,14 @@
         <div>
             <h1>Hierarchy</h1>
         </div>
-        <p class="absolute bottom-8">
+        <p class="absolute bottom-8 text-wrap left-6 right-6">
             <b>Credits</b>:<br> 
             This implementation was based on 
             <a href="https://www.youtube.com/watch?v=JxIZbV_XjAs&list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT"
              class="underline hover:text-red" target="_blank" rel="noopener noreferrer"
             >
-            The Cherno's Game Engine Series
-        </a>.
+            The Cherno's Game Engine Series.
+        </a>. Do check it out!
         </p>
     </div>
 </SideLayout>

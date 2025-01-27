@@ -74,8 +74,7 @@
         indexBuffer.bind();
         let primitiveType = gl.TRIANGLES;
         offset = 0;
-        let count = 3;
-        gl.drawElements(primitiveType, count, gl.UNSIGNED_SHORT, offset);
+        gl.drawElements(primitiveType, indexBuffer.getCount(), gl.UNSIGNED_SHORT, offset);
 
         shader.unbind();
     }

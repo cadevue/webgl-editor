@@ -33,6 +33,7 @@ export class VertexBuffer {
 
 export class IndexBuffer {
     buffer: WebGLBuffer;
+    count: number;
 
     constructor(data: Uint16Array) {
         const gl = glContext.gl;
@@ -43,6 +44,7 @@ export class IndexBuffer {
         this.buffer = gl.createBuffer() as WebGLBuffer;
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.buffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, data, gl.STATIC_DRAW);
+        this.count = data.length;
     }
 
     bind() {
@@ -59,5 +61,9 @@ export class IndexBuffer {
             throw new Error("WebGL context not initialized, cannot unbind index buffer");
         }
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+    }
+
+    getCount() {
+        return this.count;
     }
 }

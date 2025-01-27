@@ -4,7 +4,7 @@
     import { appConfig } from "@/config";
     import { Shader } from "@/lib/rendering/Shader";
     import { DOMUtils } from "@/lib/dom/DOMUtils";
-    import { VertexBuffer, IndexBuffer } from "@/lib/rendering/Buffer";
+    import { VertexBuffer, IndexBuffer, BufferLayout, ShaderDataType, BufferElement } from "@/lib/rendering/Buffer";
 
     let canvas: HTMLCanvasElement;
     const viewportColor = appConfig.viewportColor;
@@ -61,6 +61,10 @@
         const vao = gl.createVertexArray();
         gl.bindVertexArray(vao);
 
+        const layout = new BufferLayout([
+            new BufferElement("a_position", ShaderDataType.Float2),
+        ]);
+
         /** Render Preparation */
         // Setting up the viewport
         DOMUtils.resizeCanvasToDisplaySize(canvas);
@@ -71,7 +75,7 @@
         // Vertex Buffer Attrib
         shader.bind(); // Shader to use (must correspond with the layout)
         positionBuffer.bind();
-        const positionAttribLoc = gl.getAttribLocation(shader.getProgram(), "a_position");
+        const positionAttribLoc = gl.getAttribLocation(shader.program, "a_position");
         gl.enableVertexAttribArray(positionAttribLoc);
 
         let size = 2;
@@ -85,7 +89,7 @@
         indexBuffer.bind();
         let primitiveType = gl.TRIANGLES;
         offset = 0;
-        gl.drawElements(primitiveType, indexBuffer.getCount(), gl.UNSIGNED_SHORT, offset);
+        gl.drawElements(primitiveType, indexBuffer.count, gl.UNSIGNED_SHORT, offset);
     }
 
     onMount(() => {

@@ -1,9 +1,7 @@
 import { glContext } from "@/context";
 
 export class Shader {
-    private program: WebGLProgram;
-    private vertexSrc: string;
-    private fragmentSrc: string;
+    private _program: WebGLProgram;
 
     constructor(vertexSrc: string, fragmentSrc: string) {
         const gl = glContext.gl;
@@ -26,18 +24,15 @@ export class Shader {
             throw new Error("Failed to compile fragment shader: " + gl.getShaderInfoLog(fragmentShader));
         }
 
-        this.vertexSrc = vertexSrc;
-        this.fragmentSrc = fragmentSrc;
+        this._program = gl.createProgram() as WebGLProgram;
 
-        this.program = gl.createProgram() as WebGLProgram;
-
-        gl.attachShader(this.program, vertexShader);
-        gl.attachShader(this.program, fragmentShader);
-        gl.linkProgram(this.program);
-        if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
+        gl.attachShader(this._program, vertexShader);
+        gl.attachShader(this._program, fragmentShader);
+        gl.linkProgram(this._program);
+        if (!gl.getProgramParameter(this._program, gl.LINK_STATUS)) {
             gl.deleteShader(vertexShader);
             gl.deleteShader(fragmentShader);    
-            throw new Error("Failed to link shader program: " + gl.getProgramInfoLog(this.program));
+            throw new Error("Failed to link shader program: " + gl.getProgramInfoLog(this._program));
         }
 
         gl.deleteShader(vertexShader);
@@ -49,7 +44,7 @@ export class Shader {
         if (!gl) {
             throw new Error("WebGL context not initialized, cannot bind shader");
         }
-        gl.useProgram(this.program);
+        gl.useProgram(this._program);
     }
 
     unbind() {
@@ -60,7 +55,5 @@ export class Shader {
         gl.useProgram(null);
     }
 
-    getProgram() { return this.program; }
-    getVertexSrc() { return this.vertexSrc; }
-    getFragmentSrc() { return this.fragmentSrc; }
+    get program()   { return this._program; }
 }

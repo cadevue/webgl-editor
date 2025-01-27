@@ -5,7 +5,6 @@
 const canvasToDisplaySizeMap = new Map<HTMLCanvasElement, number[]>();
 
 function onResize(entries : ResizeObserverEntry[]) {
-    console.log('resize');
     for (const entry of entries) {
         let width;
         let height;

@@ -4,7 +4,7 @@
     import { appConfig } from "@/config";
     import { Shader } from "@/lib/rendering/Shader";
     import { DOMUtils } from "@/lib/dom/DOMUtils";
-  import { VertexBuffer } from "@/lib/rendering/Buffer";
+    import { VertexBuffer, IndexBuffer } from "@/lib/rendering/Buffer";
 
     let canvas: HTMLCanvasElement;
     const viewportColor = appConfig.viewportColor;
@@ -49,6 +49,11 @@
         ];
         const positionBuffer = new VertexBuffer(new Float32Array(positions));
 
+        const indices = [
+            0, 1, 2
+        ];
+        const indexBuffer = new IndexBuffer(new Uint16Array(indices));
+
         DOMUtils.resizeCanvasToDisplaySize(canvas);
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
@@ -66,10 +71,11 @@
         let offset = 0;
         gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset);
 
+        indexBuffer.bind();
         let primitiveType = gl.TRIANGLES;
         offset = 0;
         let count = 3;
-        gl.drawArrays(primitiveType, offset, count);
+        gl.drawElements(primitiveType, count, gl.UNSIGNED_SHORT, offset);
 
         shader.unbind();
     }

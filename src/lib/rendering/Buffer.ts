@@ -71,8 +71,9 @@ export class BufferLayout {
 /** VERTEX BUFFER */
 export class VertexBuffer {
     private _buffer : WebGLBuffer;
+    private _layout : BufferLayout | null;
 
-    constructor(data: Float32Array) {
+    constructor(data: Float32Array, layout?: BufferLayout) {
         const gl = glContext.gl;
         if (!gl) {
             throw new Error("WebGL context not initialized, cannot create vertex buffer");
@@ -83,6 +84,12 @@ export class VertexBuffer {
         gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
 
         reg.register(this, this._buffer);
+
+        this._layout = layout || null;
+    }
+
+    setLayout(layout: BufferLayout) {
+        this._layout = layout;
     }
 
     bind() {
@@ -100,6 +107,8 @@ export class VertexBuffer {
         }
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
     }
+
+    get layout() { return this._layout; }
 }
 
 /** INDEX BUFFER */

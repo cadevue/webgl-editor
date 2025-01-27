@@ -28,26 +28,30 @@
 
         /** Shader Initialization */
         const vertexSource = `
-            attribute vec4 a_position;
-            attribute vec4 a_color;
+            attribute vec4 a_Position;
+            attribute vec4 a_Color;
 
-            varying vec4 v_color;
+            varying vec4 v_Color;
 
             void main() {
-                gl_Position = a_position;
-                v_color = a_color;
+                gl_Position = a_Position;
+                v_Color = a_Color;
             }
         `
         const fragmentSource = `
             precision mediump float;
 
-            varying vec4 v_color;
+            varying vec4 v_Color;
 
             void main() {
-                gl_FragColor = v_color;
+                gl_FragColor = v_Color;
             }
         `
         const shader = new Shader(vertexSource, fragmentSource);
+
+        // Vertex Array
+        const vao = gl.createVertexArray();
+        gl.bindVertexArray(vao);
 
         /** Geometry Definition */
         // Vertex Buffer
@@ -56,23 +60,22 @@
              0.0,  0.5, 0.0, 1.0, 0.0,
              0.5, -0.5, 0.0, 0.0, 1.0
         ];
-        const positionBuffer = new VertexBuffer(new Float32Array(positions));
+        const vertexBuffer = new VertexBuffer(new Float32Array(positions));
+
+        // Layout definition
+        (() => {
+            const layout = new BufferLayout([
+                new BufferElement("a_Position", ShaderDataType.Float2),
+                new BufferElement("a_Color"   , ShaderDataType.Float3)
+            ]);
+            vertexBuffer.setLayout(layout);
+        })();
 
         // Index Buffer
         const indices = [
             0, 1, 2
         ];
         const indexBuffer = new IndexBuffer(new Uint16Array(indices));
-
-        // Vertex Array
-        const vao = gl.createVertexArray();
-        gl.bindVertexArray(vao);
-
-        const layout = new BufferLayout([
-            new BufferElement("a_position", ShaderDataType.Float2),
-            new BufferElement("a_color", ShaderDataType.Float3)
-        ]);
-
 
         /** Render Preparation */
         // Setting up the viewport
@@ -83,13 +86,23 @@
 
         // Vertex Buffer Attrib
         shader.bind(); // Shader to use (must correspond with the layout)
-        positionBuffer.bind();
-        for (let element of layout.elements) {
+        vertexBuffer.bind();
+
+        if (!vertexBuffer.layout) {
+            console.error("Buffer layout not set");
+            return;
+        }
+
+        for (let element of vertexBuffer.layout.elements) {
             let attribLoc = gl.getAttribLocation(shader.program, element.name);
             gl.enableVertexAttribArray(attribLoc);
-            gl.vertexAttribPointer(attribLoc, 
-                getCountOfShaderDataType(element.type), shaderDataTypeToGLType(element.type),
-                element.normalized, layout.stride, element.offset
+            gl.vertexAttribPointer(
+                attribLoc, 
+                getCountOfShaderDataType(element.type), 
+                shaderDataTypeToGLType(element.type),
+                element.normalized, 
+                vertexBuffer.layout.stride, 
+                element.offset
             );
         }
         // const positionAttribLoc = gl.getAttribLocation(shader.program, "a_position");

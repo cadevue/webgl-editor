@@ -11,7 +11,6 @@
     import { Renderer } from "@/lib/rendering/Renderer";
 
     let canvas: HTMLCanvasElement;
-    const viewportColor = appConfig.viewportColor;
 
     let anyColorShader : Shader | null = null;
     let redShader : Shader | null = null;
@@ -78,7 +77,7 @@
         const rectangle = createRectangle();
         const triangle = createTriangle();
 
-        RenderCommand.setClearColor(viewportColor[0], viewportColor[1], viewportColor[2], viewportColor[3]);
+        RenderCommand.setClearColor(appConfig.viewportColor);
 
         function drawScene() {
             /** Render Preparation */
@@ -112,10 +111,10 @@
         /** Geometry Definition */
         // Vertex Buffer
         const positions = [
-            -0.5, -0.5, 0.1, 0.1, 0.1,
-             0.5, -0.5, 0.1, 0.1, 0.1,
-             0.5,  0.5, 0.1, 0.1, 0.1,
-            -0.5,  0.5, 0.1, 0.1, 0.1,
+            -0.75, -0.75, 0.1, 0.1, 0.1,
+             0.75, -0.75, 0.1, 0.1, 0.1,
+             0.75,  0.75, 0.1, 0.1, 0.1,
+            -0.75,  0.75, 0.1, 0.1, 0.1,
         ];
         const vertexBuffer = new VertexBuffer(new Float32Array(positions));
 

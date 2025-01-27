@@ -22,7 +22,7 @@
             <a href="https://www.youtube.com/watch?v=JxIZbV_XjAs&list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT"
              class="underline hover:text-red" target="_blank" rel="noopener noreferrer"
             >
-            The Cherno's Game Engine Series.
+            The Cherno's Game Engine Series
         </a>. Do check it out!
         </p>
     </div>

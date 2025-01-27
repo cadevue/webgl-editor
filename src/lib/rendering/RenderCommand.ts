@@ -1,10 +1,11 @@
 import { renderContext } from "@/context";
 import type { VertexArray } from "./VertexArray";
+import type { ColorRGBA } from "@/lib/math/color";
 
 export class RenderCommand {
-    static setClearColor(r: number, g: number, b: number, a: number) {
+    static setClearColor(color: ColorRGBA) {
         const gl = renderContext.getWebGLRenderingContext();
-        gl.clearColor(r, g, b, a);
+        gl.clearColor(color.r, color.g, color.b, color.a);
     }
 
     static clear() {

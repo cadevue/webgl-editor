@@ -1,11 +1,12 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { glContext as ctx } from "@/context";
+    import { renderContext } from "@/context";
     import { appConfig } from "@/config";
     import { Shader } from "@/lib/rendering/Shader";
     import { DOMUtils } from "@/lib/dom/DOMUtils";
     import { VertexBuffer, IndexBuffer, BufferLayout, BufferElement } from "@/lib/rendering/Buffer";
-    import { getCountOfShaderDataType, ShaderDataType, shaderDataTypeToGLType } from "@/lib/rendering/ShaderType";
+    import { ShaderDataType } from "@/lib/rendering/ShaderType";
+    import { VertexArray } from "@/lib/rendering/VertexArray";
 
     let canvas: HTMLCanvasElement;
     const viewportColor = appConfig.viewportColor;
@@ -18,13 +19,14 @@
 
         DOMUtils.initCanvas(canvas);
 
-        ctx.gl = canvas.getContext("webgl2");
-        if (!ctx.gl) {
+        const webglRenderCtx = canvas.getContext("webgl2");
+        if (!webglRenderCtx) {
             console.error("WebGL 2 is not supported");
             return;
         }
 
-        const gl = ctx.gl;
+        renderContext.setWebGLRenderingContext(webglRenderCtx);
+        const gl = renderContext.getWebGLRenderingContext();
 
         /** Shader Initialization */
         const vertexSource = `
@@ -49,20 +51,17 @@
         `
         const shader = new Shader(vertexSource, fragmentSource);
 
-        // Vertex Array
-        const vao = gl.createVertexArray();
-        gl.bindVertexArray(vao);
-
         /** Geometry Definition */
         // Vertex Buffer
         const positions = [
             -0.5, -0.5, 1.0, 0.0, 0.0,
-             0.0,  0.5, 0.0, 1.0, 0.0,
-             0.5, -0.5, 0.0, 0.0, 1.0
+             0.5, -0.5, 1.0, 0.1, 0.1,
+             0.5,  0.5, 1.0, 0.4, 0.2,
+            -0.5,  0.5, 1.0, 0.0, 0.0
         ];
         const vertexBuffer = new VertexBuffer(new Float32Array(positions));
 
-        // Layout definition
+        // Vertex Buffer Layout definition
         (() => {
             const layout = new BufferLayout([
                 new BufferElement("a_Position", ShaderDataType.Float2),
@@ -72,10 +71,16 @@
         })();
 
         // Index Buffer
-        const indices = [
-            0, 1, 2
-        ];
+        const indices = [ 0, 1, 2, 0, 2, 3 ];
         const indexBuffer = new IndexBuffer(new Uint16Array(indices));
+
+        // Vertex Array
+        shader.bind(); // Needed to get the attribute locations and layout validation
+        const vertexArray = new VertexArray();
+
+        // Bind Vertex Array and Buffers
+        vertexArray.addVertexBuffer(vertexBuffer);
+        vertexArray.setIndexBuffer(indexBuffer);
 
         /** Render Preparation */
         // Setting up the viewport
@@ -85,37 +90,9 @@
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         // Vertex Buffer Attrib
-        shader.bind(); // Shader to use (must correspond with the layout)
-        vertexBuffer.bind();
+        vertexArray.bind();
 
-        if (!vertexBuffer.layout) {
-            console.error("Buffer layout not set");
-            return;
-        }
-
-        for (let element of vertexBuffer.layout.elements) {
-            let attribLoc = gl.getAttribLocation(shader.program, element.name);
-            gl.enableVertexAttribArray(attribLoc);
-            gl.vertexAttribPointer(
-                attribLoc, 
-                getCountOfShaderDataType(element.type), 
-                shaderDataTypeToGLType(element.type),
-                element.normalized, 
-                vertexBuffer.layout.stride, 
-                element.offset
-            );
-        }
-        // const positionAttribLoc = gl.getAttribLocation(shader.program, "a_position");
-        // gl.enableVertexAttribArray(positionAttribLoc);
-
-        // let size = 2;
-        // let type = gl.FLOAT;
-        // let normalize = false;
-        // let stride = 0;
-        // let offset = 0;
-        // gl.vertexAttribPointer(positionAttribLoc, size, type, normalize, stride, offset);
-
-        /** Render */
+        /** Draw */
         indexBuffer.bind();
         let primitiveType = gl.TRIANGLES;
         let offset = 0;

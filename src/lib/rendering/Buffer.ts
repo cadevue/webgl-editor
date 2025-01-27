@@ -1,12 +1,9 @@
-import { glContext } from "@/context";
+import { renderContext } from "@/context";
 import { getSizeOfShaderDataType, shaderDataTypeToString, type ShaderDataType } from "./ShaderType";
 
 // Delete webgl buffer when the parent object is garbage collected
 const reg = new FinalizationRegistry((buffer: WebGLBuffer) => {
-    const gl = glContext.gl;
-    if (!gl) {
-        throw new Error("WebGL context not initialized, cannot delete buffer");
-    }
+    const gl = renderContext.getWebGLRenderingContext();
     gl.deleteBuffer(buffer);
 });
 
@@ -74,10 +71,7 @@ export class VertexBuffer {
     private _layout : BufferLayout | null;
 
     constructor(data: Float32Array, layout?: BufferLayout) {
-        const gl = glContext.gl;
-        if (!gl) {
-            throw new Error("WebGL context not initialized, cannot create vertex buffer");
-        }
+        const gl = renderContext.getWebGLRenderingContext();
 
         this._buffer = gl.createBuffer() as WebGLBuffer;
         gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer);
@@ -93,18 +87,12 @@ export class VertexBuffer {
     }
 
     bind() {
-        const gl = glContext.gl;
-        if (!gl) {
-            throw new Error("WebGL context not initialized, cannot bind vertex buffer");
-        }
+        const gl = renderContext.getWebGLRenderingContext();
         gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer);
     }
 
     unbind() {
-        const gl = glContext.gl;
-        if (!gl) {
-            throw new Error("WebGL context not initialized, cannot unbind vertex buffer");
-        }
+        const gl = renderContext.getWebGLRenderingContext();
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
     }
 
@@ -117,10 +105,7 @@ export class IndexBuffer {
     private _count  : number;
 
     constructor(data: Uint16Array) {
-        const gl = glContext.gl;
-        if (!gl) {
-            throw new Error("WebGL context not initialized, cannot create index buffer");
-        }
+        const gl = renderContext.getWebGLRenderingContext();
 
         this._buffer = gl.createBuffer() as WebGLBuffer;
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._buffer);
@@ -132,18 +117,12 @@ export class IndexBuffer {
     }
 
     bind() {
-        const gl = glContext.gl;
-        if (!gl) {
-            throw new Error("WebGL context not initialized, cannot bind index buffer");
-        }
+        const gl = renderContext.getWebGLRenderingContext();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._buffer);
     }
 
     unbind() {
-        const gl = glContext.gl;
-        if (!gl) {
-            throw new Error("WebGL context not initialized, cannot unbind index buffer");
-        }
+        const gl = renderContext.getWebGLRenderingContext();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
     }
 

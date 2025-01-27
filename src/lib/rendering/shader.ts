@@ -1,13 +1,10 @@
-import { glContext } from "@/context";
+import { renderContext } from "@/context";
 
 export class Shader {
     private _program: WebGLProgram;
 
     constructor(vertexSrc: string, fragmentSrc: string) {
-        const gl = glContext.gl;
-        if (!gl) {
-            throw new Error("WebGL context not initialized, cannot create shader");
-        }
+        const gl = renderContext.getWebGLRenderingContext();
 
         const vertexShader = gl.createShader(gl.VERTEX_SHADER) as WebGLShader;
         gl.shaderSource(vertexShader, vertexSrc);
@@ -40,19 +37,15 @@ export class Shader {
     }
 
     bind() {
-        const gl = glContext.gl;
-        if (!gl) {
-            throw new Error("WebGL context not initialized, cannot bind shader");
-        }
+        const gl = renderContext.getWebGLRenderingContext();
         gl.useProgram(this._program);
+        renderContext.setActiveShader(this);
     }
 
     unbind() {
-        const gl = glContext.gl;
-        if (!gl) {
-            throw new Error("WebGL context not initialized, cannot unbind shader");
-        }
+        const gl = renderContext.getWebGLRenderingContext();
         gl.useProgram(null);
+        renderContext.setActiveShader(null);
     }
 
     get program()   { return this._program; }

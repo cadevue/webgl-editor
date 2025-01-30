@@ -1,4 +1,4 @@
-import { Shader } from "./Shader";
+import Shader from "./Shader";
 
 interface ShaderSource {
     vertex: string;

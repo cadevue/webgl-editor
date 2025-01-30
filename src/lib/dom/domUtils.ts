@@ -62,7 +62,9 @@ function initCanvas(canvas : HTMLCanvasElement) {
     }
 }
 
-export const DOMUtils = {
+const DOMUtils = {
     initCanvas,
     resizeCanvasToDisplaySize,
 }
+
+export default DOMUtils;

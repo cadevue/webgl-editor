@@ -1,7 +1,7 @@
-import { RenderCommand } from "./RenderCommand";
-import type { VertexArray } from "./VertexArray";
+import RenderCommand from "./RenderCommand";
+import VertexArray from "./VertexArray";
 
-export class Renderer {
+export default class Renderer {
     static beginScene() { }
     static endScene() { }
     static submit(vertexArray : VertexArray) { 

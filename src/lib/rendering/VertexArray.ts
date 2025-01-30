@@ -9,7 +9,7 @@ const reg = new FinalizationRegistry((value: WebGLVertexArrayObject) => {
 });
 
 /** VERTEX ARRAY */
-export class VertexArray {
+export default class VertexArray {
     private _vertexArray : WebGLVertexArrayObject;
     private _vertexBuffers: VertexBuffer[];
     private _indexBuffer: IndexBuffer | null;

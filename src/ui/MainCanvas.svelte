@@ -2,14 +2,14 @@
     import { onMount } from "svelte";
     import { renderContext } from "@/context";
     import { appConfig } from "@/config";
-    import { Shader } from "@/lib/rendering/Shader";
-    import { DOMUtils } from "@/lib/dom/DOMUtils";
     import { VertexBuffer, IndexBuffer, BufferLayout, BufferElement } from "@/lib/rendering/Buffer";
     import { ShaderDataType } from "@/lib/rendering/ShaderType";
-    import { VertexArray } from "@/lib/rendering/VertexArray";
-    import { RenderCommand } from "@/lib/rendering/RenderCommand";
-    import { Renderer } from "@/lib/rendering/Renderer";
-  import ShaderStore from "@/lib/rendering/ShaderStore";
+    import Shader from "@/lib/rendering/Shader";
+    import DOMUtils from "@/lib/dom/DOMUtils";
+    import VertexArray from "@/lib/rendering/VertexArray";
+    import RenderCommand from "@/lib/rendering/RenderCommand";
+    import Renderer from "@/lib/rendering/Renderer";
+    import ShaderStore from "@/lib/rendering/ShaderStore";
 
     let canvas: HTMLCanvasElement;
 

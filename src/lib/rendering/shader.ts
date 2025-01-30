@@ -1,6 +1,6 @@
 import { renderContext } from "@/context";
 
-export class Shader {
+export default class Shader {
     private _program: WebGLProgram;
 
     constructor(vertexSrc: string, fragmentSrc: string) {

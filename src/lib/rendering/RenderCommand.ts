@@ -1,8 +1,8 @@
 import { renderContext } from "@/context";
-import type { VertexArray } from "./VertexArray";
-import type { ColorRGBA } from "@/lib/math/Color";
+import VertexArray from "./VertexArray";
+import { ColorRGBA } from "@/lib/math/Color";
 
-export class RenderCommand {
+export default class RenderCommand {
     static setClearColor(color: ColorRGBA) {
         const gl = renderContext.getWebGLRenderingContext();
         gl.clearColor(color.r, color.g, color.b, color.a);

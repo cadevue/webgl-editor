@@ -10,8 +10,10 @@ function radToDeg(radians: number): number {
   return radians * 180 / Math.PI;
 }
 
-export const math = {
+const MathUtils = {
     clamp,
     degToRad,
     radToDeg
 };
+
+export default MathUtils;

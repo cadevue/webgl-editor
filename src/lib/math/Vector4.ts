@@ -1,6 +1,6 @@
-import type { Mat4 } from "./m4";
+import type Mat4 from "./Mat4";
 
-export class Vector4 extends Float32Array {
+export default class Vector4 extends Float32Array {
     constructor(numbers?: ArrayLike<number>) {
         if (numbers) {
             if (numbers.length < 4) {

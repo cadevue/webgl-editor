@@ -1,7 +1,7 @@
-import { Vector3 } from "./vec3";
-import { Vector4 } from "./vec4";
+import Vector3 from "./Vector3";
+import Vector4 from "./Vector4";
 
-export class Quaternion extends Vector4 {
+export default class Quaternion extends Vector4 {
     static fromEuler(euler: Vector3, dst?: Quaternion) : Quaternion {
         dst = dst || new Quaternion();
 

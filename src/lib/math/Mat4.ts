@@ -1,8 +1,8 @@
-import { Vector3 } from "@/lib/math/vec3";
-import { math } from "@/lib/math/math";
-import type { Quaternion } from "./quaternion";
+import Vector3 from "@/lib/math/Vector3";
+import MathUtils from "@/lib/math/MathUtils";
+import type Quaternion from "./Quaternion";
 
-export class Mat4 extends Float32Array {
+export default class Mat4 extends Float32Array {
     constructor(numbers?: ArrayLike<number>) {
         if (numbers) {
             if (numbers.length < 16) {
@@ -918,8 +918,8 @@ export class Mat4 extends Float32Array {
 
     static shearingXY(theta: number, phi: number, dst?: Mat4): Mat4 {
         dst = dst || new Mat4();
-        const t = Math.tan(math.degToRad(theta));
-        const p = Math.tan(math.degToRad(phi));
+        const t = Math.tan(MathUtils.degToRad(theta));
+        const p = Math.tan(MathUtils.degToRad(phi));
 
         dst[0]  = 1;
         dst[1]  = 0;

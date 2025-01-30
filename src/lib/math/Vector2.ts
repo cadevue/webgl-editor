@@ -1,4 +1,4 @@
-export class Vector2 extends Float32Array {
+export default class Vector2 extends Float32Array {
     constructor(numbers?: ArrayLike<number>) {
         if (numbers) {
             if (numbers.length < 2) {

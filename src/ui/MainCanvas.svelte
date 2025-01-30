@@ -97,6 +97,7 @@
 
             Renderer.endScene();
 
+            /** Loop */
             requestAnimationFrame(drawScene);
         }
 

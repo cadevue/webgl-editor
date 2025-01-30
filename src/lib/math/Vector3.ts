@@ -1,6 +1,6 @@
-import { Mat4 } from "./m4";
+import Mat4 from "./Mat4";
 
-export class Vector3 extends Float32Array {
+export default class Vector3 extends Float32Array {
     constructor(numbers?: ArrayLike<number>) {
         if (numbers) {
             if (numbers.length < 3) {

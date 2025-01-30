@@ -1,6 +1,6 @@
 import { renderContext } from "@/context";
 import type { VertexArray } from "./VertexArray";
-import type { ColorRGBA } from "@/lib/math/color";
+import type { ColorRGBA } from "@/lib/math/Color";
 
 export class RenderCommand {
     static setClearColor(color: ColorRGBA) {

@@ -6,26 +6,28 @@
 
     let canvas: HTMLCanvasElement;
 
-    function initWebGL() {
+    function startApp() {
+        /** Register Canvas */
         if (!canvas) {
             console.error("Canvas not found");
             return;
         }
-
         DOMUtils.initCanvas(canvas);
 
+        /** Initialize WebGL */
         const webglRenderCtx = canvas.getContext("webgl2");
         if (!webglRenderCtx) {
             console.error("WebGL 2 is not supported");
             return;
         }
-
         renderContext.setWebGLRenderingContext(webglRenderCtx);
+
+        /** Start Application */
         Application.instance.run();
     }
 
     onMount(() => {
-        initWebGL();
+        startApp();
     });
 </script>
 

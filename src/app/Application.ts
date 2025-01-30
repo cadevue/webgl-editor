@@ -13,6 +13,7 @@ import Shader from "../lib/rendering/Shader";
 import Camera from "../lib/scene/camera/Camera";
 import Renderer from "../lib/rendering/Renderer";
 import RenderCommand from "../lib/rendering/RenderCommand";
+import Input from "@/lib/event/Input";
 
 export default class Application {
     private static _instance: Application;
@@ -74,8 +75,9 @@ export default class Application {
 
             Renderer.endScene();
 
+
             /** Loop */
-            // requestAnimationFrame(drawScene);
+            requestAnimationFrame(drawScene);
         }
 
         drawScene();

@@ -1,4 +1,4 @@
-import type { Shader } from "@/lib/rendering/Shader";
+import type Shader from "@/lib/rendering/Shader";
 
 //////////////////////////////////
 /** Rendering Specific Context **/

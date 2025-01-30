@@ -15,10 +15,10 @@ import Renderer from "../lib/rendering/Renderer";
 import RenderCommand from "../lib/rendering/RenderCommand";
 import Input from "@/lib/event/Input";
 import { KeyCode } from "@/lib/event/InputType";
+import Transform from "@/lib/scene/component/Transform";
 
 export default class Application {
     private static _instance: Application;
-    private constructor() { }
 
     static get instance() {
         if (!Application._instance) {
@@ -36,11 +36,12 @@ export default class Application {
             attribute vec4 a_Color;
 
             uniform mat4 u_ViewProjection;
+            uniform mat4 u_Transform;
 
             varying vec4 v_Color;
 
             void main() {
-                gl_Position = u_ViewProjection * a_Position;
+                gl_Position = u_ViewProjection * u_Transform * a_Position;
                 v_Color = a_Color;
             }
         `;
@@ -58,26 +59,36 @@ export default class Application {
         const shader = new Shader(vertex, fragment);
 
         const rectangle = this.createRectangle(shader);
+        const rectangleTr = new Transform();
+
         const camera = Camera.createOrtographicCamera();
 
         RenderCommand.setClearColor(appConfig.viewportColor);
 
         let deltaTime = 0;
         let previousTime = 0;
-        const camSpeed = 1;
+
+        const moveSpeed = 1;
+        const rotateSpeed = 135;
 
         function update() {
            /** Input */
             if (Input.isKeyPressed(KeyCode.W)) {
-                camera.transform.position.y += camSpeed * deltaTime;
+                rectangleTr.position.y += moveSpeed * deltaTime;
             } else if (Input.isKeyPressed(KeyCode.S)) {
-                camera.transform.position.y -= camSpeed * deltaTime;
+                rectangleTr.position.y -= moveSpeed * deltaTime;
             }
 
             if (Input.isKeyPressed(KeyCode.A)) {
-                camera.transform.position.x -= camSpeed * deltaTime;
+                rectangleTr.position.x -= moveSpeed * deltaTime;
             } else if (Input.isKeyPressed(KeyCode.D)) {
-                camera.transform.position.x += camSpeed * deltaTime;
+                rectangleTr.position.x += moveSpeed * deltaTime
+            }
+
+            if (Input.isKeyPressed(KeyCode.Q)) {
+                rectangleTr.rotation.z += rotateSpeed * deltaTime;
+            } else if (Input.isKeyPressed(KeyCode.E)) {
+                rectangleTr.rotation.z -= rotateSpeed * deltaTime
             }
         }
 
@@ -91,7 +102,7 @@ export default class Application {
             /** Draw */
             Renderer.beginScene(camera);
 
-            Renderer.submit(shader, rectangle);
+            Renderer.submit(shader, rectangle, rectangleTr);
 
             Renderer.endScene();
         }        

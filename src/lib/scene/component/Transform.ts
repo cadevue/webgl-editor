@@ -1,10 +1,9 @@
-import Mat4 from "../math/Mat4";
-import Quaternion from "../math/Quaternion";
-import Vector3 from "../math/Vector3";
+import Vector3 from "@/lib/math/Vector3";
+import NodeComponent from "./NodeComponent";
+import Mat4 from "@/lib/math/Mat4";
+import Quaternion from "@/lib/math/Quaternion";
 
-export default class NodeComponent { }
-
-export class Transform extends NodeComponent {
+export default class Transform extends NodeComponent {
     private _position: Vector3 = Vector3.zeros();
     private _rotation: Vector3 = Vector3.zeros();
     private _scale   : Vector3 = Vector3.ones();
@@ -31,12 +30,16 @@ export class Transform extends NodeComponent {
 
         return this._worldMatrix;
     }
-}
 
-export class Mesh extends NodeComponent {
+    translate(translation: Vector3): void {
+        this.position = Vector3.add(this.position, translation);
+    }
 
-}
+    rotate(rotation: Vector3): void {
+        this.rotation = Vector3.add(this.rotation, rotation);
+    }
 
-export class Skin extends NodeComponent {
-
+    scaleBy(scale: Vector3): void {
+        this.scale = Vector3.multiply(this.scale, scale);
+    }
 }

@@ -27,6 +27,11 @@ export default class Input {
         window.addEventListener('mouseup', this.onMouseUp.bind(this));
         window.addEventListener('mousemove', this.onMouseMove.bind(this));
         window.addEventListener('wheel', this.onMouseWheel.bind(this));
+
+        /** Reset if window loses focus */
+        window.addEventListener('blur', this.reset.bind(this));
+        window.addEventListener('focus', this.reset.bind(this));
+        window.addEventListener('resize', this.reset.bind(this));
     }
 
     static isKeyPressed(key: KeyCode): boolean {
@@ -72,5 +77,13 @@ export default class Input {
 
     private onMouseWheel(event: WheelEvent): void {
         this._mouseWheelDelta = event.deltaY;
+    }
+
+
+    private reset() {
+        this._keys.forEach((_, key) => this._keys.set(key, false));
+        this._mouseButtons.forEach((_, button) => this._mouseButtons.set(button, false));
+        this._mouseDelta = { x: 0, y: 0 };
+        this._mouseWheelDelta = 0;
     }
 }

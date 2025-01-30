@@ -48,5 +48,11 @@ export default class Shader {
         renderContext.setActiveShader(null);
     }
 
+    uploadUniformMat4(name: string, matrix: Float32Array) {
+        const gl = renderContext.getWebGLRenderingContext();
+        const location = gl.getUniformLocation(this._program, name);
+        gl.uniformMatrix4fv(location, false, matrix);
+    }
+
     get program()   { return this._program; }
 }

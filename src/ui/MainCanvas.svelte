@@ -14,8 +14,6 @@
 
     let canvas: HTMLCanvasElement;
 
-    let anyColorShader : Shader | null = null;
-
     function initWebGL() {
         if (!canvas) {
             console.error("Canvas not found");
@@ -33,9 +31,33 @@
         renderContext.setWebGLRenderingContext(webglRenderCtx);
         const gl = renderContext.getWebGLRenderingContext();
 
-        anyColorShader = ShaderStore.instance.getShader("simple-2d-with-camera");
+        const vertex = `
+            attribute vec4 a_Position;
+            attribute vec4 a_Color;
 
-        const rectangle = createRectangle();
+            uniform mat4 u_ViewProjection;
+
+            varying vec4 v_Color;
+
+            void main() {
+                gl_Position = u_ViewProjection * a_Position;
+                v_Color = a_Color;
+            }
+        `;
+
+        const fragment = `
+            precision mediump float;
+
+            varying vec4 v_Color;
+
+            void main() {
+                gl_FragColor = v_Color;
+            }
+        `;
+
+        const shader = new Shader(vertex, fragment);
+
+        const rectangle = createRectangle(shader);
         const camera = Camera.createOrtographicCamera();
 
         RenderCommand.setClearColor(appConfig.viewportColor);
@@ -50,13 +72,14 @@
             /** Draw */
             Renderer.beginScene();
 
-            anyColorShader!.bind();
+            shader.bind();
+            shader.uploadUniformMat4("u_ViewProjection", camera.viewProjectionMatrix);
             Renderer.submit(rectangle);
 
             Renderer.endScene();
 
             /** Loop */
-            requestAnimationFrame(drawScene);
+            // requestAnimationFrame(drawScene);
         }
 
         drawScene();
@@ -66,7 +89,7 @@
         initWebGL();
     });
 
-    function createRectangle() {
+    function createRectangle(shader: Shader) {
         /** Geometry Definition */
         // Vertex Buffer
         const positions = [
@@ -91,7 +114,7 @@
         const indexBuffer = new IndexBuffer(new Uint16Array(indices));
 
         // Vertex Array
-        anyColorShader!.bind();
+        shader.bind();
         const vertexArray = new VertexArray();
 
         // Bind Vertex Array and Buffers

@@ -5,9 +5,9 @@ import Vector3 from "../math/Vector3";
 export default class NodeComponent { }
 
 export class Transform extends NodeComponent {
-    private _position: Vector3 = new Vector3();
-    private _rotation: Vector3 = new Vector3();
-    private _scale: Vector3 = new Vector3();
+    private _position: Vector3 = Vector3.zeros();
+    private _rotation: Vector3 = Vector3.zeros();
+    private _scale   : Vector3 = Vector3.ones();
     private _worldMatrix: Mat4 = Mat4.identity();
     private _dirty: boolean = true;
 

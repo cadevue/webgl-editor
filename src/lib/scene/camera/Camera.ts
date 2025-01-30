@@ -42,6 +42,7 @@ export default class Camera {
             this.calculateViewProjectionMatrix();
             this._dirty = false;
         }
+        console.log(this._viewProjectionMatrix.toString());
         return this._viewProjectionMatrix;
     }
 }

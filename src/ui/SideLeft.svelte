@@ -8,7 +8,7 @@
         <div>
             <h1 class="text-red">Webジーエル Engine</h1>
             <p>made by 
-                <a href="https://moonwr-dev.pages.dev/" target="_blank" rel="noopener noreferrer">Cadevue</a>
+                <a href="https://cadevue.com/" target="_blank" rel="noopener noreferrer">Cadevue</a>
             </p>
         </div>
         <div>

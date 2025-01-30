@@ -1,33 +1,23 @@
 import Shader from "./Shader";
 
+/** Shader Sources */
+import simple2D from "../shaders/simple2D";
+import simple2DWithCamera from "../shaders/simple2DWithCamera";
+
 interface ShaderSource {
     vertex: string;
     fragment: string;
 }
 
+function ReadonlyMapWithStringKeys<K extends string, V>(
+  iterable: Iterable<[K, V]>): ReadonlyMap<K, V> {
+  return new Map(iterable)
+}
+
+
 const sources : { [key: string]: ShaderSource } = {
-    "2d-with-vert-color" : {
-        vertex : `
-            attribute vec4 a_Position;
-            attribute vec4 a_Color;
-
-            varying vec4 v_Color;
-
-            void main() {
-                gl_Position = a_Position;
-                v_Color = a_Color;
-            }
-        `,
-        fragment : `
-            precision mediump float;
-
-            varying vec4 v_Color;
-
-            void main() {
-                gl_FragColor = v_Color;
-            }
-        `
-    }
+    "simple-2d" : simple2D,
+    'simple-2d-with-camera' : simple2DWithCamera,
 }
 
 export default class ShaderStore {

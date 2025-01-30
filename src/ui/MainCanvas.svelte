@@ -10,6 +10,7 @@
     import RenderCommand from "@/lib/rendering/RenderCommand";
     import Renderer from "@/lib/rendering/Renderer";
     import ShaderStore from "@/lib/rendering/ShaderStore";
+    import Camera from "@/lib/scene/camera/Camera";
 
     let canvas: HTMLCanvasElement;
 
@@ -32,9 +33,10 @@
         renderContext.setWebGLRenderingContext(webglRenderCtx);
         const gl = renderContext.getWebGLRenderingContext();
 
-        anyColorShader = ShaderStore.instance.getShader("2d-with-vert-color");
+        anyColorShader = ShaderStore.instance.getShader("simple-2d-with-camera");
 
         const rectangle = createRectangle();
+        const camera = Camera.createOrtographicCamera();
 
         RenderCommand.setClearColor(appConfig.viewportColor);
 

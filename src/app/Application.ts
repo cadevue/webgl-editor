@@ -1,18 +1,18 @@
 /** Shared State */
-import { appConfig } from "../config";
-import { renderContext } from "../context";
+import { appConfig } from "@/config";
+import { renderContext } from "@/context";
 
 /** Utils */
-import DOMUtils from "../lib/dom/DOMUtils";
+import DOMUtils from "@/lib/dom/DOMUtils";
 
 /** Rendering */
-import { BufferElement, BufferLayout, IndexBuffer, VertexBuffer } from "../lib/rendering/Buffer";
-import { ShaderDataType } from "../lib/rendering/ShaderType";
-import VertexArray from "../lib/rendering/VertexArray";
-import Shader from "../lib/rendering/Shader";
-import Camera from "../lib/scene/camera/Camera";
-import Renderer from "../lib/rendering/Renderer";
-import RenderCommand from "../lib/rendering/RenderCommand";
+import { BufferElement, BufferLayout, IndexBuffer, VertexBuffer } from "@/lib/rendering/Buffer";
+import { ShaderDataType } from "@/lib/rendering/ShaderType";
+import VertexArray from "@/lib/rendering/VertexArray";
+import Shader from "@/lib/rendering/Shader";
+import Camera from "@/lib/scene/camera/Camera";
+import Renderer from "@/lib/rendering/Renderer";
+import RenderCommand from "@/lib/rendering/RenderCommand";
 import Input from "@/lib/event/Input";
 import { KeyCode } from "@/lib/event/InputType";
 import Transform from "@/lib/scene/component/Transform";

@@ -1,5 +1,5 @@
 import Mat4 from "@/lib/math/Mat4";
-import Transform from "../component/Transform";
+import Transform from "@/lib/scene/component/Transform";
 import { OrthographicCameraProjection, type CameraProjection } from "./CameraProjection";
 
 export default class Camera {

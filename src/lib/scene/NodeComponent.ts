@@ -11,9 +11,9 @@ export class Transform extends NodeComponent {
     private _worldMatrix: Mat4 = Mat4.identity();
     private _dirty: boolean = true;
 
-    get position(): Vector3 { return this._position; }
-    get rotation(): Vector3 { return this._rotation; }
-    get scale(): Vector3 { return this._scale; }
+    get position(): Vector3 { this._dirty = true; return this._position; }
+    get rotation(): Vector3 { this._dirty = true; return this._rotation; }
+    get scale()   : Vector3 { this._dirty = true; return this._scale; }
 
     set position(value: Vector3) { this._position = value; this._dirty = true; }
     set rotation(value: Vector3) { this._rotation = value; this._dirty = true; }

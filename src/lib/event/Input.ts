@@ -1,11 +1,18 @@
+import { KeyCode, MouseButton } from "./InputType";
+
 export default class Input {
     private static _instance: Input = new Input();
     private constructor() { 
         this.initialize(); 
     }
 
-    private _keys: Map<string, boolean> = new Map<string, boolean>()
-    private _mouseButtons: Map<number, boolean> = new Map<number, boolean>();
+    private _keys: Map<KeyCode, boolean> = new Map<KeyCode, boolean>(
+        Object.values(KeyCode).map((key) => [key, false])
+    );
+
+    private _mouseButtons: Map<MouseButton | string, boolean> = new Map<MouseButton | string, boolean>(
+        Object.values(MouseButton).map((button) => [button, false])
+    );
     private _mousePosition: { x: number, y: number } = { x: 0, y: 0 };
     private _mouseDelta: { x: number, y: number } = { x: 0, y: 0 };
     private _mouseWheelDelta: number = 0;
@@ -20,15 +27,13 @@ export default class Input {
         window.addEventListener('mouseup', this.onMouseUp.bind(this));
         window.addEventListener('mousemove', this.onMouseMove.bind(this));
         window.addEventListener('wheel', this.onMouseWheel.bind(this));
-
-        console.log("Input initialized");
     }
 
-    static isKeyPressed(key: string): boolean {
+    static isKeyPressed(key: KeyCode): boolean {
         return this._instance._keys.get(key) || false;
     }
 
-    static isMouseButtonPressed(button: number): boolean {
+    static isMouseButtonPressed(button: MouseButton): boolean {
         return this._instance._mouseButtons.get(button) || false;
     }
 
@@ -45,19 +50,19 @@ export default class Input {
     }
 
     private onKeyDown(event: KeyboardEvent): void {
-        this._keys.set(event.key, true);
+        this._keys.set(event.code as KeyCode, true);
     }
 
     private onKeyUp(event: KeyboardEvent): void {
-        this._keys.set(event.key, false);
+        this._keys.set(event.code as KeyCode, false);
     }
 
     private onMouseDown(event: MouseEvent): void {
-        this._mouseButtons.set(event.button, true);
+        this._mouseButtons.set(event.button as MouseButton, true);
     }
 
     private onMouseUp(event: MouseEvent): void {
-        this._mouseButtons.set(event.button, false);
+        this._mouseButtons.set(event.button as MouseButton, false);
     }
 
     private onMouseMove(event: MouseEvent): void {

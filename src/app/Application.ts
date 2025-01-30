@@ -14,6 +14,7 @@ import Camera from "../lib/scene/camera/Camera";
 import Renderer from "../lib/rendering/Renderer";
 import RenderCommand from "../lib/rendering/RenderCommand";
 import Input from "@/lib/event/Input";
+import { KeyCode } from "@/lib/event/InputType";
 
 export default class Application {
     private static _instance: Application;
@@ -58,10 +59,26 @@ export default class Application {
 
         const rectangle = this.createRectangle(shader);
         const camera = Camera.createOrtographicCamera();
+        camera.transform.position.y -= 0.5;
 
         RenderCommand.setClearColor(appConfig.viewportColor);
 
+        const camSpeed = 0.02;
+
         function drawScene() {
+            /** Input Handling */
+            if (Input.isKeyPressed(KeyCode.W)) {
+                camera.transform.position.y += camSpeed;
+            } else if (Input.isKeyPressed(KeyCode.S)) {
+                camera.transform.position.y -= camSpeed;
+            } 
+            
+            if (Input.isKeyPressed(KeyCode.A)) {
+                camera.transform.position.x -= camSpeed;
+            } else if (Input.isKeyPressed(KeyCode.D)) {
+                camera.transform.position.x += camSpeed;
+            }
+
             /** Render Preparation */
             // Setting up the viewport
             DOMUtils.resizeCanvasToDisplaySize(gl.canvas as HTMLCanvasElement);

@@ -1,7 +1,12 @@
 import { renderContext } from "@/context";
+import type Vector2 from "@/lib/math/Vector2";
+import type Vector3 from "@/lib/math/Vector3";
+import type Vector4 from "@/lib/math/Vector4";
+import type Mat4 from "@/lib/math/Mat4";
 
 export default class Shader {
     private _program: WebGLProgram;
+    private _uniformCache: Map<string, WebGLUniformLocation> = new Map();
 
     constructor(vertexSrc: string, fragmentSrc: string) {
         const gl = renderContext.getWebGLRenderingContext();
@@ -48,11 +53,75 @@ export default class Shader {
         renderContext.setActiveShader(null);
     }
 
-    uploadUniformMat4(name: string, matrix: Float32Array) {
+    private getUniformLocation(name: string): WebGLUniformLocation {
+        if (this._uniformCache.has(name)) {
+            return this._uniformCache.get(name) as WebGLUniformLocation;
+        } else {
+            const gl = renderContext.getWebGLRenderingContext();
+            const location = gl.getUniformLocation(this._program, name);
+            if (location) {
+                this._uniformCache.set(name, location);
+                return location;
+            } else {
+                throw new Error(`Uniform ${name} not found in shader`);
+            }
+        }
+    }
+
+    uploadUniformMat4(name: string, matrix: Mat4) {
+        const location = this.getUniformLocation(name);
         const gl = renderContext.getWebGLRenderingContext();
-        const location = gl.getUniformLocation(this._program, name);
         gl.uniformMatrix4fv(location, false, matrix);
     }
+
+    uploadUniformFloat(name: string, value: number) {
+        const location = this.getUniformLocation(name);
+        const gl = renderContext.getWebGLRenderingContext();
+        gl.uniform1f(location, value);
+    }
+
+    uploadUniformFloat2(name: string, value: Vector2) {
+        const location = this.getUniformLocation(name);
+        const gl = renderContext.getWebGLRenderingContext();
+        gl.uniform2f(location, value.x, value.y);
+    }
+
+    uploadUniformFloat3(name: string, value: Vector3) {
+        const location = this.getUniformLocation(name);
+        const gl = renderContext.getWebGLRenderingContext();
+        gl.uniform3fv(location, value);
+    }
+
+    uploadUniformFloat4(name: string, value: Vector4) {
+        const location = this.getUniformLocation(name);
+        const gl = renderContext.getWebGLRenderingContext();
+        gl.uniform4fv(location, value);
+    }
+
+    uploadUniformInt(name: string, value: number) {
+        const location = this.getUniformLocation(name);
+        const gl = renderContext.getWebGLRenderingContext();
+        gl.uniform1i(location, value);
+    }
+
+    uploadUniformInt2(name: string, value: Vector2) {
+        const location = this.getUniformLocation(name);
+        const gl = renderContext.getWebGLRenderingContext();
+        gl.uniform2i(location, value.x, value.y);
+    }
+
+    uploadUniformInt3(name: string, value: Vector3) {
+        const location = this.getUniformLocation(name);
+        const gl = renderContext.getWebGLRenderingContext();
+        gl.uniform3iv(location, value);
+    }
+
+    uploadUniformInt4(name: string, value: Vector4) {
+        const location = this.getUniformLocation(name);
+        const gl = renderContext.getWebGLRenderingContext();
+        gl.uniform4iv(location, value);
+    }
+
 
     get program()   { return this._program; }
 }

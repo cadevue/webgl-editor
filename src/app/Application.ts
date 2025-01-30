@@ -16,6 +16,7 @@ import RenderCommand from "@/lib/rendering/RenderCommand";
 import Input from "@/lib/event/Input";
 import { KeyCode } from "@/lib/event/InputType";
 import Transform from "@/lib/scene/component/Transform";
+import { ColorRGBA } from "@/lib/math/Color";
 
 export default class Application {
     private static _instance: Application;
@@ -33,26 +34,22 @@ export default class Application {
 
         const vertex = `
             attribute vec4 a_Position;
-            attribute vec4 a_Color;
 
             uniform mat4 u_ViewProjection;
             uniform mat4 u_Transform;
 
-            varying vec4 v_Color;
-
             void main() {
                 gl_Position = u_ViewProjection * u_Transform * a_Position;
-                v_Color = a_Color;
             }
         `;
 
         const fragment = `
             precision mediump float;
 
-            varying vec4 v_Color;
+            uniform vec4 u_Color;
 
             void main() {
-                gl_FragColor = v_Color;
+                gl_FragColor = u_Color;
             }
         `;
 
@@ -92,6 +89,8 @@ export default class Application {
             }
         }
 
+        const rectangleColor = ColorRGBA.create(0.8, 0.2, 0.2, 1);
+
         function drawScene() {
             /** Render Preparation */
             // Setting up the viewport
@@ -102,7 +101,7 @@ export default class Application {
             /** Draw */
             Renderer.beginScene(camera);
 
-            Renderer.submit(shader, rectangle, rectangleTr);
+            Renderer.submit(shader, rectangle, rectangleTr, rectangleColor);
 
             Renderer.endScene();
         }        
@@ -124,10 +123,10 @@ export default class Application {
         /** Geometry Definition */
         // Vertex Buffer
         const positions = [
-            -0.5, -0.5, 0.75, 0.2, 0.1,
-             0.5, -0.5, 0.75, 0.2, 0.1,
-             0.5,  0.5, 0.75, 0.2, 0.1,
-            -0.5,  0.5, 0.75, 0.2, 0.1
+            -0.5, -0.5,
+             0.5, -0.5,
+             0.5,  0.5,
+            -0.5,  0.5,
         ];
         const vertexBuffer = new VertexBuffer(new Float32Array(positions));
 
@@ -135,7 +134,6 @@ export default class Application {
         (() => {
             const layout = new BufferLayout([
                 new BufferElement("a_Position", ShaderDataType.Float2),
-                new BufferElement("a_Color"   , ShaderDataType.Float3)
             ]);
             vertexBuffer.setLayout(layout);
         })();

@@ -137,3 +137,7 @@ p {
 a {
   @apply hover:text-red underline;
 }
+
+label {
+  @apply text-xs text-light font-bold;
+}

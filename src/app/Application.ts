@@ -1,21 +1,32 @@
 /** Shared State */
-import { appConfig } from "./config";
-import { renderContext } from "./context";
+import { appConfig } from "../config";
+import { renderContext } from "../context";
 
 /** Utils */
-import DOMUtils from "./lib/dom/DOMUtils";
+import DOMUtils from "../lib/dom/DOMUtils";
 
 /** Rendering */
-import { BufferElement, BufferLayout, IndexBuffer, VertexBuffer } from "./lib/rendering/Buffer";
-import VertexArray from "./lib/rendering/VertexArray";
-import { ShaderDataType } from "./lib/rendering/ShaderType";
-import Shader from "./lib/rendering/Shader";
-import Camera from "./lib/scene/camera/Camera";
-import Renderer from "./lib/rendering/Renderer";
-import RenderCommand from "./lib/rendering/RenderCommand";
+import { BufferElement, BufferLayout, IndexBuffer, VertexBuffer } from "../lib/rendering/Buffer";
+import { ShaderDataType } from "../lib/rendering/ShaderType";
+import VertexArray from "../lib/rendering/VertexArray";
+import Shader from "../lib/rendering/Shader";
+import Camera from "../lib/scene/camera/Camera";
+import Renderer from "../lib/rendering/Renderer";
+import RenderCommand from "../lib/rendering/RenderCommand";
 
 export default class Application {
-    static run() {
+    private static _instance: Application;
+    private constructor() { }
+
+    static get instance() {
+        if (!Application._instance) {
+            Application._instance = new Application();
+        }
+
+        return Application._instance;
+    }
+
+    run() {
        const gl = renderContext.getWebGLRenderingContext();
 
         const vertex = `
@@ -44,7 +55,7 @@ export default class Application {
 
         const shader = new Shader(vertex, fragment);
 
-        const rectangle = Application.createRectangle(shader);
+        const rectangle = this.createRectangle(shader);
         const camera = Camera.createOrtographicCamera();
 
         RenderCommand.setClearColor(appConfig.viewportColor);
@@ -70,7 +81,7 @@ export default class Application {
         drawScene();
     }
 
-    private static createRectangle(shader: Shader) {
+    private createRectangle(shader: Shader) {
         /** Geometry Definition */
         // Vertex Buffer
         const positions = [

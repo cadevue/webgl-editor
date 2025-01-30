@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import { renderContext } from "@/context";
     import DOMUtils from "@/lib/dom/DOMUtils";
-    import Application from "@/Application";
+    import Application from "@/app/Application";
 
     let canvas: HTMLCanvasElement;
 
@@ -21,7 +21,7 @@
         }
 
         renderContext.setWebGLRenderingContext(webglRenderCtx);
-        Application.run();
+        Application.instance.run();
     }
 
     onMount(() => {

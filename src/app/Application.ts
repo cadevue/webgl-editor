@@ -59,26 +59,29 @@ export default class Application {
 
         const rectangle = this.createRectangle(shader);
         const camera = Camera.createOrtographicCamera();
-        camera.transform.position.y -= 0.5;
 
         RenderCommand.setClearColor(appConfig.viewportColor);
 
-        const camSpeed = 0.02;
+        let deltaTime = 0;
+        let previousTime = 0;
+        const camSpeed = 1;
 
-        function drawScene() {
-            /** Input Handling */
+        function update() {
+           /** Input */
             if (Input.isKeyPressed(KeyCode.W)) {
-                camera.transform.position.y += camSpeed;
+                camera.transform.position.y += camSpeed * deltaTime;
             } else if (Input.isKeyPressed(KeyCode.S)) {
-                camera.transform.position.y -= camSpeed;
-            } 
-            
-            if (Input.isKeyPressed(KeyCode.A)) {
-                camera.transform.position.x -= camSpeed;
-            } else if (Input.isKeyPressed(KeyCode.D)) {
-                camera.transform.position.x += camSpeed;
+                camera.transform.position.y -= camSpeed * deltaTime;
             }
 
+            if (Input.isKeyPressed(KeyCode.A)) {
+                camera.transform.position.x -= camSpeed * deltaTime;
+            } else if (Input.isKeyPressed(KeyCode.D)) {
+                camera.transform.position.x += camSpeed * deltaTime;
+            }
+        }
+
+        function drawScene() {
             /** Render Preparation */
             // Setting up the viewport
             DOMUtils.resizeCanvasToDisplaySize(gl.canvas as HTMLCanvasElement);
@@ -91,13 +94,19 @@ export default class Application {
             Renderer.submit(shader, rectangle);
 
             Renderer.endScene();
+        }        
+        
+        function loop(timestamp: DOMHighResTimeStamp) {
+            deltaTime = (timestamp - previousTime) / 1000;
+            previousTime = timestamp;
 
+            update();
+            drawScene();
 
-            /** Loop */
-            requestAnimationFrame(drawScene);
+            requestAnimationFrame(loop);
         }
 
-        drawScene();
+        loop(0);
     }
 
     private createRectangle(shader: Shader) {

@@ -141,3 +141,11 @@ a {
 label {
   @apply text-xs text-light font-bold;
 }
+
+ul {
+  @apply list-disc ml-4;
+}
+
+li {
+  @apply text-xs text-light;
+}

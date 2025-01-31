@@ -2,10 +2,11 @@ import Vector3, { type Vector3Array } from "@/lib/math/Vector3";
 import NodeComponent from "./NodeComponent";
 import Mat4 from "@/lib/math/Mat4";
 import Quaternion from "@/lib/math/Quaternion";
-import { bindedVec } from "@/context";
-import type IDirtyConsumable from "@/lib/interface/IDirtyConsumable";
+import type IDirtyConsumable from "@/lib/interface/DirtyConsumable";
+import type { IExposableComponent } from "@/lib/interface/Exposable";
+import TransformField from "@/ui/components/TransformField.svelte";
 
-export default class Transform extends NodeComponent implements IDirtyConsumable {
+export default class Transform extends NodeComponent implements IDirtyConsumable, IExposableComponent {
     private _position: Vector3 = Vector3.zeros();
     private _rotation: Vector3 = Vector3.zeros();
     private _scale   : Vector3 = Vector3.ones();
@@ -18,12 +19,6 @@ export default class Transform extends NodeComponent implements IDirtyConsumable
     get position(): Vector3 { return this._position; }
     get rotation(): Vector3 { return this._rotation; }
     get scale()   : Vector3 { return this._scale; }
-
-    constructor() {
-        super();
-        bindedVec.set(this._position);
-        console.log("position", this._position);
-    }
 
     set position(value: Vector3Array) { 
         this._position.x = value[0];
@@ -71,5 +66,16 @@ export default class Transform extends NodeComponent implements IDirtyConsumable
 
     scaleBy(scale: Vector3): void {
         Vector3.multiply(this.scale, scale, this.scale);
+    }
+
+    // Inspector Exposable
+    get label(): string { return "Transform"; }
+    createInspectorField(): any {
+        return {
+            component: TransformField,
+            props: {
+                transform: this
+            }
+        }
     }
 }

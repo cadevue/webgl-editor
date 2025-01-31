@@ -1,11 +1,14 @@
 import Mat4 from "@/lib/math/Mat4";
 import Transform from "@/lib/scene/component/Transform";
 import { OrthographicCameraProjection, type CameraProjection } from "./CameraProjection";
-import { bindedVec } from "@/context";
+import type { IExposableOwner } from "@/lib/interface/Exposable";
+import { bindedProperties } from "@/context";
 
-export default class Camera {
+export default class Camera implements IExposableOwner {
     private _projection: CameraProjection;
     private _viewProjectionMatrix: Mat4 = Mat4.identity();
+
+    // Component
     private _transform: Transform = new Transform();
 
     static createOrtographicCamera(left?: number, right?: number, bottom?: number, top?: number, near?: number, far?: number): Camera {
@@ -23,7 +26,6 @@ export default class Camera {
 
     constructor(projection?: CameraProjection) {
         this._projection = projection ? projection : new OrthographicCameraProjection(-1, 1, -1, 1, 0, 1);
-        bindedVec.set(this._transform.position)
     }
 
     private calculateViewProjectionMatrix(): void {
@@ -41,5 +43,9 @@ export default class Camera {
             this.calculateViewProjectionMatrix();
         }
         return this._viewProjectionMatrix;
+    }
+
+    bindProperties(): void {
+        bindedProperties.set([this.transform]);
     }
 }

@@ -13,13 +13,12 @@ export default class Renderer {
         this._viewProjectionMatrix = Mat4.copy(camera.viewProjectionMatrix); // To avoid inconsistencies
     }
 
-    static submit(shader: Shader, vertexArray : VertexArray, transform?: Transform, color?: ColorRGBA) {
+    static submit(shader: Shader, vertexArray : VertexArray, transform?: Transform) {
         shader.bind();
         shader.uploadUniformMat4("u_ViewProjection", this._viewProjectionMatrix);
 
         transform = transform || new Transform();
         shader.uploadUniformMat4("u_Transform", transform.worldMatrix);
-        shader.uploadUniformFloat4("u_Color", color || new ColorRGBA([1, 1, 1, 1]));
 
         vertexArray.bind();
         RenderCommand.drawIndexed(vertexArray);

@@ -49,4 +49,6 @@ export const renderContext = {
 ////////////////////////////////////
 
 import { atom } from "nanostores";
-export const bindedVec = atom<Vector3 | null>(null);
+import { type IExposableComponent } from "./lib/interface/Exposable";
+
+export const bindedProperties = atom<IExposableComponent[]>([]);

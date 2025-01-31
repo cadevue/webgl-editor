@@ -1,4 +1,4 @@
-import type IDirtyConsumable from "../interface/IDirtyConsumable";
+import type IDirtyConsumable from "../interface/DirtyConsumable";
 import Mat4 from "./Mat4";
 
 export type Vector3Array = [number, number, number];

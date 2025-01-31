@@ -69,8 +69,7 @@ export default class Transform extends NodeComponent implements IDirtyConsumable
     }
 
     // Inspector API
-    get label(): string { return "Transform"; }
-    createFieldRenderer() : FieldRenderer {
+    getFieldRenderer() : FieldRenderer {
         return {
             component: TransformField,
             props: {

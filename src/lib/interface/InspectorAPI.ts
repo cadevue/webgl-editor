@@ -10,6 +10,5 @@ export interface FieldRenderer {
 }
 
 export interface ISerializableComponent {
-    label?: string; // Optional label for the component
-    createFieldRenderer(): FieldRenderer;
+    getFieldRenderer(): FieldRenderer;
 }

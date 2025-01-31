@@ -6,8 +6,10 @@
 </script>
 
 <div>
-    <h1>Camera Transform</h1>
-    <Vector3Field label="Position" bindedValue={transform.position} />
-    <Vector3Field label="Rotation" bindedValue={transform.rotation} />
-    <Vector3Field label="Scale"    bindedValue={transform.scale}    />
+    <h1>Transform</h1>
+    <div class="flex flex-col gap-3">
+        <Vector3Field label="Position" bindedValue={transform.position} />
+        <Vector3Field label="Rotation" bindedValue={transform.rotation} />
+        <Vector3Field label="Scale"    bindedValue={transform.scale}    />
+    </div>
 </div>

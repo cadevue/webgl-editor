@@ -4,7 +4,7 @@
     import type { ISerializableComponent } from "@/lib/interface/InspectorAPI";
 
     let components : ISerializableComponent[] = $state([]);
-    let componentRenderers = $derived(components.map((prop) => prop.createFieldRenderer()));
+    let componentRenderers = $derived(components.map((prop) => prop.getFieldRenderer()));
 
     bindedComponents.subscribe(() => {
         components = bindedComponents.get();

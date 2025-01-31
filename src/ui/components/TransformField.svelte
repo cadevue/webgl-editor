@@ -6,8 +6,8 @@
 </script>
 
 <div>
-    <h2>Camera Transform</h2>
-    <Vec3Field label="Position" bindedVec3={transform.position} />
-    <Vec3Field label="Rotation" bindedVec3={transform.rotation} />
-    <Vec3Field label="Scale" bindedVec3={transform.scale} />
+    <h1>Camera Transform</h1>
+    <Vec3Field label="Position" bindedValue={transform.position} />
+    <Vec3Field label="Rotation" bindedValue={transform.rotation} />
+    <Vec3Field label="Scale"    bindedValue={transform.scale} />
 </div>

@@ -1,1 +1,1 @@
-export default class NodeComponent { }
+export default abstract class NodeComponent { }

@@ -1,8 +1,8 @@
 import Mat4 from "@/lib/math/Mat4";
 import Transform from "@/lib/scene/component/Transform";
 import { OrthographicCameraProjection, type CameraProjection } from "./CameraProjection";
-import type { ISerializable } from "@/lib/interface/InspectorAPI";
-import { bindedComponents } from "@/context";
+import type { ISerializable } from "@/lib/interface/InspectorSerialization";
+import { bindedSerializableComponents } from "@/context";
 
 export default class Camera implements ISerializable {
     private _projection: CameraProjection;
@@ -44,6 +44,6 @@ export default class Camera implements ISerializable {
     }
 
     bindProperties(): void {
-        bindedComponents.set([this.transform]);
+        bindedSerializableComponents.set([this.transform]);
     }
 }

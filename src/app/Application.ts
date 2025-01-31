@@ -1,6 +1,6 @@
 /** Shared State */
 import { appConfig } from "@/config";
-import { bindedComponents, renderContext } from "@/context";
+import { bindedSerializableComponents, renderContext } from "@/context";
 
 /** Utils */
 import DOMUtils from "@/lib/dom/DOMUtils";
@@ -96,7 +96,7 @@ export default class Application {
 
         RenderCommand.setClearColor(appConfig.viewportColor);
 
-        bindedComponents.set([texturedRectangleTr]);
+        bindedSerializableComponents.set([texturedRectangleTr]);
 
         let deltaTime = 0;
         let previousTime = 0;

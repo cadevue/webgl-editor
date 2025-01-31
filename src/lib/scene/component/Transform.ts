@@ -2,7 +2,7 @@ import Vector3, { type Vector3Array } from "@/lib/math/Vector3";
 import NodeComponent from "./NodeComponent";
 import Mat4 from "@/lib/math/Mat4";
 import Quaternion from "@/lib/math/Quaternion";
-import type { FieldRenderer, ISerializableComponent } from "@/lib/interface/InspectorAPI";
+import type { FieldRenderer, ISerializableComponent } from "@/lib/interface/InspectorSerialization";
 import TransformField from "@/ui/fields/TransformField.svelte";
 import type { IObservable } from "@/lib/interface/Observable";
 

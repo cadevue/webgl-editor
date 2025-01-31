@@ -49,6 +49,7 @@ export const renderContext = {
 ////////////////////////////////////
 
 import { atom } from "nanostores";
-import { type ISerializableComponent } from "./lib/interface/InspectorAPI";
+import { type ISerializableComponent } from "./lib/interface/InspectorSerialization";
 
-export const bindedComponents = atom<ISerializableComponent[]>([]);
+// What component to render in inspector, usually called by ISerializable.bindProperties()
+export const bindedSerializableComponents = atom<ISerializableComponent[]>([]);

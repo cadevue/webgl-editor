@@ -1,23 +1,23 @@
 <script lang="ts">
     import Vector3 from "@/lib/math/Vector3";
 
-    const { label, bindedValue } : { label: string, bindedValue: Vector3 } = $props();
+    const { label, target } : { label: string, target: Vector3 } = $props();
 
-    let x = $state(bindedValue.x);
-    let y = $state(bindedValue.y);
-    let z = $state(bindedValue.z);
+    let x = $state(target.x);
+    let y = $state(target.y);
+    let z = $state(target.z);
 
     /** 2-way binding */
-    bindedValue.subscribe(() => {
-        x = parseFloat(bindedValue.x.toFixed(3));
-        y = parseFloat(bindedValue.y.toFixed(3));
-        z = parseFloat(bindedValue.z.toFixed(3));
+    target.subscribe(() => {
+        x = parseFloat(target.x.toFixed(3));
+        y = parseFloat(target.y.toFixed(3));
+        z = parseFloat(target.z.toFixed(3));
     });
 
     $effect(() => {
-        bindedValue.x = x;
-        bindedValue.y = y;
-        bindedValue.z = z;
+        target.x = x;
+        target.y = y;
+        target.z = z;
     });
 </script>
 

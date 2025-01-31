@@ -2,9 +2,8 @@ import type { IObservable } from "@/lib/interface/Observable";
 import type Mat4 from "@/lib/math/Mat4";
 
 export type Vector4Array = [number, number, number, number];
-export default class Vector4 extends Float32Array implements IObservable<Vector4> {
-    private _listeners: Array<(ref : Vector4) => void> = [];
 
+export default class Vector4 extends Float32Array implements IObservable<Vector4> {
     constructor(numbers?: ArrayLike<number>) {
         if (numbers) {
             if (numbers.length < 4) {
@@ -25,10 +24,10 @@ export default class Vector4 extends Float32Array implements IObservable<Vector4
     get z() { return this[2]; }
     get w() { return this[3]; }
 
-    set x(value: number) { this[0] = value; this.notifyListeners(); }
-    set y(value: number) { this[1] = value; this.notifyListeners(); }
-    set z(value: number) { this[2] = value; this.notifyListeners(); }
-    set w(value: number) { this[3] = value; this.notifyListeners(); }
+    set x(value: number) { this[0] = value; this.notifyDirty(); }
+    set y(value: number) { this[1] = value; this.notifyDirty(); }
+    set z(value: number) { this[2] = value; this.notifyDirty(); }
+    set w(value: number) { this[3] = value; this.notifyDirty(); }
 
     get r() { return this[0]; }
     get g() { return this[1]; }
@@ -45,12 +44,20 @@ export default class Vector4 extends Float32Array implements IObservable<Vector4
         this[1] = values[1];
         this[2] = values[2];
         this[3] = values[3];
-        this.notifyListeners();
+
+        this.notifyDirty();
     }
 
-    subscribe(listener: (ref : Vector4) => void) { this._listeners.push(listener); }
-    notifyListeners() { this._listeners.forEach(listener => listener(this)); }
+    /** Dirty State Management */
+    private _dirtyListeners: Array<(ref : Vector4) => void> = [];
+    subscribe(listener: (ref : Vector4) => void) { this._dirtyListeners.push(listener); }
+    notifyDirty() { this._dirtyListeners.forEach(listener => listener(this)); }
 
+    toArray() : Vector4Array {
+        return [this[0], this[1], this[2], this[3]];
+    }
+
+    /** Static Methods */
     static create(x = 0, y = 0, z = 0, w = 0) : Vector4 {
         return new Vector4([x, y, z, w]);
     }

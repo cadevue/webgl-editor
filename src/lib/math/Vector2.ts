@@ -1,9 +1,8 @@
 import type { IObservable } from "@/lib/interface/Observable";
 
 export type Vector2Array = [number, number];
-export default class Vector2 extends Float32Array implements IObservable<Vector2> {
-    private _listeners: Array<(ref : Vector2) => void> = [];
 
+export default class Vector2 extends Float32Array implements IObservable<Vector2> {
     constructor(numbers?: ArrayLike<number>) {
         if (numbers) {
             if (numbers.length < 2) {
@@ -22,8 +21,8 @@ export default class Vector2 extends Float32Array implements IObservable<Vector2
     get x() { return this[0]; }
     get y() { return this[1]; }
 
-    set x(value: number) { this[0] = value; this.notifyListeners(); }
-    set y(value: number) { this[1] = value; this.notifyListeners(); }
+    set x(value: number) { this[0] = value; this.notifyDirty(); }
+    set y(value: number) { this[1] = value; this.notifyDirty(); }
 
     get r() { return this[0]; }
     get g() { return this[1]; }
@@ -34,16 +33,20 @@ export default class Vector2 extends Float32Array implements IObservable<Vector2
     set(values: Vector2Array) {
         this[0] = values[0];
         this[1] = values[1];
-        this.notifyListeners();
+
+        this.notifyDirty();
     }
 
-    subscribe(listener: (ref : Vector2) => void) { this._listeners.push(listener); }
-    notifyListeners() { this._listeners.forEach(listener => listener(this)); }
+    /** Dirty State Management */
+    private _dirtyListeners: Array<(ref : Vector2) => void> = [];
+    subscribe(listener: (ref : Vector2) => void) { this._dirtyListeners.push(listener); }
+    notifyDirty() { this._dirtyListeners.forEach(listener => listener(this)); }
 
     toArray() : Vector2Array {
         return [this[0], this[1]];
     }
 
+    /** Static Methods */
     static create(x = 0, y = 0) : Vector2 {
         return new Vector2([x, y]);
     }

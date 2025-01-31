@@ -74,7 +74,7 @@ export default class Transform extends NodeComponent implements IObservable<Tran
         return {
             component: TransformField,
             props: {
-                transform: this,
+                target: this,
             }
         }
     }

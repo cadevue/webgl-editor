@@ -4,7 +4,7 @@ import Mat4 from "@/lib/math/Mat4";
 import Quaternion from "@/lib/math/Quaternion";
 import type { IDirtyConsumable } from "@/lib/interface/DirtyConsumable";
 import type { FieldRenderer, ISerializableComponent } from "@/lib/interface/InspectorAPI";
-import TransformField from "@/ui/components/TransformField.svelte";
+import TransformField from "@/ui/fields/TransformField.svelte";
 
 export default class Transform extends NodeComponent implements IDirtyConsumable, ISerializableComponent {
     private _position: Vector3 = Vector3.zeros();

@@ -1,6 +1,6 @@
 /** Shared State */
 import { appConfig } from "@/config";
-import { renderContext } from "@/context";
+import { bindedComponents, renderContext } from "@/context";
 
 /** Utils */
 import DOMUtils from "@/lib/dom/DOMUtils";
@@ -93,36 +93,36 @@ export default class Application {
         texturedRectangleTr.position.set([-0.42, 0, 0]);
 
         const camera = Camera.createOrtographicCamera();
-        camera.bindProperties();
 
         RenderCommand.setClearColor(appConfig.viewportColor);
+
+        bindedComponents.set([texturedRectangleTr, flatRectangleTr]);
 
         let deltaTime = 0;
         let previousTime = 0;
 
-        // const moveSpeed = 1;
-        // const rotateSpeed = 135;
-
+        const moveSpeed = 1;
+        const rotateSpeed = 135;
 
         function update() {
             /** Input */
-            // if (Input.isKeyPressed(KeyCode.W)) {
-            //     rectangleTr.position.y += moveSpeed * deltaTime;
-            // } else if (Input.isKeyPressed(KeyCode.S)) {
-            //     rectangleTr.position.y -= moveSpeed * deltaTime;
-            // }
+            if (Input.isKeyPressed(KeyCode.W)) {
+                texturedRectangleTr.position.y += moveSpeed * deltaTime;
+            } else if (Input.isKeyPressed(KeyCode.S)) {
+                texturedRectangleTr.position.y -= moveSpeed * deltaTime;
+            }
 
-            // if (Input.isKeyPressed(KeyCode.A)) {
-            //     rectangleTr.position.x -= moveSpeed * deltaTime;
-            // } else if (Input.isKeyPressed(KeyCode.D)) {
-            //     rectangleTr.position.x += moveSpeed * deltaTime
-            // }
+            if (Input.isKeyPressed(KeyCode.A)) {
+                texturedRectangleTr.position.x -= moveSpeed * deltaTime;
+            } else if (Input.isKeyPressed(KeyCode.D)) {
+                texturedRectangleTr.position.x += moveSpeed * deltaTime
+            }
 
-            // if (Input.isKeyPressed(KeyCode.Q)) {
-            //     rectangleTr.rotation.z += rotateSpeed * deltaTime;
-            // } else if (Input.isKeyPressed(KeyCode.E)) {
-            //     rectangleTr.rotation.z -= rotateSpeed * deltaTime
-            // }
+            if (Input.isKeyPressed(KeyCode.Q)) {
+                texturedRectangleTr.rotation.z += rotateSpeed * deltaTime;
+            } else if (Input.isKeyPressed(KeyCode.E)) {
+                texturedRectangleTr.rotation.z -= rotateSpeed * deltaTime
+            }
         }
 
         const rectangleColor = ColorRGBA.create(0.8, 0.2, 0.2, 1);

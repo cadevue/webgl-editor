@@ -2,19 +2,26 @@ import Vector3, { type Vector3Array } from "@/lib/math/Vector3";
 import NodeComponent from "./NodeComponent";
 import Mat4 from "@/lib/math/Mat4";
 import Quaternion from "@/lib/math/Quaternion";
-import type { IDirtyConsumable } from "@/lib/interface/DirtyConsumable";
 import type { FieldRenderer, ISerializableComponent } from "@/lib/interface/InspectorAPI";
 import TransformField from "@/ui/fields/TransformField.svelte";
+import type { IObservable } from "@/lib/interface/Observable";
 
-export default class Transform extends NodeComponent implements IDirtyConsumable, ISerializableComponent {
+export default class Transform extends NodeComponent implements IObservable<Transform>, ISerializableComponent {
     private _position: Vector3 = Vector3.zeros();
     private _rotation: Vector3 = Vector3.zeros();
     private _scale   : Vector3 = Vector3.ones();
     private _worldMatrix: Mat4 = Mat4.identity();
 
-    private _dirty: boolean = true;
-    get dirty(): boolean { return this._dirty; }
-    consume(): void { this._dirty = false; }
+    private _dirtyListeners: Array<(newVal : Transform) => void> = [];
+    subscribe(listener: (newVal : Transform) => void) { this._dirtyListeners.push(listener); }
+    notifyDirty() { this._dirtyListeners.forEach(listener => listener(this)); }
+
+    constructor() {
+        super();
+        this._position.subscribe(() => this.calculateWorldMatrix());
+        this._rotation.subscribe(() => this.calculateWorldMatrix());
+        this._scale.subscribe(() => this.calculateWorldMatrix());
+    }
 
     get position(): Vector3 { return this._position; }
     get rotation(): Vector3 { return this._rotation; }
@@ -40,19 +47,10 @@ export default class Transform extends NodeComponent implements IDirtyConsumable
 
     private calculateWorldMatrix(): void {
         this._worldMatrix = Mat4.compose(this._position, Quaternion.fromEuler(this._rotation), this._scale);
+        this.notifyDirty();
     }
 
     get worldMatrix(): Mat4 {
-        if (this._position.dirty || this._rotation.dirty || this._scale.dirty) {
-            this.calculateWorldMatrix();
-
-            this._position.consume();
-            this._rotation.consume();
-            this._scale.consume();
-
-            this._dirty = true;
-        }
-
         return this._worldMatrix;
     }
 

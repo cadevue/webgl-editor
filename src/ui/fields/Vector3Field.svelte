@@ -7,6 +7,13 @@
     let y = $state(bindedValue.y);
     let z = $state(bindedValue.z);
 
+    /** 2-way binding */
+    bindedValue.subscribe(() => {
+        x = bindedValue.x;
+        y = bindedValue.y;
+        z = bindedValue.z;
+    });
+
     $effect(() => {
         bindedValue.x = x;
         bindedValue.y = y;

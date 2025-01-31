@@ -1,9 +1,9 @@
-import type IDirtyConsumable from "../interface/DirtyConsumable";
+import type { IObservable } from "../interface/Observable";
 import Mat4 from "./Mat4";
 
 export type Vector3Array = [number, number, number];
-export default class Vector3 extends Float32Array implements IDirtyConsumable {
-    private _dirty: boolean;
+export default class Vector3 extends Float32Array implements IObservable<Vector3> {
+    private _dirtyListeners: Array<(newVal : Vector3) => void> = [];
 
     constructor(numbers?: ArrayLike<number>) {
         if (numbers) {
@@ -18,17 +18,15 @@ export default class Vector3 extends Float32Array implements IDirtyConsumable {
         } else {
             super(3);
         }
-
-        this._dirty = true;
     }
 
     get x() { return this[0]; }
     get y() { return this[1]; }
     get z() { return this[2]; }
 
-    set x(value: number) { this[0] = value; this._dirty = true; }
-    set y(value: number) { this[1] = value; this._dirty = true; }
-    set z(value: number) { this[2] = value; this._dirty = true; }
+    set x(value: number) { this[0] = value; this.notifyDirty(); }
+    set y(value: number) { this[1] = value; this.notifyDirty(); }
+    set z(value: number) { this[2] = value; this.notifyDirty(); }
 
     get r() { return this[0]; }
     get g() { return this[1]; }
@@ -38,8 +36,20 @@ export default class Vector3 extends Float32Array implements IDirtyConsumable {
     set g(value: number) { this.y = value; }
     set b(value: number) { this.z = value; }
 
-    get dirty() { return this._dirty; }
-    consume() { this._dirty = false; }
+    set(values: Vector3Array) {
+        this[0] = values[0];
+        this[1] = values[1];
+        this[2] = values[2];
+        this.notifyDirty();
+    }
+
+    subscribe(listener: (newVal : Vector3) => void) { this._dirtyListeners.push(listener); }
+    notifyDirty() { this._dirtyListeners.forEach(listener => listener(this)); }
+
+
+    toArray() : Vector3Array {
+        return [this[0], this[1], this[2]];
+    }
 
     static create(x = 0, y = 0, z = 0) : Vector3 {
         return new Vector3([x, y, z]);

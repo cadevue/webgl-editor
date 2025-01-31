@@ -14,7 +14,9 @@
 <SideLayout>
     <div class="absolute h-full bg-dark-800 left-0 top-0 w-0.5"></div>
     <h1 class="mb-4">Properties</h1>
-    {#each componentRenderers as renderer}
-        <renderer.component {...renderer.props} />
-    {/each}
+    <div class="flex flex-col gap-4">
+        {#each componentRenderers as renderer}
+            <renderer.component {...renderer.props} />
+        {/each}
+    </div>
 </SideLayout>

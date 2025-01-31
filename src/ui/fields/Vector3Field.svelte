@@ -9,9 +9,9 @@
 
     /** 2-way binding */
     bindedValue.subscribe(() => {
-        x = bindedValue.x;
-        y = bindedValue.y;
-        z = bindedValue.z;
+        x = parseFloat(bindedValue.x.toFixed(3));
+        y = parseFloat(bindedValue.y.toFixed(3));
+        z = parseFloat(bindedValue.z.toFixed(3));
     });
 
     $effect(() => {

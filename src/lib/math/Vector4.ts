@@ -25,20 +25,20 @@ export default class Vector4 extends Float32Array implements IObservable<Vector4
     get z() { return this[2]; }
     get w() { return this[3]; }
 
-    set x(value: number) { this[0] = value; }
-    set y(value: number) { this[1] = value; }
-    set z(value: number) { this[2] = value; }
-    set w(value: number) { this[3] = value; }
+    set x(value: number) { this[0] = value; this.notifyListeners(); }
+    set y(value: number) { this[1] = value; this.notifyListeners(); }
+    set z(value: number) { this[2] = value; this.notifyListeners(); }
+    set w(value: number) { this[3] = value; this.notifyListeners(); }
 
     get r() { return this[0]; }
     get g() { return this[1]; }
     get b() { return this[2]; }
     get a() { return this[3]; }
 
-    set r(value: number) { this[0] = value; }
-    set g(value: number) { this[1] = value; }
-    set b(value: number) { this[2] = value; }
-    set a(value: number) { this[3] = value; }
+    set r(value: number) { this.x = value; }
+    set g(value: number) { this.y = value; }
+    set b(value: number) { this.z = value; }
+    set a(value: number) { this.w = value; }
 
     set(values: Vector4Array) {
         this[0] = values[0];

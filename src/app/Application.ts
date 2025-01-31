@@ -96,7 +96,7 @@ export default class Application {
 
         RenderCommand.setClearColor(appConfig.viewportColor);
 
-        bindedComponents.set([texturedRectangleTr, flatRectangleTr]);
+        bindedComponents.set([texturedRectangleTr]);
 
         let deltaTime = 0;
         let previousTime = 0;

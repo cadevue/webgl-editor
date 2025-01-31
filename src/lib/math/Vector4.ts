@@ -1,6 +1,10 @@
+import type { IObservable } from "../interface/Observable";
 import type Mat4 from "./Mat4";
 
-export default class Vector4 extends Float32Array {
+export type Vector4Array = [number, number, number, number];
+export default class Vector4 extends Float32Array implements IObservable<Vector4> {
+    private _listeners: Array<(ref : Vector4) => void> = [];
+
     constructor(numbers?: ArrayLike<number>) {
         if (numbers) {
             if (numbers.length < 4) {
@@ -35,6 +39,17 @@ export default class Vector4 extends Float32Array {
     set g(value: number) { this[1] = value; }
     set b(value: number) { this[2] = value; }
     set a(value: number) { this[3] = value; }
+
+    set(values: Vector4Array) {
+        this[0] = values[0];
+        this[1] = values[1];
+        this[2] = values[2];
+        this[3] = values[3];
+        this.notifyListeners();
+    }
+
+    subscribe(listener: (ref : Vector4) => void) { this._listeners.push(listener); }
+    notifyListeners() { this._listeners.forEach(listener => listener(this)); }
 
     static create(x = 0, y = 0, z = 0, w = 0) : Vector4 {
         return new Vector4([x, y, z, w]);

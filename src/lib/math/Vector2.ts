@@ -1,4 +1,9 @@
-export default class Vector2 extends Float32Array {
+import type { IObservable } from "../interface/Observable";
+
+export type Vector2Array = [number, number];
+export default class Vector2 extends Float32Array implements IObservable<Vector2> {
+    private _listeners: Array<(ref : Vector2) => void> = [];
+
     constructor(numbers?: ArrayLike<number>) {
         if (numbers) {
             if (numbers.length < 2) {
@@ -19,6 +24,19 @@ export default class Vector2 extends Float32Array {
 
     set x(value: number) { this[0] = value; }
     set y(value: number) { this[1] = value; }
+
+    set(values: Vector2Array) {
+        this[0] = values[0];
+        this[1] = values[1];
+        this.notifyListeners();
+    }
+
+    subscribe(listener: (ref : Vector2) => void) { this._listeners.push(listener); }
+    notifyListeners() { this._listeners.forEach(listener => listener(this)); }
+
+    toArray() : Vector2Array {
+        return [this[0], this[1]];
+    }
 
     static create(x = 0, y = 0) : Vector2 {
         return new Vector2([x, y]);

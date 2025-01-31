@@ -3,7 +3,7 @@ import Mat4 from "./Mat4";
 
 export type Vector3Array = [number, number, number];
 export default class Vector3 extends Float32Array implements IObservable<Vector3> {
-    private _dirtyListeners: Array<(newVal : Vector3) => void> = [];
+    private _listeners: Array<(ref : Vector3) => void> = [];
 
     constructor(numbers?: ArrayLike<number>) {
         if (numbers) {
@@ -24,9 +24,9 @@ export default class Vector3 extends Float32Array implements IObservable<Vector3
     get y() { return this[1]; }
     get z() { return this[2]; }
 
-    set x(value: number) { this[0] = value; this.notifyDirty(); }
-    set y(value: number) { this[1] = value; this.notifyDirty(); }
-    set z(value: number) { this[2] = value; this.notifyDirty(); }
+    set x(value: number) { this[0] = value; this.notifyListeners(); }
+    set y(value: number) { this[1] = value; this.notifyListeners(); }
+    set z(value: number) { this[2] = value; this.notifyListeners(); }
 
     get r() { return this[0]; }
     get g() { return this[1]; }
@@ -40,12 +40,11 @@ export default class Vector3 extends Float32Array implements IObservable<Vector3
         this[0] = values[0];
         this[1] = values[1];
         this[2] = values[2];
-        this.notifyDirty();
+        this.notifyListeners();
     }
 
-    subscribe(listener: (newVal : Vector3) => void) { this._dirtyListeners.push(listener); }
-    notifyDirty() { this._dirtyListeners.forEach(listener => listener(this)); }
-
+    subscribe(listener: (ref : Vector3) => void) { this._listeners.push(listener); }
+    notifyListeners() { this._listeners.forEach(listener => listener(this)); }
 
     toArray() : Vector3Array {
         return [this[0], this[1], this[2]];

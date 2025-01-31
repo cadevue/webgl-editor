@@ -74,7 +74,7 @@ export default class Transform extends NodeComponent implements IDirtyConsumable
         return {
             component: TransformField,
             props: {
-                transform: this
+                transform: this,
             }
         }
     }

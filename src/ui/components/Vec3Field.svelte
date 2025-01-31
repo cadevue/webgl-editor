@@ -1,16 +1,16 @@
 <script lang="ts">
     import Vector3 from "@/lib/math/Vector3";
 
-    const { label, bindedValue } : { label: string, bindedValue: Vector3 } = $props();
+    const { label, bindedVec3 } : { label: string, bindedVec3: Vector3 } = $props();
 
-    let x = $state(bindedValue.x);
-    let y = $state(bindedValue.y);
-    let z = $state(bindedValue.z);
+    let x = $state(bindedVec3.x);
+    let y = $state(bindedVec3.y);
+    let z = $state(bindedVec3.z);
 
     $effect(() => {
-        x = bindedValue.x;
-        y = bindedValue.y;
-        z = bindedValue.z;
+        bindedVec3.x = x;
+        bindedVec3.y = y;
+        bindedVec3.z = z;
     });
 </script>
 

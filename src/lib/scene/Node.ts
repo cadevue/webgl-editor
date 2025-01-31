@@ -1,5 +1,5 @@
-import type NodeComponent from "./component/NodeComponent";
-import Transform from "./component/Transform";
+import type NodeComponent from "@/lib/scene/component/NodeComponent";
+import Transform from "@/lib/scene/component/Transform";
 
 // This is a temporary implementation. Might be changed to follow the ECS pattern in the future.
 export default class Node {

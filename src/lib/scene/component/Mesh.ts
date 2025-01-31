@@ -1,4 +1,4 @@
-import NodeComponent from "./NodeComponent";
+import NodeComponent from "@/lib/scene/component/NodeComponent";
 
 export class Mesh extends NodeComponent {
 

@@ -1,5 +1,5 @@
-import type { IObservable } from "../interface/Observable";
-import type Mat4 from "./Mat4";
+import type { IObservable } from "@/lib/interface/Observable";
+import type Mat4 from "@/lib/math/Mat4";
 
 export type Vector4Array = [number, number, number, number];
 export default class Vector4 extends Float32Array implements IObservable<Vector4> {

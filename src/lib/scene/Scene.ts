@@ -1,5 +1,5 @@
-import Camera from "./camera/Camera";
-import Node from "./Node";
+import Camera from "@/lib/scene/camera/Camera";
+import Node from "@/lib/scene/Node";
 
 export default class Scene {
     private _root: Node;

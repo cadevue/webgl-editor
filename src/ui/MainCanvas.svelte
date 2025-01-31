@@ -1,8 +1,9 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { renderContext } from "@/context";
-    import DOMUtils from "@/lib/dom/DOMUtils";
+
     import Application from "@/app/Application";
+    import DOMUtils from "@/lib/dom/DOMUtils";
 
     let canvas: HTMLCanvasElement;
 

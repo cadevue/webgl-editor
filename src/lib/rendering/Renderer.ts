@@ -4,7 +4,6 @@ import Transform from "@/lib/scene/component/Transform";
 import RenderCommand from "@/lib/rendering/RenderCommand";
 import Shader from "@/lib/rendering/Shader";
 import VertexArray from "@/lib/rendering/VertexArray";
-import { ColorRGBA } from "../math/Color";
 
 export default class Renderer {
     private static _viewProjectionMatrix: Mat4 = Mat4.identity();

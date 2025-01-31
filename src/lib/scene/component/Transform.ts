@@ -1,5 +1,5 @@
 import Vector3, { type Vector3Array } from "@/lib/math/Vector3";
-import NodeComponent from "./NodeComponent";
+import NodeComponent from "@/lib/scene/component/NodeComponent";
 import Mat4 from "@/lib/math/Mat4";
 import Quaternion from "@/lib/math/Quaternion";
 import type { FieldRenderer, ISerializableComponent } from "@/lib/interface/InspectorSerialization";
@@ -12,12 +12,10 @@ export default class Transform extends NodeComponent implements IObservable<Tran
     private _scale   : Vector3 = Vector3.ones();
     private _worldMatrix: Mat4 = Mat4.identity();
 
-    private _dirtyListeners: Array<(newVal : Transform) => void> = [];
-    subscribe(listener: (newVal : Transform) => void) { this._dirtyListeners.push(listener); }
-    notifyDirty() { this._dirtyListeners.forEach(listener => listener(this)); }
-
     constructor() {
         super();
+
+        /** Listen to TRS changes, and recalculate world matrix */
         this._position.subscribe(() => this.calculateWorldMatrix());
         this._rotation.subscribe(() => this.calculateWorldMatrix());
         this._scale.subscribe(() => this.calculateWorldMatrix());
@@ -66,7 +64,12 @@ export default class Transform extends NodeComponent implements IObservable<Tran
         Vector3.multiply(this.scale, scale, this.scale);
     }
 
-    // Inspector API
+    /** Dirty State Management */
+    private _dirtyListeners: Array<(observed : Transform) => void> = [];
+    subscribe(listener: (observed : Transform) => void) { this._dirtyListeners.push(listener); }
+    notifyDirty() { this._dirtyListeners.forEach(listener => listener(this)); }
+
+    /** Inspector Serialization */
     getFieldRenderer() : FieldRenderer {
         return {
             component: TransformField,

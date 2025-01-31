@@ -1,4 +1,4 @@
-import type { IObservable } from "../interface/Observable";
+import type { IObservable } from "@/lib/interface/Observable";
 
 export type Vector2Array = [number, number];
 export default class Vector2 extends Float32Array implements IObservable<Vector2> {

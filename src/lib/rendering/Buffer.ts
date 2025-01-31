@@ -1,5 +1,5 @@
 import { renderContext } from "@/context";
-import { getSizeOfShaderDataType, shaderDataTypeToString, type ShaderDataType } from "./ShaderType";
+import { getSizeOfShaderDataType, shaderDataTypeToString, type ShaderDataType } from "@/lib/rendering/ShaderType";
 
 // Delete webgl buffer when the parent object is garbage collected
 const reg = new FinalizationRegistry((buffer: WebGLBuffer) => {

@@ -1,4 +1,4 @@
-import { KeyCode, MouseButton } from "./InputType";
+import { KeyCode, MouseButton } from "@/lib/event/InputType";
 
 export default class Input {
     private static _instance: Input = new Input();

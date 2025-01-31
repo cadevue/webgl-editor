@@ -1,6 +1,6 @@
-import type { IndexBuffer, VertexBuffer } from "./Buffer";
+import type { IndexBuffer, VertexBuffer } from "@/lib/rendering/Buffer";
 import { renderContext } from "@/context";
-import { getCountOfShaderDataType, shaderDataTypeToGLType } from "./ShaderType";
+import { getCountOfShaderDataType, shaderDataTypeToGLType } from "@/lib/rendering/ShaderType";
 
 // Delete webgl vertex array object when the parent object is garbage collected
 const reg = new FinalizationRegistry((value: WebGLVertexArrayObject) => {

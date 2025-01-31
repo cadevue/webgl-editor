@@ -1,5 +1,5 @@
-import Vector3 from "./Vector3";
-import Vector4 from "./Vector4";
+import Vector3 from "@/lib/math/Vector3";
+import Vector4 from "@/lib/math/Vector4";
 
 export default class Quaternion extends Vector4 {
     static fromEuler(euler: Vector3, dst?: Quaternion) : Quaternion {

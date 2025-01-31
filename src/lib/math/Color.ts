@@ -1,4 +1,4 @@
-import Vector4 from "./Vector4";
+import Vector4 from "@/lib/math/Vector4";
 
 export class ColorRGBA extends Vector4 {}
 

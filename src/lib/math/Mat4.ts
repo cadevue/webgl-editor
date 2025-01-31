@@ -1,6 +1,6 @@
 import Vector3 from "@/lib/math/Vector3";
 import MathUtils from "@/lib/math/MathUtils";
-import type Quaternion from "./Quaternion";
+import type Quaternion from "@/lib/math/Quaternion";
 
 export default class Mat4 extends Float32Array {
     constructor(numbers?: ArrayLike<number>) {

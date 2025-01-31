@@ -1,7 +1,8 @@
 <script lang="ts">
     import { bindedSerializableComponents } from "@/context";
-    import SideLayout from "./layouts/SideLayout.svelte";
     import type { ISerializableComponent } from "@/lib/interface/InspectorSerialization";
+
+    import SideLayout from "./layouts/SideLayout.svelte";
 
     /** List of components to render */
     let components : ISerializableComponent[] = $state([]);

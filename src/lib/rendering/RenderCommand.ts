@@ -1,5 +1,5 @@
 import { renderContext } from "@/context";
-import VertexArray from "./VertexArray";
+import VertexArray from "@/lib/rendering/VertexArray";
 import { ColorRGBA } from "@/lib/math/Color";
 
 export default class RenderCommand {

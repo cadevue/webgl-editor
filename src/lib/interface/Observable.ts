@@ -1,3 +1,6 @@
 export interface IObservable<T> {
-    subscribe: (listener: (newVal : T) => void) => void;
+    /** Subscribe to changes in the observable */
+    // Implementation is up to the class implementation
+    // e.g. for dirty state tracking
+    subscribe: (listener: (observed : T) => void) => void;
 }

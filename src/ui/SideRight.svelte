@@ -1,20 +1,20 @@
 <script lang="ts">
-    import { bindedProperties } from "@/context";
+    import { bindedComponents } from "@/context";
     import SideLayout from "./layouts/SideLayout.svelte";
-    import type { IExposableComponent } from "@/lib/interface/Exposable";
+    import type { ISerializableComponent } from "@/lib/interface/InspectorAPI";
 
-    let properties : IExposableComponent[] = $state([]);
-    let propertyFields = $derived(properties.map((prop) => prop.createInspectorField()));
+    let components : ISerializableComponent[] = $state([]);
+    let componentRenderers = $derived(components.map((prop) => prop.createFieldRenderer()));
 
-    bindedProperties.subscribe(() => {
-        properties = bindedProperties.get();
+    bindedComponents.subscribe(() => {
+        components = bindedComponents.get();
     });
 </script>
 
 <SideLayout>
     <div class="absolute h-full bg-dark-800 left-0 top-0 w-0.5"></div>
     <h1 class="mb-4">Properties</h1>
-    {#each propertyFields as field}
-        <field.component {...field.props} />
+    {#each componentRenderers as renderer}
+        <renderer.component {...renderer.props} />
     {/each}
 </SideLayout>

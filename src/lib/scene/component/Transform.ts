@@ -2,11 +2,11 @@ import Vector3, { type Vector3Array } from "@/lib/math/Vector3";
 import NodeComponent from "./NodeComponent";
 import Mat4 from "@/lib/math/Mat4";
 import Quaternion from "@/lib/math/Quaternion";
-import type IDirtyConsumable from "@/lib/interface/DirtyConsumable";
-import type { IExposableComponent } from "@/lib/interface/Exposable";
+import type { IDirtyConsumable } from "@/lib/interface/DirtyConsumable";
+import type { FieldRenderer, ISerializableComponent } from "@/lib/interface/InspectorAPI";
 import TransformField from "@/ui/components/TransformField.svelte";
 
-export default class Transform extends NodeComponent implements IDirtyConsumable, IExposableComponent {
+export default class Transform extends NodeComponent implements IDirtyConsumable, ISerializableComponent {
     private _position: Vector3 = Vector3.zeros();
     private _rotation: Vector3 = Vector3.zeros();
     private _scale   : Vector3 = Vector3.ones();
@@ -68,9 +68,9 @@ export default class Transform extends NodeComponent implements IDirtyConsumable
         Vector3.multiply(this.scale, scale, this.scale);
     }
 
-    // Inspector Exposable
+    // Inspector API
     get label(): string { return "Transform"; }
-    createInspectorField(): any {
+    createFieldRenderer() : FieldRenderer {
         return {
             component: TransformField,
             props: {

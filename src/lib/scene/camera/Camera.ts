@@ -1,10 +1,10 @@
 import Mat4 from "@/lib/math/Mat4";
 import Transform from "@/lib/scene/component/Transform";
 import { OrthographicCameraProjection, type CameraProjection } from "./CameraProjection";
-import type { IExposableOwner } from "@/lib/interface/Exposable";
-import { bindedProperties } from "@/context";
+import type { ISerializable } from "@/lib/interface/InspectorAPI";
+import { bindedComponents } from "@/context";
 
-export default class Camera implements IExposableOwner {
+export default class Camera implements ISerializable {
     private _projection: CameraProjection;
     private _viewProjectionMatrix: Mat4 = Mat4.identity();
 
@@ -46,6 +46,6 @@ export default class Camera implements IExposableOwner {
     }
 
     bindProperties(): void {
-        bindedProperties.set([this.transform]);
+        bindedComponents.set([this.transform]);
     }
 }

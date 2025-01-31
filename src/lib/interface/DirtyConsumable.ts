@@ -1,4 +1,4 @@
-export default interface IDirtyConsumable {
+export interface IDirtyConsumable {
     dirty: boolean;
     consume(): void;
 }

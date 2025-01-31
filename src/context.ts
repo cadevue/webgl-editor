@@ -49,6 +49,6 @@ export const renderContext = {
 ////////////////////////////////////
 
 import { atom } from "nanostores";
-import { type IExposableComponent } from "./lib/interface/Exposable";
+import { type ISerializableComponent } from "./lib/interface/InspectorAPI";
 
-export const bindedProperties = atom<IExposableComponent[]>([]);
+export const bindedComponents = atom<ISerializableComponent[]>([]);

@@ -1,6 +1,10 @@
+import type IDirtyConsumable from "../interface/IDirtyConsumable";
 import Mat4 from "./Mat4";
 
-export default class Vector3 extends Float32Array {
+export type Vector3Array = [number, number, number];
+export default class Vector3 extends Float32Array implements IDirtyConsumable {
+    private _dirty: boolean;
+
     constructor(numbers?: ArrayLike<number>) {
         if (numbers) {
             if (numbers.length < 3) {
@@ -14,23 +18,28 @@ export default class Vector3 extends Float32Array {
         } else {
             super(3);
         }
+
+        this._dirty = true;
     }
 
     get x() { return this[0]; }
     get y() { return this[1]; }
     get z() { return this[2]; }
 
-    set x(value: number) { this[0] = value; }
-    set y(value: number) { this[1] = value; }
-    set z(value: number) { this[2] = value; }
+    set x(value: number) { this[0] = value; this._dirty = true; }
+    set y(value: number) { this[1] = value; this._dirty = true; }
+    set z(value: number) { this[2] = value; this._dirty = true; }
 
     get r() { return this[0]; }
     get g() { return this[1]; }
     get b() { return this[2]; }
 
-    set r(value: number) { this[0] = value; }
-    set g(value: number) { this[1] = value; }
-    set b(value: number) { this[2] = value; }
+    set r(value: number) { this.x = value; }
+    set g(value: number) { this.y = value; }
+    set b(value: number) { this.z = value; }
+
+    get dirty() { return this._dirty; }
+    consume() { this._dirty = false; }
 
     static create(x = 0, y = 0, z = 0) : Vector3 {
         return new Vector3([x, y, z]);

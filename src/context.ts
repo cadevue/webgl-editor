@@ -1,4 +1,5 @@
 import type Shader from "@/lib/rendering/Shader";
+import type Vector3 from "./lib/math/Vector3";
 
 //////////////////////////////////
 /** Rendering Specific Context **/
@@ -46,3 +47,6 @@ export const renderContext = {
 ////////////////////////////////////
 /** Application Specific Context **/
 ////////////////////////////////////
+
+import { atom } from "nanostores";
+export const bindedVec = atom<Vector3 | null>(null);

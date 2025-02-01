@@ -38,8 +38,8 @@ export default class Vector2 extends Float32Array implements IObservable<Vector2
     }
 
     /** Dirty State Management */
-    private _dirtyListeners: Array<(ref : Vector2) => void> = [];
-    subscribe(listener: (ref : Vector2) => void) { this._dirtyListeners.push(listener); }
+    private _dirtyListeners: Set<(ref : Vector2) => void> = new Set();
+    subscribe(listener: (ref : Vector2) => void) { this._dirtyListeners.add(listener); }
     notifyDirty() { this._dirtyListeners.forEach(listener => listener(this)); }
 
     toArray() : Vector2Array {

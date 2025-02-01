@@ -18,6 +18,7 @@ import { KeyCode } from "@/lib/event/InputType";
 import Transform from "@/lib/scene/component/Transform";
 import { ColorRGBA } from "@/lib/math/Color";
 import { Texture2D } from "@/lib/asset/Texture";
+import type { OrthographicCameraProjection } from "@/lib/scene/camera/CameraProjection";
 
 export default class Application {
     private static _instance: Application;
@@ -84,25 +85,33 @@ export default class Application {
         `;
         const texturedShader = new Shader(texturedVertex, texturedFragment);
 
-        const flatRectangle = this.createRectangleFlat(flatColorShader);
-        const flatRectangleTr = new Transform();
-        flatRectangleTr.scale.set([0.8, 0.8, 1]);
-        flatRectangleTr.position.set([0.42, 0, 0]);
+        const flatSquare = this.createSquareFlat(flatColorShader);
+        const flatSquareTr = new Transform();
+        const flatSquareColor = ColorRGBA.create(0.8, 0.2, 0.2, 1);
+        flatSquareTr.scale.set([0.8, 0.8, 1]);
+        flatSquareTr.position.set([0.42, 0, 0]);
 
-        const texturedRectangle = this.createRectangleTextured(texturedShader);
-        const texturedRectangleTr = new Transform();
-        texturedRectangleTr.scale.set([0.8, 0.8, 1]);
-        texturedRectangleTr.position.set([-0.42, 0, 0]);
+        const texturedSquare = this.createSquareTextured(texturedShader);
+        const texturedSquareTr = new Transform();
+        texturedSquareTr.scale.set([0.8, 0.8, 1]);
+        texturedSquareTr.position.set([-0.42, 0, 0]);
 
-        const rectangleTex = new Texture2D("src/assets/moonwr.png");
+        const squareTex = new Texture2D("src/assets/moonwr.png");
         texturedShader.uploadUniformInt("u_Texture", 0);
-        rectangleTex.bind(gl.TEXTURE0);
+        squareTex.bind(gl.TEXTURE0);
 
-        const camera = Camera.createOrtographicCamera();
+        const aspect = gl.canvas.width / gl.canvas.height;
+        const camera = Camera.createOrtographicCamera(-aspect, aspect, -1, 1, 0, 1);
+        DOMUtils.addResizeCallback((width, height) => {
+            const orthoProjection = camera.projection as OrthographicCameraProjection;
+            const aspect = width / height;
+            orthoProjection.left = -aspect;
+            orthoProjection.right = aspect;
+        });
 
         RenderCommand.setClearColor(appConfig.viewportColor);
 
-        bindedSerializableFields.set([texturedRectangleTr]);
+        bindedSerializableFields.set([texturedSquareTr]);
 
         let deltaTime = 0;
         let previousTime = 0;
@@ -113,25 +122,23 @@ export default class Application {
         function update() {
             /** Input */
             if (Input.isKeyPressed(KeyCode.W)) {
-                texturedRectangleTr.position.y += moveSpeed * deltaTime;
+                texturedSquareTr.position.y += moveSpeed * deltaTime;
             } else if (Input.isKeyPressed(KeyCode.S)) {
-                texturedRectangleTr.position.y -= moveSpeed * deltaTime;
+                texturedSquareTr.position.y -= moveSpeed * deltaTime;
             }
 
             if (Input.isKeyPressed(KeyCode.A)) {
-                texturedRectangleTr.position.x -= moveSpeed * deltaTime;
+                texturedSquareTr.position.x -= moveSpeed * deltaTime;
             } else if (Input.isKeyPressed(KeyCode.D)) {
-                texturedRectangleTr.position.x += moveSpeed * deltaTime
+                texturedSquareTr.position.x += moveSpeed * deltaTime
             }
 
             if (Input.isKeyPressed(KeyCode.Q)) {
-                texturedRectangleTr.rotation.z += rotateSpeed * deltaTime;
+                texturedSquareTr.rotation.z += rotateSpeed * deltaTime;
             } else if (Input.isKeyPressed(KeyCode.E)) {
-                texturedRectangleTr.rotation.z -= rotateSpeed * deltaTime
+                texturedSquareTr.rotation.z -= rotateSpeed * deltaTime
             }
         }
-
-        const rectangleColor = ColorRGBA.create(0.8, 0.2, 0.2, 1);
 
         function drawScene() {
             /** Render Preparation */
@@ -143,13 +150,13 @@ export default class Application {
             /** Draw */
             Renderer.beginScene(camera);
 
-            Renderer.submit(flatColorShader, flatRectangle, flatRectangleTr);
-            flatColorShader.uploadUniformFloat4("u_Color", rectangleColor);
+            Renderer.submit(flatColorShader, flatSquare, flatSquareTr);
+            flatColorShader.uploadUniformFloat4("u_Color", flatSquareColor);
 
-            Renderer.submit(texturedShader, texturedRectangle, texturedRectangleTr);
+            Renderer.submit(texturedShader, texturedSquare, texturedSquareTr);
 
             Renderer.endScene();
-        }        
+        }
         
         function loop(timestamp: DOMHighResTimeStamp) {
             deltaTime = (timestamp - previousTime) / 1000;
@@ -164,7 +171,7 @@ export default class Application {
         loop(0);
     }
 
-    private createRectangleFlat(shader: Shader) {
+    private createSquareFlat(shader: Shader) {
         /** Geometry Definition */
         // Vertex Buffer
         const positions = [
@@ -198,7 +205,7 @@ export default class Application {
         return vertexArray;
     }
 
-        private createRectangleTextured(shader: Shader) {
+        private createSquareTextured(shader: Shader) {
         /** Geometry Definition */
         // Vertex Buffer
         const positions = [

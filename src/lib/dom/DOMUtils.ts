@@ -33,6 +33,11 @@ function onResize(entries : ResizeObserverEntry[]) {
     }
 }
 
+const onResizeCallbacks = Array<(width: number, height: number) => void>();
+function addResizeCallback(callback : (width: number, height: number) => void) {
+    onResizeCallbacks.push(callback);
+}
+
 const resizeObserver = new ResizeObserver(onResize);
 
 function resizeCanvasToDisplaySize(canvas : HTMLCanvasElement) {
@@ -42,6 +47,7 @@ function resizeCanvasToDisplaySize(canvas : HTMLCanvasElement) {
     if (needResize) {
         canvas.width = displayWidth;
         canvas.height = displayHeight;
+        onResizeCallbacks.forEach(callback => callback(displayWidth, displayHeight));
     }
 }
 
@@ -64,6 +70,7 @@ function initCanvas(canvas : HTMLCanvasElement) {
 
 const DOMUtils = {
     initCanvas,
+    addResizeCallback,
     resizeCanvasToDisplaySize,
 }
 

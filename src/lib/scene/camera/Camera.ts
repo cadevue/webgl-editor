@@ -26,6 +26,8 @@ export default class Camera implements ISerializable {
 
     constructor(projection?: CameraProjection) {
         this._projection = projection ? projection : new OrthographicCameraProjection(-1, 1, -1, 1, 0, 1);
+
+        this._projection.subscribe(() => this.calculateViewProjectionMatrix());
         this._transform.subscribe(() => this.calculateViewProjectionMatrix());
     }
 
@@ -38,7 +40,6 @@ export default class Camera implements ISerializable {
 
     get projection() { return this._projection; }
     get transform()  { return this._transform ; }
-
     get viewProjectionMatrix(): Mat4 {
         return this._viewProjectionMatrix;
     }

@@ -47,7 +47,10 @@ export default class Vector3 extends Float32Array implements IObservable<Vector3
 
     /** Dirty State Management */
     private _dirtyListeners: Set<(observed : Vector3) => void> = new Set();
-    subscribe(listener: (observed : Vector3) => void) { this._dirtyListeners.add(listener); }
+    subscribe(listener: (observed : Vector3) => void) { 
+        this._dirtyListeners.add(listener); 
+        this.notifyDirty(); 
+    }
     notifyDirty() { this._dirtyListeners.forEach(listener => listener(this)); }
 
     /** Inspector Serialization */

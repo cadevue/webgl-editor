@@ -65,8 +65,8 @@ export default class Transform extends NodeComponent implements IObservable<Tran
     }
 
     /** Dirty State Management */
-    private _dirtyListeners: Array<(observed : Transform) => void> = [];
-    subscribe(listener: (observed : Transform) => void) { this._dirtyListeners.push(listener); }
+    private _dirtyListeners: Set<(observed : Transform) => void> = new Set();
+    subscribe(listener: (observed : Transform) => void) { this._dirtyListeners.add(listener); }
     notifyDirty() { this._dirtyListeners.forEach(listener => listener(this)); }
 
     /** Inspector Serialization */

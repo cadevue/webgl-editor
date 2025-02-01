@@ -49,8 +49,8 @@ export default class Vector4 extends Float32Array implements IObservable<Vector4
     }
 
     /** Dirty State Management */
-    private _dirtyListeners: Set<(ref : Vector4) => void> = new Set();
-    subscribe(listener: (ref : Vector4) => void) { this._dirtyListeners.add(listener); }
+    private _dirtyListeners: Set<(observed : Vector4) => void> = new Set();
+    subscribe(listener: (observed : Vector4) => void) { this._dirtyListeners.add(listener); }
     notifyDirty() { this._dirtyListeners.forEach(listener => listener(this)); }
 
     toArray() : Vector4Array {

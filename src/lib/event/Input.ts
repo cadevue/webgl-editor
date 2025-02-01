@@ -2,9 +2,8 @@ import { KeyCode, MouseButton } from "@/lib/event/InputType";
 
 export default class Input {
     private static _instance: Input = new Input();
-    private constructor() { 
-        this.initialize(); 
-    }
+
+    static init(canvas: HTMLCanvasElement) { this._instance.initialize(canvas); }
 
     private _keys: Map<KeyCode, boolean> = new Map<KeyCode, boolean>(
         Object.values(KeyCode).map((key) => [key, false])
@@ -17,21 +16,21 @@ export default class Input {
     private _mouseDelta: { x: number, y: number } = { x: 0, y: 0 };
     private _mouseWheelDelta: number = 0;
 
-    private initialize(): void {
+    initialize(canvas : HTMLCanvasElement): void {
         /** Keyboard */
-        window.addEventListener('keydown', this.onKeyDown.bind(this));
+        canvas.addEventListener('keydown', this.onKeyDown.bind(this));
         window.addEventListener('keyup', this.onKeyUp.bind(this));
 
         /** Mouse */
-        window.addEventListener('mousedown', this.onMouseDown.bind(this));
+        canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
         window.addEventListener('mouseup', this.onMouseUp.bind(this));
-        window.addEventListener('mousemove', this.onMouseMove.bind(this));
-        window.addEventListener('wheel', this.onMouseWheel.bind(this));
+        canvas.addEventListener('mousemove', this.onMouseMove.bind(this));
+        canvas.addEventListener('wheel', this.onMouseWheel.bind(this));
 
-        /** Reset if window loses focus */
-        window.addEventListener('blur', this.reset.bind(this));
-        window.addEventListener('focus', this.reset.bind(this));
-        window.addEventListener('resize', this.reset.bind(this));
+        /** Reset if canvas loses focus */
+        window.addEventListener('blur', this.hardReset.bind(this));
+        window.addEventListener('focus', this.hardReset.bind(this));
+        window.addEventListener('resize', this.hardReset.bind(this));
     }
 
     static isKeyPressed(key: KeyCode): boolean {
@@ -71,7 +70,9 @@ export default class Input {
     }
 
     private onMouseMove(event: MouseEvent): void {
-        this._mouseDelta = { x: event.movementX, y: event.movementY };
+        this._mouseDelta.x += event.movementX;
+        this._mouseDelta.y += event.movementY;
+
         this._mousePosition = { x: event.clientX, y: event.clientY };
     }
 
@@ -80,7 +81,14 @@ export default class Input {
     }
 
 
-    private reset() {
+    static beginUpdate() { }
+
+    static endUpdate() {
+        this._instance._mouseDelta = { x: 0, y: 0 };
+        this._instance._mouseWheelDelta = 0;
+    }
+
+    private hardReset() {
         this._keys.forEach((_, key) => this._keys.set(key, false));
         this._mouseButtons.forEach((_, button) => this._mouseButtons.set(button, false));
         this._mouseDelta = { x: 0, y: 0 };

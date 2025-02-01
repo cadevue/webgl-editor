@@ -4,6 +4,7 @@
 
     import Application from "@/app/Application";
     import DOMUtils from "@/lib/dom/DOMUtils";
+  import Input from "@/lib/event/Input";
 
     let canvas: HTMLCanvasElement;
 
@@ -14,6 +15,7 @@
             return;
         }
         DOMUtils.initCanvas(canvas);
+        Input.init(canvas);
 
         /** Initialize WebGL */
         const webglRenderCtx = canvas.getContext("webgl2");

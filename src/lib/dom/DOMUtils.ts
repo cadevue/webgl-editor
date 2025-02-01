@@ -68,10 +68,15 @@ function initCanvas(canvas : HTMLCanvasElement) {
     }
 }
 
+function setCursor(cursor : string) {
+    document.body.style.cursor = cursor;
+}
+
 const DOMUtils = {
     initCanvas,
     addResizeCallback,
     resizeCanvasToDisplaySize,
+    setCursor,
 }
 
 export default DOMUtils;

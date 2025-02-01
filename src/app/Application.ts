@@ -14,11 +14,12 @@ import Camera from "@/lib/scene/camera/Camera";
 import Renderer from "@/lib/rendering/Renderer";
 import RenderCommand from "@/lib/rendering/RenderCommand";
 import Input from "@/lib/event/Input";
-import { KeyCode } from "@/lib/event/InputType";
+import { KeyCode, MouseButton } from "@/lib/event/InputType";
 import Transform from "@/lib/scene/component/Transform";
-import { ColorRGBA } from "@/lib/math/Color";
+import { ColorRGBA, HexToColorRGBA } from "@/lib/math/Color";
 import { Texture2D } from "@/lib/asset/Texture";
 import type { OrthographicCameraProjection } from "@/lib/scene/camera/CameraProjection";
+import MathUtils from "@/lib/math/MathUtils";
 
 export default class Application {
     private static _instance: Application;
@@ -87,7 +88,7 @@ export default class Application {
 
         const flatSquare = this.createSquareFlat(flatColorShader);
         const flatSquareTr = new Transform();
-        const flatSquareColor = ColorRGBA.create(0.8, 0.2, 0.2, 1);
+        const flatSquareColor = HexToColorRGBA("#BA3A2C");
         flatSquareTr.scale.set([0.8, 0.8, 1]);
         flatSquareTr.position.set([0.42, 0, 0]);
 
@@ -101,7 +102,7 @@ export default class Application {
         squareTex.bind(gl.TEXTURE0);
 
         const aspect = gl.canvas.width / gl.canvas.height;
-        const camera = Camera.createOrtographicCamera(-aspect, aspect, -1, 1, 0, 1);
+        const camera = Camera.createOrtographicCamera(-aspect, aspect, -1, 1, -Number.MAX_VALUE, Number.MAX_VALUE);
         DOMUtils.addResizeCallback((width, height) => {
             const orthoProjection = camera.projection as OrthographicCameraProjection;
             const aspect = width / height;
@@ -111,7 +112,7 @@ export default class Application {
 
         RenderCommand.setClearColor(appConfig.viewportColor);
 
-        bindedSerializableFields.set([texturedSquareTr]);
+        bindedSerializableFields.set([texturedSquareTr, camera.transform]);
 
         let deltaTime = 0;
         let previousTime = 0;
@@ -121,6 +122,8 @@ export default class Application {
 
         function update() {
             /** Input */
+            Input.beginUpdate();
+
             if (Input.isKeyPressed(KeyCode.W)) {
                 texturedSquareTr.position.y += moveSpeed * deltaTime;
             } else if (Input.isKeyPressed(KeyCode.S)) {
@@ -138,6 +141,26 @@ export default class Application {
             } else if (Input.isKeyPressed(KeyCode.E)) {
                 texturedSquareTr.rotation.z -= rotateSpeed * deltaTime
             }
+
+            const wheelDelta = Input.getMouseWheelDelta();
+            const scaleDelta = wheelDelta * deltaTime * 0.1;
+            camera.transform.scale.x = MathUtils.clamp(camera.transform.scale.x + scaleDelta, 0.1, 10);
+            camera.transform.scale.y = MathUtils.clamp(camera.transform.scale.y + scaleDelta, 0.1, 10);
+
+            if (Input.isMouseButtonPressed(MouseButton.Middle)) {
+                DOMUtils.setCursor("grab");
+                const delta = Input.getMouseDelta(); // Screen Space
+                console.log(delta);
+                const [width, height] = [gl.canvas.width, gl.canvas.height];
+                // const aspect = width / height;
+
+                camera.transform.position.x -= delta.x / width * 2 * camera.transform.scale.x;
+                camera.transform.position.y += delta.y / height * 2 * camera.transform.scale.y;
+            } else {
+               DOMUtils.setCursor("default");
+            }
+
+            Input.endUpdate();
         }
 
         function drawScene() {

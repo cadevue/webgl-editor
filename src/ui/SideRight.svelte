@@ -1,17 +1,17 @@
 <script lang="ts">
-    import { bindedSerializableComponents } from "@/context";
-    import type { ISerializableComponent } from "@/lib/interface/InspectorSerialization";
+    import { bindedSerializableFields } from "@/context";
+    import type { ISerializableField } from "@/lib/interface/InspectorSerialization";
 
     import SideLayout from "./layouts/SideLayout.svelte";
 
     /** List of components to render */
-    let components : ISerializableComponent[] = $state([]);
+    let fields : ISerializableField[] = $state([]);
     // Derived store to get the field renderers
-    let componentRenderers = $derived(components.map((prop) => prop.getFieldRenderer()));
+    let fieldRenderers = $derived(fields.map((prop) => prop.getFieldRenderer()));
 
     /** Listen if the components have changed (e.g. new object selected) */
-    bindedSerializableComponents.subscribe(() => {
-        components = bindedSerializableComponents.get();
+    bindedSerializableFields.subscribe(() => {
+        fields = bindedSerializableFields.get();
     });
 </script>
 
@@ -20,7 +20,7 @@
     <h1 class="mb-4">Properties</h1>
     <div class="flex flex-col gap-4">
         <!-- Render all the serializable components -->
-        {#each componentRenderers as renderer}
+        {#each fieldRenderers as renderer}
             <renderer.component {...renderer.props} />
         {/each}
     </div>

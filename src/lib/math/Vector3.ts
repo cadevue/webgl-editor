@@ -1,9 +1,11 @@
 import type { IObservable } from "@/lib/interface/Observable";
 import Mat4 from "@/lib/math/Mat4";
+import type { FieldRenderer, ISerializableField } from "../interface/InspectorSerialization";
+import Vector3Field from "@/ui/fields/Vector3Field.svelte";
 
 export type Vector3Array = [number, number, number];
 
-export default class Vector3 extends Float32Array implements IObservable<Vector3> {
+export default class Vector3 extends Float32Array implements IObservable<Vector3>, ISerializableField {
     constructor(numbers?: ArrayLike<number>) {
         if (numbers) {
             if (numbers.length < 3) {
@@ -47,6 +49,11 @@ export default class Vector3 extends Float32Array implements IObservable<Vector3
     private _dirtyListeners: Set<(observed : Vector3) => void> = new Set();
     subscribe(listener: (observed : Vector3) => void) { this._dirtyListeners.add(listener); }
     notifyDirty() { this._dirtyListeners.forEach(listener => listener(this)); }
+
+    /** Inspector Serialization */
+    getFieldRenderer() : FieldRenderer {
+        return { component: Vector3Field, props: { target: this, } };
+    }
 
     toArray() : Vector3Array {
         return [this[0], this[1], this[2]];

@@ -2,7 +2,7 @@ import Mat4 from "@/lib/math/Mat4";
 import Transform from "@/lib/scene/component/Transform";
 import { OrthographicCameraProjection, type CameraProjection } from "@/lib/scene/camera/CameraProjection";
 import type { ISerializable } from "@/lib/interface/InspectorSerialization";
-import { bindedSerializableComponents } from "@/context";
+import { bindedSerializableFields } from "@/context";
 
 export default class Camera implements ISerializable {
     private _projection: CameraProjection;
@@ -44,6 +44,6 @@ export default class Camera implements ISerializable {
     }
 
     bindComponents(): void {
-        bindedSerializableComponents.set([this.transform]);
+        bindedSerializableFields.set([this.transform]);
     }
 }

@@ -1,6 +1,6 @@
 /** Shared State */
 import { appConfig } from "@/config";
-import { bindedSerializableComponents, renderContext } from "@/context";
+import { bindedSerializableFields, renderContext } from "@/context";
 
 /** Utils */
 import DOMUtils from "@/lib/dom/DOMUtils";
@@ -17,6 +17,7 @@ import Input from "@/lib/event/Input";
 import { KeyCode } from "@/lib/event/InputType";
 import Transform from "@/lib/scene/component/Transform";
 import { ColorRGBA } from "@/lib/math/Color";
+import { Texture2D } from "@/lib/asset/Texture";
 
 export default class Application {
     private static _instance: Application;
@@ -77,7 +78,8 @@ export default class Application {
             varying vec2 v_TexCoord;
 
             void main() {
-                gl_FragColor = vec4(v_TexCoord, 0.0, 1.0);
+                vec2 uv_Coord = vec2(v_TexCoord.x, 1.0 - v_TexCoord.y); // Handle Flip
+                gl_FragColor = texture2D(u_Texture, uv_Coord);
             }
         `;
         const texturedShader = new Shader(texturedVertex, texturedFragment);
@@ -92,11 +94,15 @@ export default class Application {
         texturedRectangleTr.scale.set([0.8, 0.8, 1]);
         texturedRectangleTr.position.set([-0.42, 0, 0]);
 
+        const rectangleTex = new Texture2D("src/assets/moonwr.png");
+        texturedShader.uploadUniformInt("u_Texture", 0);
+        rectangleTex.bind(gl.TEXTURE0);
+
         const camera = Camera.createOrtographicCamera();
 
         RenderCommand.setClearColor(appConfig.viewportColor);
 
-        bindedSerializableComponents.set([texturedRectangleTr]);
+        bindedSerializableFields.set([texturedRectangleTr]);
 
         let deltaTime = 0;
         let previousTime = 0;

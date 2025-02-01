@@ -9,12 +9,14 @@
 
     /** 2-way binding */
     target.subscribe(() => {
+        // UI listen (subsscribe) to changes made by application logic (target)
         x = parseFloat(target.x.toFixed(3));
         y = parseFloat(target.y.toFixed(3));
         z = parseFloat(target.z.toFixed(3));
     });
 
     $effect(() => {
+        // Application logic (target) listen to changes made by UI through state & effect
         target.x = x;
         target.y = y;
         target.z = z;

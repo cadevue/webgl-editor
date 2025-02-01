@@ -6,7 +6,7 @@ export interface ISerializable {
 }   
 
 // A node component that can be serialized 
-export interface ISerializableComponent {
+export interface ISerializableField {
     getFieldRenderer(): FieldRenderer;
 }
 

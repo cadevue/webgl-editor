@@ -18,7 +18,7 @@ export default class Input {
 
     initialize(canvas : HTMLCanvasElement): void {
         /** Keyboard */
-        canvas.addEventListener('keydown', this.onKeyDown.bind(this));
+        window.addEventListener('keydown', this.onKeyDown.bind(this));
         window.addEventListener('keyup', this.onKeyUp.bind(this));
 
         /** Mouse */

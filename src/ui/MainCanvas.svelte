@@ -4,7 +4,7 @@
 
     import Application from "@/app/Application";
     import DOMUtils from "@/lib/dom/DOMUtils";
-  import Input from "@/lib/event/Input";
+    import Input from "@/lib/event/Input";
 
     let canvas: HTMLCanvasElement;
 

@@ -33,6 +33,8 @@ export default class Application {
     }
 
     run() {
+        Renderer.init();
+
         const gl = renderContext.getWebGLRenderingContext();
 
         const flatColorVertex = `
@@ -85,21 +87,22 @@ export default class Application {
             }
         `;
         const texturedShader = new Shader(texturedVertex, texturedFragment);
-
-        const flatSquare = this.createSquareFlat(flatColorShader);
-        const flatSquareTr = new Transform();
-        const flatSquareColor = HexToColorRGBA("#BA3A2C");
-        flatSquareTr.scale.set([0.8, 0.8, 1]);
-        flatSquareTr.position.set([0.42, 0, 0]);
-
-        const texturedSquare = this.createSquareTextured(texturedShader);
-        const texturedSquareTr = new Transform();
-        texturedSquareTr.scale.set([0.8, 0.8, 1]);
-        texturedSquareTr.position.set([-0.42, 0, 0]);
-
-        const squareTex = new Texture2D("src/assets/moonwr.png");
         texturedShader.uploadUniformInt("u_Texture", 0);
-        squareTex.bind(gl.TEXTURE0);
+
+        // const flatSquareColor = HexToColorRGBA("#BA3A2C");
+
+        const staticSquare = this.createSquareTextured(texturedShader);
+        const staticSquareTr = new Transform();
+        staticSquareTr.scale.set([0.8, 0.8, 1]);
+        staticSquareTr.position.set([0.42, 0, 0]);
+
+        const controllableSquare = this.createSquareTextured(texturedShader);
+        const controllableSquareTr = new Transform();
+        controllableSquareTr.scale.set([0.8, 0.8, 1]);
+        controllableSquareTr.position.set([-0.42, 0, 0]);
+
+        const moonwrTex = new Texture2D("src/assets/moonwr.png");
+        const itbTex = new Texture2D("src/assets/itb.png");
 
         const aspect = gl.canvas.width / gl.canvas.height;
         const camera = Camera.createOrtographicCamera(-aspect, aspect, -1, 1, -Number.MAX_VALUE, Number.MAX_VALUE);
@@ -112,7 +115,7 @@ export default class Application {
 
         RenderCommand.setClearColor(appConfig.viewportColor);
 
-        bindedSerializableFields.set([texturedSquareTr, camera.transform]);
+        bindedSerializableFields.set([controllableSquareTr, camera.transform]);
 
         let deltaTime = 0;
         let previousTime = 0;
@@ -125,21 +128,21 @@ export default class Application {
             Input.beginUpdate();
 
             if (Input.isKeyPressed(KeyCode.W)) {
-                texturedSquareTr.position.y += moveSpeed * deltaTime;
+                controllableSquareTr.position.y += moveSpeed * deltaTime;
             } else if (Input.isKeyPressed(KeyCode.S)) {
-                texturedSquareTr.position.y -= moveSpeed * deltaTime;
+                controllableSquareTr.position.y -= moveSpeed * deltaTime;
             }
 
             if (Input.isKeyPressed(KeyCode.A)) {
-                texturedSquareTr.position.x -= moveSpeed * deltaTime;
+                controllableSquareTr.position.x -= moveSpeed * deltaTime;
             } else if (Input.isKeyPressed(KeyCode.D)) {
-                texturedSquareTr.position.x += moveSpeed * deltaTime
+                controllableSquareTr.position.x += moveSpeed * deltaTime
             }
 
             if (Input.isKeyPressed(KeyCode.Q)) {
-                texturedSquareTr.rotation.z += rotateSpeed * deltaTime;
+                controllableSquareTr.rotation.z += rotateSpeed * deltaTime;
             } else if (Input.isKeyPressed(KeyCode.E)) {
-                texturedSquareTr.rotation.z -= rotateSpeed * deltaTime
+                controllableSquareTr.rotation.z -= rotateSpeed * deltaTime
             }
 
             const wheelDelta = Input.getMouseWheelDelta();
@@ -173,10 +176,12 @@ export default class Application {
             /** Draw */
             Renderer.beginScene(camera);
 
-            Renderer.submit(flatColorShader, flatSquare, flatSquareTr);
-            flatColorShader.uploadUniformFloat4("u_Color", flatSquareColor);
+            moonwrTex.bind();
+            Renderer.submit(texturedShader, staticSquare, staticSquareTr);
+            // flatColorShader.uploadUniformFloat4("u_Color", flatSquareColor);
 
-            Renderer.submit(texturedShader, texturedSquare, texturedSquareTr);
+            itbTex.bind();
+            Renderer.submit(texturedShader, controllableSquare, controllableSquareTr);
 
             Renderer.endScene();
         }

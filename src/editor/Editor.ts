@@ -1,5 +1,4 @@
 /** Shared State */
-import { appConfig } from "@/config";
 import { renderContext } from "@/renderContext";
 
 /** Utils */
@@ -10,7 +9,6 @@ import Camera from "@/lib/scene/camera/Camera";
 import Renderer from "@/lib/rendering/Renderer";
 import RenderCommand from "@/lib/rendering/RenderCommand";
 import { Texture2D } from "@/lib/asset/Texture";
-import type { OrthographicCameraProjection } from "@/lib/scene/camera/CameraProjection";
 
 /** Scene */
 import Transform from "@/lib/scene/component/Transform";
@@ -18,14 +16,13 @@ import Primitives from "@/lib/scene/Primitives";
 
 /** Input */
 import Input from "@/lib/event/Input";
-import { KeyCode, MouseButton } from "@/lib/event/InputType";
+import { KeyCode } from "@/lib/event/InputType";
 
 /** Misc */
-import MathUtils from "@/lib/math/MathUtils";
 import ShaderLibrary, { BuiltInShader } from "@/lib/asset/ShaderLibrary";
-import { bindedExposableFields } from "@/editorContext";
+import { bindedExposableFields, editorConfig } from "@/editorContext";
 import ExposableTransfrom from "@/editor/fields/ExposableTransform";
-import ExposableCamera from "./object/ExposableCamera";
+import { OrthographicCameraController } from "@/lib/scene/camera/CameraController";
 
 export default class Editor {
     private static _instance: Editor;
@@ -64,25 +61,17 @@ export default class Editor {
         const itbTex = new Texture2D("textures/itb.png");
 
         const aspect = gl.canvas.width / gl.canvas.height;
-        const camera = Camera.createOrtographicCamera(-aspect, aspect, -1, 1, -Number.MAX_VALUE, Number.MAX_VALUE);
-        DOMUtils.addResizeCallback((width, height) => {
-            const orthoProjection = camera.projection as OrthographicCameraProjection;
-            const aspect = width / height;
-            orthoProjection.left = -aspect;
-            orthoProjection.right = aspect;
-        });
+        const camera = Camera.createOrtographicCamera(-aspect, aspect, -1, 1, Number.MIN_VALUE, Number.MAX_VALUE);
+        const cameraController = new OrthographicCameraController(aspect, camera);
 
-        RenderCommand.setClearColor(appConfig.viewportColor);
+        RenderCommand.setClearColor(editorConfig.viewportColor);
 
         bindedExposableFields.set([new ExposableTransfrom(controllableSquareTr), new ExposableTransfrom(camera.transform)]);
-
-        let deltaTime = 0;
-        let previousTime = 0;
 
         const moveSpeed = 1;
         const rotateSpeed = 135;
 
-        function update() {
+        function update(deltaTime: number) {
             /** Input */
             Input.beginUpdate();
 
@@ -104,21 +93,7 @@ export default class Editor {
                 controllableSquareTr.rotation.z -= rotateSpeed * deltaTime
             }
 
-            const wheelDelta = Input.getMouseWheelDelta();
-            const scaleDelta = wheelDelta * deltaTime * 0.1 * camera.transform.scale.x;
-            camera.transform.scale.x = MathUtils.clamp(camera.transform.scale.x + scaleDelta, 0.1, 10);
-            camera.transform.scale.y = MathUtils.clamp(camera.transform.scale.y + scaleDelta, 0.1, 10);
-
-            if (Input.isMouseButtonPressed(MouseButton.Middle)) {
-                DOMUtils.setCursor("grab");
-                const delta = Input.getMouseDelta(); // Screen Space
-                const [width, height] = [gl.canvas.width, gl.canvas.height];
-
-                camera.transform.position.x -= delta.x / width * 2 * camera.transform.scale.x;
-                camera.transform.position.y += delta.y / height * 2 * camera.transform.scale.y;
-            } else {
-               DOMUtils.setCursor("default");
-            }
+            cameraController.onUpdate(deltaTime);
 
             Input.endUpdate();
         }
@@ -143,11 +118,13 @@ export default class Editor {
             Renderer.endScene();
         }
         
+        let previousTime = 0;
+        let deltaTime = 0;
         function loop(timestamp: DOMHighResTimeStamp) {
             deltaTime = (timestamp - previousTime) / 1000;
             previousTime = timestamp;
 
-            update();
+            update(deltaTime);
             drawScene();
 
             requestAnimationFrame(loop);

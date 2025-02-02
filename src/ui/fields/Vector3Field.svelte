@@ -3,13 +3,22 @@
 
     const { label, target } : { label: string, target: Vector3 } = $props();
 
+    // Temporary solution
+    let xInput : HTMLInputElement | null = null,
+        yInput : HTMLInputElement | null = null,
+        zInput : HTMLInputElement | null = null;
+
     let x = $state(target.x);
     let y = $state(target.y);
     let z = $state(target.z);
 
     /** 2-way binding */
     target.subscribe(() => {
-        // UI listen (subsscribe) to changes made by application logic (target)
+        xInput?.blur();
+        yInput?.blur();
+        zInput?.blur();
+
+        // UI listen (subscribe) to changes made by application logic (target)
         x = parseFloat(target.x.toFixed(3));
         y = parseFloat(target.y.toFixed(3));
         z = parseFloat(target.z.toFixed(3));
@@ -27,14 +36,14 @@
     <h2>{label}</h2>
     <div class="flex gap-2 items-center">
         <label class="text-xs" for="x">X</label>
-        <input type="number" bind:value={x} class="p-1 text-xs w-2/3 rounded-sm" step="0.025" id="x" />
+        <input type="number" bind:value={x} class="p-1 text-xs w-2/3 rounded-sm" step="0.025" id="x" bind:this={xInput} />
     </div>
     <div class="flex gap-2 items-center">
         <label class="text-xs" for="y">Y</label>
-        <input type="number" bind:value={y} class="p-1 text-xs w-2/3 rounded-sm" step="0.025" id="y" />
+        <input type="number" bind:value={y} class="p-1 text-xs w-2/3 rounded-sm" step="0.025" id="y" bind:this={yInput} />
     </div>
     <div class="flex gap-2 items-center">
         <label class="text-xs" for="z">Z</label>
-        <input type="number" bind:value={z} class="p-1 text-xs w-2/3 rounded-sm" step="0.025" id="z" />
+        <input type="number" bind:value={z} class="p-1 text-xs w-2/3 rounded-sm" step="0.025" id="z" bind:this={zInput} />
     </div>
 </div>

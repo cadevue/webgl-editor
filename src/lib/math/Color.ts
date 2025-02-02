@@ -3,9 +3,17 @@ import Vector4 from "@/lib/math/Vector4";
 export class ColorRGBA extends Vector4 {}
 
 export function HexToColorRGBA(hex: string): ColorRGBA {
-    const r = parseInt(hex.slice(1, 3), 16) / 255;
-    const g = parseInt(hex.slice(3, 5), 16) / 255;
-    const b = parseInt(hex.slice(5, 7), 16) / 255;
+    let start = 0;
+    if (hex.length == 7) {
+        start = 1;
+    } else if (hex.length != 6) {
+        throw new Error("Invalid hex color. use #RRGGBB or RRGGBB");
+    }
+
+    const r = parseInt(hex.slice(start, start + 2), 16) / 255;
+    const g = parseInt(hex.slice(start + 2, start + 4), 16) / 255;
+    const b = parseInt(hex.slice(start + 4, start + 6), 16) / 255;
+
     return new ColorRGBA([r, g, b, 1]);
 }
 

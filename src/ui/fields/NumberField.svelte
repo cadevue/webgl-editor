@@ -17,8 +17,8 @@
 </script>
 
 <div class="flex flex-col gap-2">
+    <label class="text-sm" for="value">{ label || "Value" }</label>
     <div class="flex gap-2 items-center">
-        <label class="text-xs" for="value">{ label || "Value" }</label>
         <input type="number" bind:value={value} class="p-1 text-xs w-2/3 rounded-sm" step="0.025" id="value"/>
     </div>
 </div>

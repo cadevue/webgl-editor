@@ -15,4 +15,22 @@ An attempt to create Game Engine in Web. Adapted from [The Cherno's Game Engine 
 
 ## Milestones 🏆
 1. 2D Renderer (On progress ⭐)
-2. 3D Renderer
+      - [x] Basic Renderer
+      - [x] Texture Support
+      - [x] Camera
+      - [x] Input Handling
+      - [o] Editor
+      - [ ] Sprites
+      - [ ] Animation
+      - [ ] UI Elements
+      - [ ] Scene Management
+      - [ ] Physics
+      - [ ] Audio
+      - [ ] Scripting
+      - [ ] Networking
+
+**Screenshot (3 February 2025):**
+
+![Progress, 3 February 2025](./docs/screenshots/2025-02-03.png)
+
+2. 3D Renderer (Coming soon 🚀)

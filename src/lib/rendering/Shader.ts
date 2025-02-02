@@ -4,41 +4,35 @@ import type Vector3 from "@/lib/math/Vector3";
 import type Vector4 from "@/lib/math/Vector4";
 import type Mat4 from "@/lib/math/Mat4";
 
+export type ShaderSource = Map<GLenum, string>;
+
 export default class Shader {
     private _program: WebGLProgram;
     private _uniformCache: Map<string, WebGLUniformLocation> = new Map();
 
-    constructor(vertexSrc: string, fragmentSrc: string) {
+    get program()   { return this._program; }
+
+    constructor(sources: Map<GLenum, string>) {
         const gl = renderContext.getWebGLRenderingContext();
-
-        const vertexShader = gl.createShader(gl.VERTEX_SHADER) as WebGLShader;
-        gl.shaderSource(vertexShader, vertexSrc);
-        gl.compileShader(vertexShader);
-        if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-            throw new Error("Failed to compile vertex shader: " + gl.getShaderInfoLog(vertexShader));
-        }
-
-        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER) as WebGLShader;
-        gl.shaderSource(fragmentShader, fragmentSrc);
-        gl.compileShader(fragmentShader);
-        if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
-            gl.deleteShader(vertexShader);
-            throw new Error("Failed to compile fragment shader: " + gl.getShaderInfoLog(fragmentShader));
-        }
 
         this._program = gl.createProgram() as WebGLProgram;
 
-        gl.attachShader(this._program, vertexShader);
-        gl.attachShader(this._program, fragmentShader);
+        sources.forEach((source, type) => {
+            const shader = gl.createShader(type) as WebGLShader;
+            gl.shaderSource(shader, source);
+            gl.compileShader(shader);
+            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                throw new Error("Failed to compile shader: " + gl.getShaderInfoLog(shader));
+            }
+
+            gl.attachShader(this._program, shader);
+            gl.deleteShader(shader);
+        });
+
         gl.linkProgram(this._program);
         if (!gl.getProgramParameter(this._program, gl.LINK_STATUS)) {
-            gl.deleteShader(vertexShader);
-            gl.deleteShader(fragmentShader);    
             throw new Error("Failed to link shader program: " + gl.getProgramInfoLog(this._program));
         }
-
-        gl.deleteShader(vertexShader);
-        gl.deleteShader(fragmentShader);
     }
 
     bind() {
@@ -121,7 +115,4 @@ export default class Shader {
         const gl = renderContext.getWebGLRenderingContext();
         gl.uniform4iv(location, value);
     }
-
-
-    get program()   { return this._program; }
 }

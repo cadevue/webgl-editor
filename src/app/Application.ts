@@ -16,10 +16,10 @@ import RenderCommand from "@/lib/rendering/RenderCommand";
 import Input from "@/lib/event/Input";
 import { KeyCode, MouseButton } from "@/lib/event/InputType";
 import Transform from "@/lib/scene/component/Transform";
-import { ColorRGBA, HexToColorRGBA } from "@/lib/math/Color";
 import { Texture2D } from "@/lib/asset/Texture";
 import type { OrthographicCameraProjection } from "@/lib/scene/camera/CameraProjection";
 import MathUtils from "@/lib/math/MathUtils";
+import ShaderLibrary, { ShaderAsset } from "@/lib/asset/ShaderLibrary";
 
 export default class Application {
     private static _instance: Application;
@@ -27,69 +27,23 @@ export default class Application {
     static get instance() {
         if (!Application._instance) {
             Application._instance = new Application();
+            Application._instance.init();
         }
 
         return Application._instance;
     }
 
-    run() {
+    private init() {
         Renderer.init();
+        ShaderLibrary.load();
+    }
 
+    run() {
         const gl = renderContext.getWebGLRenderingContext();
 
-        const flatColorVertex = `
-            attribute vec4 a_Position;
-
-            uniform mat4 u_ViewProjection;
-            uniform mat4 u_Transform;
-
-            varying vec2 v_TexCoord;
-
-            void main() {
-                gl_Position = u_ViewProjection * u_Transform * a_Position;
-            }
-        `;
-        const flatColorFragment = `
-            precision mediump float;
-
-            uniform vec4 u_Color;
-
-            void main() {
-                gl_FragColor = u_Color;
-            }
-        `;
-        const flatColorShader = new Shader(flatColorVertex, flatColorFragment);
-
-        const texturedVertex = `
-            attribute vec4 a_Position;
-            attribute vec2 a_TexCoord;
-
-            uniform mat4 u_ViewProjection;
-            uniform mat4 u_Transform;
-
-            varying vec2 v_TexCoord;
-
-            void main() {
-                gl_Position = u_ViewProjection * u_Transform * a_Position;
-                v_TexCoord = a_TexCoord;
-            }
-        `;
-        const texturedFragment = `
-            precision mediump float;
-
-            uniform sampler2D u_Texture;
-
-            varying vec2 v_TexCoord;
-
-            void main() {
-                vec2 uv_Coord = vec2(v_TexCoord.x, 1.0 - v_TexCoord.y); // Handle Flip
-                gl_FragColor = texture2D(u_Texture, uv_Coord);
-            }
-        `;
-        const texturedShader = new Shader(texturedVertex, texturedFragment);
+        const texturedShader = ShaderLibrary.get(ShaderAsset.Textured2D)!;
+        texturedShader.bind();
         texturedShader.uploadUniformInt("u_Texture", 0);
-
-        // const flatSquareColor = HexToColorRGBA("#BA3A2C");
 
         const staticSquare = this.createSquareTextured(texturedShader);
         const staticSquareTr = new Transform();
@@ -101,8 +55,8 @@ export default class Application {
         controllableSquareTr.scale.set([0.8, 0.8, 1]);
         controllableSquareTr.position.set([-0.42, 0, 0]);
 
-        const moonwrTex = new Texture2D("src/assets/moonwr.png");
-        const itbTex = new Texture2D("src/assets/itb.png");
+        const moonwrTex = new Texture2D("textures/moonwr.png");
+        const itbTex = new Texture2D("textures/itb.png");
 
         const aspect = gl.canvas.width / gl.canvas.height;
         const camera = Camera.createOrtographicCamera(-aspect, aspect, -1, 1, -Number.MAX_VALUE, Number.MAX_VALUE);
@@ -153,7 +107,6 @@ export default class Application {
             if (Input.isMouseButtonPressed(MouseButton.Middle)) {
                 DOMUtils.setCursor("grab");
                 const delta = Input.getMouseDelta(); // Screen Space
-                console.log(delta);
                 const [width, height] = [gl.canvas.width, gl.canvas.height];
                 // const aspect = width / height;
 

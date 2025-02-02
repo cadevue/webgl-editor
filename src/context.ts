@@ -5,11 +5,13 @@ import type Vector3 from "./lib/math/Vector3";
 /** Rendering Specific Context **/
 //////////////////////////////////
 type GLContext = {
+    initialized: boolean;
     gl: WebGL2RenderingContext | null;
     activeShader: Shader | null;
 }
 
 const _renderContext : GLContext = {
+    initialized: false,
     gl: null,
     activeShader: null,
 };
@@ -24,6 +26,7 @@ function getWebGLRenderingContext() {
 
 function setWebGLRenderingContext(gl: WebGL2RenderingContext) {
     _renderContext.gl = gl;
+    _renderContext.initialized = true;
 }
 
 function getActiveShader() {
@@ -37,11 +40,16 @@ function setActiveShader(shader: Shader | null) {
     _renderContext.activeShader = shader;
 }
 
+function isInitialized() {
+    return _renderContext.initialized;
+}
+
 export const renderContext = {
     getWebGLRenderingContext,
     setWebGLRenderingContext,
     getActiveShader,
     setActiveShader,
+    isInitialized,
 };
 
 ////////////////////////////////////

@@ -18,12 +18,14 @@
         Input.init(canvas);
 
         /** Initialize WebGL */
-        const webglRenderCtx = canvas.getContext("webgl2");
-        if (!webglRenderCtx) {
-            console.error("WebGL 2 is not supported");
-            return;
+        if (!renderContext.isInitialized()) {
+            const webglRenderCtx = canvas.getContext("webgl2");
+            if (!webglRenderCtx) {
+                console.error("WebGL 2 is not supported");
+                return;
+            }
+            renderContext.setWebGLRenderingContext(webglRenderCtx);
         }
-        renderContext.setWebGLRenderingContext(webglRenderCtx);
 
         /** Start Application */
         Application.instance.run();

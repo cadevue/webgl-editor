@@ -1,6 +1,6 @@
 /** Shared State */
 import { appConfig } from "@/config";
-import { bindedSerializableFields, renderContext } from "@/context";
+import { renderContext } from "@/renderContext";
 
 /** Utils */
 import DOMUtils from "@/lib/dom/DOMUtils";
@@ -22,29 +22,31 @@ import { KeyCode, MouseButton } from "@/lib/event/InputType";
 
 /** Misc */
 import MathUtils from "@/lib/math/MathUtils";
-import ShaderLibrary, { ShaderAsset } from "@/lib/asset/ShaderLibrary";
+import ShaderLibrary, { BuiltInShader } from "@/lib/asset/ShaderLibrary";
+import { bindedExposableFields } from "@/editorContext";
+import ExposableTransfrom from "@/editor/fields/ExposableTransform";
+import ExposableCamera from "./object/ExposableCamera";
 
-export default class Application {
-    private static _instance: Application;
+export default class Editor {
+    private static _instance: Editor;
 
     static get instance() {
-        if (!Application._instance) {
-            Application._instance = new Application();
-            Application._instance.init();
+        if (!Editor._instance) {
+            Editor._instance = new Editor();
+            Editor._instance.init();
         }
 
-        return Application._instance;
+        return Editor._instance;
     }
 
     private init() {
         Renderer.init();
-        ShaderLibrary.init();
     }
 
     run() {
         const gl = renderContext.getWebGLRenderingContext();
 
-        const texturedShader = ShaderLibrary.get(ShaderAsset.Textured2D)!;
+        const texturedShader = ShaderLibrary.get(BuiltInShader.Textured2D)!;
         texturedShader.bind();
         texturedShader.uploadUniformInt("u_Texture", 0);
 
@@ -72,7 +74,7 @@ export default class Application {
 
         RenderCommand.setClearColor(appConfig.viewportColor);
 
-        bindedSerializableFields.set([controllableSquareTr, camera.transform]);
+        bindedExposableFields.set([new ExposableTransfrom(controllableSquareTr), new ExposableTransfrom(camera.transform)]);
 
         let deltaTime = 0;
         let previousTime = 0;
@@ -103,7 +105,7 @@ export default class Application {
             }
 
             const wheelDelta = Input.getMouseWheelDelta();
-            const scaleDelta = wheelDelta * deltaTime * 0.1;
+            const scaleDelta = wheelDelta * deltaTime * 0.1 * camera.transform.scale.x;
             camera.transform.scale.x = MathUtils.clamp(camera.transform.scale.x + scaleDelta, 0.1, 10);
             camera.transform.scale.y = MathUtils.clamp(camera.transform.scale.y + scaleDelta, 0.1, 10);
 
@@ -111,7 +113,6 @@ export default class Application {
                 DOMUtils.setCursor("grab");
                 const delta = Input.getMouseDelta(); // Screen Space
                 const [width, height] = [gl.canvas.width, gl.canvas.height];
-                // const aspect = width / height;
 
                 camera.transform.position.x -= delta.x / width * 2 * camera.transform.scale.x;
                 camera.transform.position.y += delta.y / height * 2 * camera.transform.scale.y;

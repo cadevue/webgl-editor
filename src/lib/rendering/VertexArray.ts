@@ -1,5 +1,5 @@
 import type { IndexBuffer, VertexBuffer } from "@/lib/rendering/Buffer";
-import { renderContext } from "@/context";
+import { renderContext } from "@/renderContext";
 import { getCountOfShaderDataType, shaderDataTypeToGLType } from "@/lib/rendering/ShaderType";
 
 // Delete webgl vertex array object when the parent object is garbage collected

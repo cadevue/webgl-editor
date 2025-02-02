@@ -1,5 +1,4 @@
 import type Shader from "@/lib/rendering/Shader";
-import type Vector3 from "./lib/math/Vector3";
 
 //////////////////////////////////
 /** Rendering Specific Context **/
@@ -51,13 +50,3 @@ export const renderContext = {
     setActiveShader,
     isInitialized,
 };
-
-////////////////////////////////////
-/** Application Specific Context **/
-////////////////////////////////////
-
-import { atom } from "nanostores";
-import { type ISerializableField } from "./lib/interface/InspectorSerialization";
-
-// What component to render in inspector, usually called by ISerializable.bindProperties()
-export const bindedSerializableFields = atom<ISerializableField[]>([]);

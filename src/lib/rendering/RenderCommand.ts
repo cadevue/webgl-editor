@@ -1,4 +1,4 @@
-import { renderContext } from "@/context";
+import { renderContext } from "@/renderContext";
 import VertexArray from "@/lib/rendering/VertexArray";
 import { ColorRGBA } from "@/lib/math/Color";
 

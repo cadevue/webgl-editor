@@ -4,7 +4,8 @@ import Transform from "@/lib/scene/component/Transform";
 import RenderCommand from "@/lib/rendering/RenderCommand";
 import Shader from "@/lib/rendering/Shader";
 import VertexArray from "@/lib/rendering/VertexArray";
-import { renderContext } from "@/context";
+import { renderContext } from "@/renderContext";
+import ShaderLibrary from "../asset/ShaderLibrary";
 
 export default class Renderer {
     private static _viewProjectionMatrix: Mat4 = Mat4.identity();
@@ -13,6 +14,8 @@ export default class Renderer {
         const gl = renderContext.getWebGLRenderingContext();
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+        ShaderLibrary.init();
     }
 
     static beginScene(camera: Camera) { 

@@ -2,11 +2,10 @@ import Vector3, { type Vector3Array } from "@/lib/math/Vector3";
 import NodeComponent from "@/lib/scene/component/NodeComponent";
 import Mat4 from "@/lib/math/Mat4";
 import Quaternion from "@/lib/math/Quaternion";
-import type { FieldRenderer, ISerializableField } from "@/lib/interface/InspectorSerialization";
 import TransformField from "@/ui/fields/TransformField.svelte";
 import type { IObservable } from "@/lib/interface/Observable";
 
-export default class Transform extends NodeComponent implements IObservable<Transform>, ISerializableField {
+export default class Transform extends NodeComponent implements IObservable<Transform> {
     private _position: Vector3 = Vector3.zeros();
     private _rotation: Vector3 = Vector3.zeros();
     private _scale   : Vector3 = Vector3.ones();
@@ -71,9 +70,4 @@ export default class Transform extends NodeComponent implements IObservable<Tran
         this.notifyDirty();
     }
     notifyDirty() { this._dirtyListeners.forEach(listener => listener(this)); }
-
-    /** Inspector Serialization */
-    getFieldRenderer() : FieldRenderer {
-        return { component: TransformField, props: { target: this, } }
-    }
 }

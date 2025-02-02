@@ -1,4 +1,4 @@
-import { renderContext } from "@/context";
+import { renderContext } from "@/renderContext";
 
 export abstract class Texture {
     public abstract get width(): number;

@@ -1,8 +1,8 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { renderContext } from "@/context";
+    import { renderContext } from "@/renderContext";
 
-    import Application from "@/app/Application";
+    import Editor from "@/editor/Editor";
     import DOMUtils from "@/lib/dom/DOMUtils";
     import Input from "@/lib/event/Input";
 
@@ -28,7 +28,7 @@
         }
 
         /** Start Application */
-        Application.instance.run();
+        Editor.instance.run();
     }
 
     onMount(() => {

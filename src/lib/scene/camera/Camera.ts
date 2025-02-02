@@ -1,10 +1,11 @@
 import Mat4 from "@/lib/math/Mat4";
 import Transform from "@/lib/scene/component/Transform";
 import { OrthographicCameraProjection, type CameraProjection } from "@/lib/scene/camera/CameraProjection";
-import type { ISerializable } from "@/lib/interface/InspectorSerialization";
-import { bindedSerializableFields } from "@/context";
+import type { IExposable } from "@/editor/InspectorExpose";
+import { bindedExposableFields } from "@/editorContext";
+import ExposableTransfrom from "@/editor/fields/ExposableTransform";
 
-export default class Camera implements ISerializable {
+export default class Camera implements IExposable {
     private _projection: CameraProjection;
     private _viewProjectionMatrix: Mat4 = Mat4.identity();
 
@@ -45,6 +46,6 @@ export default class Camera implements ISerializable {
     }
 
     bindComponents(): void {
-        bindedSerializableFields.set([this.transform]);
+        bindedExposableFields.set([new ExposableTransfrom(this.transform)]);
     }
 }

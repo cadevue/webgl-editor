@@ -1,4 +1,4 @@
-import { renderContext } from "@/context";
+import { renderContext } from "@/renderContext";
 import type Vector2 from "@/lib/math/Vector2";
 import type Vector3 from "@/lib/math/Vector3";
 import type Vector4 from "@/lib/math/Vector4";
@@ -15,8 +15,15 @@ export default class Shader {
     constructor(sources: Map<GLenum, string>) {
         const gl = renderContext.getWebGLRenderingContext();
 
+
+        if (sources.size > 3) {
+            throw new Error("Currently only supports 3 shaders");
+        }
+
+        const shaders: [WebGLShader | null, WebGLShader | null, WebGLShader | null] = [null, null, null];
         this._program = gl.createProgram() as WebGLProgram;
 
+        let i = 0;
         sources.forEach((source, type) => {
             const shader = gl.createShader(type) as WebGLShader;
             gl.shaderSource(shader, source);
@@ -26,8 +33,14 @@ export default class Shader {
             }
 
             gl.attachShader(this._program, shader);
-            gl.deleteShader(shader);
+            shaders[i++] = shader;
         });
+
+        for (i = 0; i < shaders.length; i++) {
+            if (shaders[i]) {
+                gl.deleteShader(shaders[i]);
+            } else { break; }
+        }
 
         gl.linkProgram(this._program);
         if (!gl.getProgramParameter(this._program, gl.LINK_STATUS)) {

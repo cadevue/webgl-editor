@@ -4,29 +4,36 @@ import Shader, { type ShaderSource } from '@/lib/rendering/Shader';
 import Flat2DSource from '@/assets/shaders/Flat2D.glsl?raw';
 import Textured2DSource from '@/assets/shaders/Textured2D.glsl?raw';
 
-export enum ShaderAsset { 
-    Flat2D, 
-    Textured2D 
-}
+export enum BuiltInShader { Flat2D, Textured2D }
 
 export default class ShaderLibrary {
-    private static _library: Map<string | ShaderAsset, Shader> = new Map();
+    private static _library: Map<string | BuiltInShader, Shader> = new Map();
 
     static init() {
-        this._library.set(ShaderAsset.Flat2D, new Shader(ShaderLibrary.parseShaderSource(Flat2DSource)));
-        this._library.set(ShaderAsset.Textured2D, new Shader(ShaderLibrary.parseShaderSource(Textured2DSource)));
+        this._library.set(BuiltInShader.Flat2D, new Shader(ShaderLibrary.parseShaderSource(Flat2DSource)));
+        this._library.set(BuiltInShader.Textured2D, new Shader(ShaderLibrary.parseShaderSource(Textured2DSource)));
     }
 
-    static get(asset: ShaderAsset | string): Shader | undefined {
-        return this._library.get(asset);
+    static get(name: BuiltInShader | string): Shader | undefined {
+        if (!this._library.has(name)) { 
+            throw new Error(`Shader not found: ${name}`);
+        }
+
+        return this._library.get(name);
     }
 
-    static addToLib(asset: string, shader: Shader) {
-        this._library.set(asset, shader);
+    static add(name: string, shader: Shader) {
+        if (this._library.has(name)) {
+            throw new Error(`Shader already exists: ${name}`);
+        }
+        this._library.set(name, shader);
     }
     
-    static addToLibFromSource(asset: string, source: ShaderSource) {
-        this._library.set(asset, new Shader(source));
+    static addFromSource(name: string, source: ShaderSource) {
+        if (this._library.has(name)) {
+            throw new Error(`Shader already exists: ${name}`);
+        }
+        this._library.set(name, new Shader(source));
     }
 
     /** Shader Helper */

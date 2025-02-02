@@ -1,4 +1,4 @@
-import { renderContext } from "@/context";
+import { renderContext } from "@/renderContext";
 import { getSizeOfShaderDataType, shaderDataTypeToString, type ShaderDataType } from "@/lib/rendering/ShaderType";
 
 // Delete webgl buffer when the parent object is garbage collected

@@ -1,7 +1,7 @@
 <script lang="ts">
     import Vector3 from "@/lib/math/Vector3";
 
-    const { label, target } : { label: string, target: Vector3 } = $props();
+    const { label, target } : { label?: string, target: Vector3 } = $props();
 
     // Temporary solution
     let xInput : HTMLInputElement | null = null,
@@ -33,7 +33,7 @@
 </script>
 
 <div class="flex flex-col gap-2">
-    <h2>{label}</h2>
+    <h2>{label || "Vector3"}</h2>
     <div class="flex gap-2 items-center">
         <label class="text-xs" for="x">X</label>
         <input type="number" bind:value={x} class="p-1 text-xs w-2/3 rounded-sm" step="0.025" id="x" bind:this={xInput} />

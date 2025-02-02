@@ -5,12 +5,16 @@ import Input from "@/lib/event/Input";
 import MathUtils from "@/lib/math/MathUtils";
 import { renderContext } from "@/renderContext";
 import { MouseButton } from "@/lib/event/InputType";
+import Observable from "@/lib/math/Observable";
 
 /** Some default camera controller provided by the engine */
 export class OrthographicCameraController {
     private _camera : Camera;
     private _aspect : number;
     private _zoomLevel : number = 1;
+    private _zoomSpeed : Observable<number> = new Observable(0.1);
+
+    get zoomSpeed() { return this._zoomSpeed; }
 
     get camera() { return this._camera; }
 
@@ -44,7 +48,7 @@ export class OrthographicCameraController {
         /** Zoom */
         const wheelDelta = Input.getMouseWheelDelta();
         if (wheelDelta != 0) {
-            const zoomDelta = wheelDelta * deltaTime * 0.1 * this._zoomLevel;
+            const zoomDelta = wheelDelta * deltaTime * this._zoomSpeed.value * this._zoomLevel;
             this._zoomLevel = MathUtils.clamp(this._zoomLevel + zoomDelta, 0.1, 10);
             this.updateOrthographicProjection();
         }

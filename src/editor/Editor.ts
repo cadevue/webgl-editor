@@ -23,6 +23,7 @@ import ShaderLibrary, { BuiltInShader } from "@/lib/asset/ShaderLibrary";
 import { bindedExposableFields, editorConfig } from "@/editorContext";
 import ExposableTransfrom from "@/editor/fields/ExposableTransform";
 import { OrthographicCameraController } from "@/lib/scene/camera/CameraController";
+import ExposableNumber from "./fields/ExposableNumber";
 
 export default class Editor {
     private static _instance: Editor;
@@ -66,7 +67,11 @@ export default class Editor {
 
         RenderCommand.setClearColor(editorConfig.viewportColor);
 
-        bindedExposableFields.set([new ExposableTransfrom(controllableSquareTr), new ExposableTransfrom(camera.transform)]);
+        bindedExposableFields.set([
+            new ExposableTransfrom(controllableSquareTr, "Square Transform"),
+            new ExposableTransfrom(camera.transform, "Camera Transform"),
+            new ExposableNumber(cameraController.zoomSpeed, "Zoom Speed")
+        ]);
 
         const moveSpeed = 1;
         const rotateSpeed = 135;

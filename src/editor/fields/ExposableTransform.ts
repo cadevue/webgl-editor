@@ -3,7 +3,7 @@ import TransformField from "@/ui/fields/TransformField.svelte";
 import ExposableField from "./ExposableField";
 
 export default class ExposableTransfrom extends ExposableField<Transform> {
-    constructor(target: Transform) {
-        super(target, TransformField);
+    constructor(target: Transform, label?: string) {
+        super(target, TransformField, label);
     }
 }

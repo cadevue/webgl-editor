@@ -19,7 +19,7 @@ An attempt to create Game Engine in Web. Adapted from [The Cherno's Game Engine 
       - [x] Texture Support
       - [x] Camera
       - [x] Input Handling
-      - [o] Editor
+      - [x] Editor
       - [ ] Sprites
       - [ ] Animation
       - [ ] UI Elements

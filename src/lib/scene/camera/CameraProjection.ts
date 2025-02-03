@@ -1,4 +1,4 @@
-import type { IObservable } from "@/lib/interface/Observable";
+import type { IObservable } from "@/lib/interface/IObservable";
 import Mat4 from "@/lib/math/Mat4";
 
 export abstract class CameraProjection implements IObservable<CameraProjection> {

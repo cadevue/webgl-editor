@@ -1,4 +1,4 @@
-import type { IObservable } from "@/lib/interface/Observable";
+import type { IObservable } from "@/lib/interface/IObservable";
 
 export type Vector2Array = [number, number];
 

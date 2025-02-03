@@ -72,12 +72,16 @@ export default class Editor implements AppLayer {
         this._camera = Camera.createOrtographicCamera(-aspect, aspect, -1, 1, Number.MIN_VALUE, Number.MAX_VALUE);
         this._cameraController = new OrthographicCameraController(aspect, this._camera);
 
+        this.bindProperties();
         RenderCommand.setClearColor(editorConfig.viewportColor);
+    }
 
+    private bindProperties() {
         bindedExposableFields.set([
             new ExposableTransfrom(this._controllableSquareTr, "Square Transform"),
             new ExposableTransfrom(this._camera.transform, "Camera Transform"),
-            new ExposableNumber(this._cameraController.zoomSpeed, "Zoom Speed")
+            new ExposableNumber(this._cameraController.zoomSpeed, "Zoom Speed"),
+            new ExposableNumber(this._cameraController.zoomLevel, "Zoom Level")
         ]);
     }
 

@@ -3,7 +3,7 @@ import NodeComponent from "@/lib/scene/component/NodeComponent";
 import Mat4 from "@/lib/math/Mat4";
 import Quaternion from "@/lib/math/Quaternion";
 import TransformField from "@/ui/fields/TransformField.svelte";
-import type { IObservable } from "@/lib/interface/Observable";
+import type { IObservable } from "@/lib/interface/IObservable";
 
 export default class Transform extends NodeComponent implements IObservable<Transform> {
     private _position: Vector3 = Vector3.zeros();

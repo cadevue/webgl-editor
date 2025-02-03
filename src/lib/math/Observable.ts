@@ -1,4 +1,4 @@
-import type { IObservable } from "../interface/Observable";
+import type { IObservable } from "../interface/IObservable";
 
 export default class Observable<T> implements IObservable<T> {
     private _value: T;

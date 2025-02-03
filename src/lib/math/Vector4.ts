@@ -1,4 +1,4 @@
-import type { IObservable } from "@/lib/interface/Observable";
+import type { IObservable } from "@/lib/interface/IObservable";
 import type Mat4 from "@/lib/math/Mat4";
 
 export type Vector4Array = [number, number, number, number];

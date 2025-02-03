@@ -10,12 +10,16 @@ import Observable from "@/lib/math/Observable";
 /** Some default camera controller provided by the engine */
 export class OrthographicCameraController {
     private _camera : Camera;
+
+    // Updated on resize
     private _aspect : number;
-    private _zoomLevel : number = 1;
+
+    // Internal
+    private _zoomLevel : Observable<number> = new Observable(1);
     private _zoomSpeed : Observable<number> = new Observable(0.1);
 
+    get zoomLevel() { return this._zoomLevel; }
     get zoomSpeed() { return this._zoomSpeed; }
-
     get camera() { return this._camera; }
 
     constructor(aspect: number, camera?: Camera) {
@@ -32,14 +36,16 @@ export class OrthographicCameraController {
             this._aspect = width / height;
             this.updateOrthographicProjection();
         });
+
+        this._zoomLevel.subscribe(() => this.updateOrthographicProjection());
     }
 
     private updateOrthographicProjection() {
         const orthoProjection = this._camera.projection as OrthographicCameraProjection;
-        orthoProjection.bottom = -this._zoomLevel;
-        orthoProjection.top = this._zoomLevel;
-        orthoProjection.left = -this._aspect * this._zoomLevel;
-        orthoProjection.right = this._aspect * this._zoomLevel;
+        orthoProjection.bottom = -this._zoomLevel.value;
+        orthoProjection.top = this._zoomLevel.value;
+        orthoProjection.left = -this._aspect * this._zoomLevel.value;
+        orthoProjection.right = this._aspect * this._zoomLevel.value;
     }
 
     onUpdate(deltaTime : number) {
@@ -48,8 +54,8 @@ export class OrthographicCameraController {
         /** Zoom */
         const wheelDelta = Input.getMouseWheelDelta();
         if (wheelDelta != 0) {
-            const zoomDelta = wheelDelta * deltaTime * this._zoomSpeed.value * this._zoomLevel;
-            this._zoomLevel = MathUtils.clamp(this._zoomLevel + zoomDelta, 0.1, 10);
+            const zoomDelta = wheelDelta * deltaTime * this._zoomSpeed.value * this._zoomLevel.value;
+            this._zoomLevel.value = MathUtils.clamp(this._zoomLevel.value + zoomDelta, 0.1, 10);
             this.updateOrthographicProjection();
         }
 
@@ -59,8 +65,8 @@ export class OrthographicCameraController {
             const delta = Input.getMouseDelta(); // Screen Space
             const [width, height] = [gl.canvas.width, gl.canvas.height];
 
-            this._camera.transform.position.x -= delta.x / width * 2 * this._zoomLevel;
-            this._camera.transform.position.y += delta.y / height * 2 * this._zoomLevel;
+            this._camera.transform.position.x -= delta.x / width * 2 * this._zoomLevel.value;
+            this._camera.transform.position.y += delta.y / height * 2 * this._zoomLevel.value;
         } else {
             DOMUtils.setCursor("default");
         }

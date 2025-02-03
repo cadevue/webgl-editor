@@ -40,7 +40,7 @@ function addResizeCallback(callback : (width: number, height: number) => void) {
 
 const resizeObserver = new ResizeObserver(onResize);
 
-function resizeCanvasToDisplaySize(canvas : HTMLCanvasElement) {
+function resizeCanvasToDisplaySize(canvas : HTMLCanvasElement) : boolean {
     const [displayWidth, displayHeight] = canvasToDisplaySizeMap.get(canvas) || [0, 0];
 
     const needResize = canvas.width !== displayWidth || canvas.height !== displayHeight;
@@ -49,6 +49,8 @@ function resizeCanvasToDisplaySize(canvas : HTMLCanvasElement) {
         canvas.height = displayHeight;
         onResizeCallbacks.forEach(callback => callback(displayWidth, displayHeight));
     }
+
+    return needResize;
 }
 
 function initCanvas(canvas : HTMLCanvasElement) {

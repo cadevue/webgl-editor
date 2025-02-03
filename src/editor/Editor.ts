@@ -24,117 +24,105 @@ import { bindedExposableFields, editorConfig } from "@/editorContext";
 import ExposableTransfrom from "@/editor/fields/ExposableTransform";
 import { OrthographicCameraController } from "@/lib/scene/camera/CameraController";
 import ExposableNumber from "./fields/ExposableNumber";
+import type VertexArray from "@/lib/rendering/VertexArray";
+import type Shader from "@/lib/rendering/Shader";
+import type AppLayer from "@/lib/app/Layer";
 
-export default class Editor {
-    private static _instance: Editor;
 
-    static get instance() {
-        if (!Editor._instance) {
-            Editor._instance = new Editor();
-            Editor._instance.init();
-        }
+export default class Editor implements AppLayer {
+    private _gl : WebGL2RenderingContext;
+    private _texturedShader : Shader;
 
-        return Editor._instance;
-    }
+    private _staticSquare : VertexArray;
+    private _staticSquareTr : Transform;
+    
+    private _controllableSquare : VertexArray;
+    private _controllableSquareTr : Transform;
 
-    private init() {
-        Renderer.init();
-    }
+    private _moonwrTex : Texture2D;
+    private _itbTex : Texture2D;
 
-    run() {
-        const gl = renderContext.getWebGLRenderingContext();
+    private _camera : Camera;
+    private _cameraController : OrthographicCameraController;
 
-        const texturedShader = ShaderLibrary.get(BuiltInShader.Textured2D)!;
-        texturedShader.bind();
-        texturedShader.uploadUniformInt("u_Texture", 0);
+    private _needResize = false;
 
-        const staticSquare = Primitives.createSquareTextured(texturedShader);
-        const staticSquareTr = new Transform();
-        staticSquareTr.scale.set([0.8, 0.8, 1]);
-        staticSquareTr.position.set([0.42, 0, 0]);
+    constructor() {
+        this._gl = renderContext.getWebGLRenderingContext();
+        const gl = this._gl;
 
-        const controllableSquare = Primitives.createSquareTextured(texturedShader);
-        const controllableSquareTr = new Transform();
-        controllableSquareTr.scale.set([0.8, 0.8, 1]);
-        controllableSquareTr.position.set([-0.42, 0, 0]);
+        this._texturedShader = ShaderLibrary.get(BuiltInShader.Textured2D)!;
+        this._texturedShader.bind();
+        this._texturedShader.uploadUniformInt("u_Texture", 0);
 
-        const moonwrTex = new Texture2D("textures/moonwr.png");
-        const itbTex = new Texture2D("textures/itb.png");
+        this._staticSquare = Primitives.createSquareTextured(this._texturedShader);
+        this._staticSquareTr = new Transform();
+        this._staticSquareTr.scale.set([0.8, 0.8, 1]);
+        this._staticSquareTr.position.set([0.42, 0, 0]);
+
+        this._controllableSquare = Primitives.createSquareTextured(this._texturedShader);
+        this._controllableSquareTr = new Transform();
+        this._controllableSquareTr.scale.set([0.8, 0.8, 1]);
+        this._controllableSquareTr.position.set([-0.42, 0, 0]);
+
+        this._moonwrTex = new Texture2D("textures/moonwr.png");
+        this._itbTex = new Texture2D("textures/itb.png");
 
         const aspect = gl.canvas.width / gl.canvas.height;
-        const camera = Camera.createOrtographicCamera(-aspect, aspect, -1, 1, Number.MIN_VALUE, Number.MAX_VALUE);
-        const cameraController = new OrthographicCameraController(aspect, camera);
+        this._camera = Camera.createOrtographicCamera(-aspect, aspect, -1, 1, Number.MIN_VALUE, Number.MAX_VALUE);
+        this._cameraController = new OrthographicCameraController(aspect, this._camera);
 
         RenderCommand.setClearColor(editorConfig.viewportColor);
 
         bindedExposableFields.set([
-            new ExposableTransfrom(controllableSquareTr, "Square Transform"),
-            new ExposableTransfrom(camera.transform, "Camera Transform"),
-            new ExposableNumber(cameraController.zoomSpeed, "Zoom Speed")
+            new ExposableTransfrom(this._controllableSquareTr, "Square Transform"),
+            new ExposableTransfrom(this._camera.transform, "Camera Transform"),
+            new ExposableNumber(this._cameraController.zoomSpeed, "Zoom Speed")
         ]);
+    }
 
+    onUpdate(deltaTime: number) {
         const moveSpeed = 1;
         const rotateSpeed = 135;
 
-        function update(deltaTime: number) {
-            /** Input */
-            Input.beginUpdate();
-
-            if (Input.isKeyPressed(KeyCode.W)) {
-                controllableSquareTr.position.y += moveSpeed * deltaTime;
-            } else if (Input.isKeyPressed(KeyCode.S)) {
-                controllableSquareTr.position.y -= moveSpeed * deltaTime;
-            }
-
-            if (Input.isKeyPressed(KeyCode.A)) {
-                controllableSquareTr.position.x -= moveSpeed * deltaTime;
-            } else if (Input.isKeyPressed(KeyCode.D)) {
-                controllableSquareTr.position.x += moveSpeed * deltaTime
-            }
-
-            if (Input.isKeyPressed(KeyCode.Q)) {
-                controllableSquareTr.rotation.z += rotateSpeed * deltaTime;
-            } else if (Input.isKeyPressed(KeyCode.E)) {
-                controllableSquareTr.rotation.z -= rotateSpeed * deltaTime
-            }
-
-            cameraController.onUpdate(deltaTime);
-
-            Input.endUpdate();
+        if (Input.isKeyPressed(KeyCode.W)) {
+            this._controllableSquareTr.position.y += moveSpeed * deltaTime;
+        } else if (Input.isKeyPressed(KeyCode.S)) {
+            this._controllableSquareTr.position.y -= moveSpeed * deltaTime;
         }
 
-        function drawScene() {
-            /** Render Preparation */
-            // Setting up the viewport
-            DOMUtils.resizeCanvasToDisplaySize(gl.canvas as HTMLCanvasElement);
-            RenderCommand.setViewport(0, 0, gl.canvas.width, gl.canvas.height);
-            RenderCommand.clear();
-
-            /** Draw */
-            Renderer.beginScene(camera);
-
-            moonwrTex.bind();
-            Renderer.submit(texturedShader, staticSquare, staticSquareTr);
-            // flatColorShader.uploadUniformFloat4("u_Color", flatSquareColor);
-
-            itbTex.bind();
-            Renderer.submit(texturedShader, controllableSquare, controllableSquareTr);
-
-            Renderer.endScene();
-        }
-        
-        let previousTime = 0;
-        let deltaTime = 0;
-        function loop(timestamp: DOMHighResTimeStamp) {
-            deltaTime = (timestamp - previousTime) / 1000;
-            previousTime = timestamp;
-
-            update(deltaTime);
-            drawScene();
-
-            requestAnimationFrame(loop);
+        if (Input.isKeyPressed(KeyCode.A)) {
+            this._controllableSquareTr.position.x -= moveSpeed * deltaTime;
+        } else if (Input.isKeyPressed(KeyCode.D)) {
+            this._controllableSquareTr.position.x += moveSpeed * deltaTime
         }
 
-        loop(0);
+        if (Input.isKeyPressed(KeyCode.Q)) {
+            this._controllableSquareTr.rotation.z += rotateSpeed * deltaTime;
+        } else if (Input.isKeyPressed(KeyCode.E)) {
+            this._controllableSquareTr!.rotation.z -= rotateSpeed * deltaTime
+        }
+
+        this._cameraController.onUpdate(deltaTime);
+
+        /** Render Preparation */
+        // Setting up the viewport
+        this._needResize = DOMUtils.resizeCanvasToDisplaySize(this._gl.canvas as HTMLCanvasElement);
+        if (this._needResize) {
+            RenderCommand.setViewport(0, 0, this._gl.canvas.width, this._gl.canvas.height);
+        }
+
+        RenderCommand.clear();
+
+        /** Draw */
+        Renderer.beginScene(this._camera);
+
+        this._moonwrTex.bind();
+        Renderer.submit(this._texturedShader, this._staticSquare, this._staticSquareTr);
+
+        this._itbTex.bind();
+        Renderer.submit(this._texturedShader, this._controllableSquare, this._controllableSquareTr);
+
+        Renderer.endScene();
     }
 }

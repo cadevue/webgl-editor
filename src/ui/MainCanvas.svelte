@@ -5,6 +5,7 @@
     import Editor from "@/editor/Editor";
     import DOMUtils from "@/lib/dom/DOMUtils";
     import Input from "@/lib/event/Input";
+    import Application from "@/lib/app/Application";
 
     let canvas: HTMLCanvasElement;
 
@@ -28,7 +29,9 @@
         }
 
         /** Start Application */
-        Editor.instance.run();
+        const app = new Application();
+        app.pushLayer(new Editor());
+        app.run();
     }
 
     onMount(() => {

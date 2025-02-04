@@ -121,22 +121,42 @@ export default class Mat4 extends Float32Array {
 
     static transpose(m: Mat4, dst?: Mat4) : Mat4 {
         dst = dst || new Mat4();
-        dst[0]  = m[0];
-        dst[1]  = m[4];
-        dst[2]  = m[8];
-        dst[3]  = m[12];
-        dst[4]  = m[1];
-        dst[5]  = m[5];
-        dst[6]  = m[9];
-        dst[7]  = m[13];
-        dst[8]  = m[2];
-        dst[9]  = m[6];
-        dst[10] = m[10];
-        dst[11] = m[14];
-        dst[12] = m[3];
-        dst[13] = m[7];
-        dst[14] = m[11];
-        dst[15] = m[15];
+        if (dst === m) {
+            let a01 = m[1], a02 = m[2], a03 = m[3],
+                a12 = m[6], a13 = m[7],
+                a23 = m[11];
+
+            dst[1] = m[4];
+            dst[2] = m[8];
+            dst[3] = m[12];
+            dst[4] = a01;
+            dst[6] = m[9];
+            dst[7] = m[13];
+            dst[8] = a02;
+            dst[9] = a12;
+            dst[11] = m[14];
+            dst[12] = a03;
+            dst[13] = a13;
+            dst[14] = a23;
+        } else {
+            dst[0]  = m[0];
+            dst[1]  = m[4];
+            dst[2]  = m[8];
+            dst[3]  = m[12];
+            dst[4]  = m[1];
+            dst[5]  = m[5];
+            dst[6]  = m[9];
+            dst[7]  = m[13];
+            dst[8]  = m[2];
+            dst[9]  = m[6];
+            dst[10] = m[10];
+            dst[11] = m[14];
+            dst[12] = m[3];
+            dst[13] = m[7];
+            dst[14] = m[11];
+            dst[15] = m[15];
+        }
+
         return dst;
     }
 

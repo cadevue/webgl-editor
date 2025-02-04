@@ -8,8 +8,8 @@ function createSquareFlat(shader: Shader) {
     // Vertex Buffer
     const positions = [
         -0.5, -0.5,
-            0.5, -0.5,
-            0.5,  0.5,
+         0.5, -0.5,
+         0.5,  0.5,
         -0.5,  0.5,
     ];
     const vertexBuffer = new VertexBuffer(new Float32Array(positions));
@@ -42,8 +42,8 @@ function createSquareTextured(shader: Shader) {
     // Vertex Buffer
     const positions = [
         -0.5, -0.5, 0.0, 0.0,
-            0.5, -0.5, 1.0, 0.0,
-            0.5,  0.5, 1.0, 1.0,
+         0.5, -0.5, 1.0, 0.0,
+         0.5,  0.5, 1.0, 1.0,
         -0.5,  0.5, 0.0, 1.0,
     ];
     const vertexBuffer = new VertexBuffer(new Float32Array(positions));

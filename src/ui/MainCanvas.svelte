@@ -4,10 +4,10 @@
 
     import Editor from "@/editor/Editor";
     import DOMUtils from "@/lib/dom/DOMUtils";
-    import Input from "@/lib/event/Input";
-    import Application from "@/lib/app/Application";
+    import Input from "@/lib/input/Input";
+    import type Application from "@/lib/app/Application";
 
-    let canvas: HTMLCanvasElement;
+    let canvas: HTMLCanvasElement | null = $state(null);
 
     function startApp() {
         /** Register Canvas */
@@ -29,8 +29,7 @@
         }
 
         /** Start Application */
-        const app = new Application();
-        app.pushLayer(new Editor());
+        const app : Application = new Editor(); // The editor application
         app.run();
     }
 

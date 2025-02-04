@@ -1,4 +1,4 @@
-import Input from "../event/Input";
+import Input from "../input/Input";
 import RenderCommand from "../rendering/RenderCommand";
 import Renderer from "../rendering/Renderer";
 import LayerStack from "./LayerStack";
@@ -6,7 +6,7 @@ import DOMUtils from "../dom/DOMUtils";
 import { renderContext } from "@/renderContext";
 import type AppLayer from "./Layer";
 
-export default class Application {
+export default abstract class Application {
     private _layerStack: LayerStack = new LayerStack();
 
     constructor() { Renderer.init(); }
@@ -23,20 +23,18 @@ export default class Application {
         const gl = renderContext.getWebGLRenderingContext();
 
         let needResize = false;
-
         const update = (deltaTime: number) => {
             // Window Resize Handling
             needResize = DOMUtils.resizeCanvasToDisplaySize(gl.canvas as HTMLCanvasElement);
             if (needResize) {
                 RenderCommand.setViewport(0, 0, gl.canvas.width, gl.canvas.height);
             }
-            RenderCommand.clear();
 
             // Layer Stack Processing
             Input.beginUpdate();
 
             for (const layer of this._layerStack.layers) {
-                layer.onUpdate(deltaTime);
+                layer.onUpdate?.(deltaTime);
             }
 
             Input.endUpdate();

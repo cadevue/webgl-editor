@@ -1,11 +1,6 @@
 import { renderContext } from "@/renderContext";
 import { getSizeOfShaderDataType, shaderDataTypeToString, type ShaderDataType } from "@/lib/rendering/ShaderType";
-
-// Delete webgl buffer when the parent object is garbage collected
-const reg = new FinalizationRegistry((buffer: WebGLBuffer) => {
-    const gl = renderContext.getWebGLRenderingContext();
-    gl.deleteBuffer(buffer);
-});
+import GLMemory from "./GLMemory";
 
 /** BUFFER ELEMENT */
 export class BufferElement {
@@ -77,9 +72,9 @@ export class VertexBuffer {
         gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer);
         gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
 
-        reg.register(this, this._buffer);
-
         this._layout = layout || null;
+
+        GLMemory.registerResource(this, this._buffer);
     }
 
     setLayout(layout: BufferLayout) {
@@ -113,7 +108,7 @@ export class IndexBuffer {
 
         this._count = data.length;
 
-        reg.register(this, this._buffer);
+        GLMemory.registerResource(this, this._buffer);
     }
 
     bind() {

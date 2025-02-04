@@ -14,12 +14,12 @@ export default class ShaderLibrary {
         this._library.set(BuiltInShader.Textured2D, new Shader(ShaderLibrary.parseShaderSource(Textured2DSource)));
     }
 
-    static get(name: BuiltInShader | string): Shader | undefined {
+    static get(name: BuiltInShader | string): Shader {
         if (!this._library.has(name)) { 
             throw new Error(`Shader not found: ${name}`);
         }
 
-        return this._library.get(name);
+        return this._library.get(name)!;
     }
 
     static add(name: string, shader: Shader) {

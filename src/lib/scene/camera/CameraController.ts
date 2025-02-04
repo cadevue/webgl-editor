@@ -1,7 +1,7 @@
 import DOMUtils from "@/lib/dom/DOMUtils";
 import Camera from "./Camera";
 import { OrthographicCameraProjection } from "./CameraProjection";
-import Input, { MouseButton } from "@/lib/event/Input";
+import Input, { MouseButton } from "@/lib/input/Input";
 import MathUtils from "@/lib/math/MathUtils";
 import { renderContext } from "@/renderContext";
 import Observable from "@/lib/math/Observable";

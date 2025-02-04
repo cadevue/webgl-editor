@@ -1,4 +1,5 @@
 import { renderContext } from "@/renderContext";
+import GLMemory from "./GLMemory";
 
 export abstract class Texture {
     public abstract get width(): number;
@@ -48,9 +49,12 @@ export class Texture2D extends Texture {
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
             gl.generateMipmap(gl.TEXTURE_2D);
         }
+
         image.onerror = () => {
             console.error(`Failed to load texture from path: ${path}`);
         }
+
+        GLMemory.registerResource(this, this._texture);
     }
 
     public bind(slot? : TextureSlot): void { 

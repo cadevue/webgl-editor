@@ -34,35 +34,27 @@ export class Texture2D extends Texture {
         super();
         this._width  = width || 0;
         this._height = height || 0;
-        // this._path   = path;
+
+        if (!color && !path) {
+            console.warn("Creating a texture without a path or color will default to a 1x1 pixel magenta color");
+        }
+
+        color = color || ColorRGBA.MAGENTA;
+        this._path = "";
 
         const gl = renderContext.getWebGLRenderingContext();
 
-        if (!path) {
-            if (!color) {
-                console.warn("Creating a texture without a path or color will default to a 1x1 pixel magenta color");
-                color = ColorRGBA.MAGENTA;
-            }
+        this._texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, this._texture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(color.toArrayDenormalized()));
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 
-            this._texture = gl.createTexture();
-            gl.bindTexture(gl.TEXTURE_2D, this._texture);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(color.toArrayDenormalized()));
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-
-            this._path = "";
-        } else {
+        if (path) {
             // Create a texture and set it to a 1x1 pixel magenta color
             this._path = path;
-            this._texture = gl.createTexture();
-            gl.bindTexture(gl.TEXTURE_2D, this._texture);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 0, 255, 255]));
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 
             // Load the texture image
             const image = new Image();

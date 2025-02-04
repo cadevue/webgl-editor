@@ -1,7 +1,7 @@
 import { mount } from 'svelte'
-import App from './App.svelte'
+import Editor from './editor/Editor.svelte'
 
-const app = mount(App, {
+const app = mount(Editor, {
   target: document.getElementById('app')!,
 })
 

@@ -1,6 +1,6 @@
 import type Transform from "@/lib/scene/component/Transform";
-import TransformField from "@/ui/fields/TransformField.svelte";
 import ExposableField from "./ExposableField";
+import TransformField from "../ui/fields/TransformField.svelte";
 
 export default class ExposableTransfrom extends ExposableField<Transform> {
     constructor(target: Transform, label?: string) {

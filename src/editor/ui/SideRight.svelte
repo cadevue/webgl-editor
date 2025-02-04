@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { bindedExposableFields } from "@/editorContext";
     import type { IExposableField } from "@/editor/InspectorExpose";
+    import { bindedExposableFields } from "../editorContext";
 
     import SideLayout from "./layouts/SideLayout.svelte";
 

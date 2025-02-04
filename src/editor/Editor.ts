@@ -12,7 +12,7 @@ import Primitives from "@/lib/scene/Primitives";
 
 /** Misc */
 import ShaderLibrary, { BuiltInShader } from "@/lib/asset/ShaderLibrary";
-import { bindedExposableFields, editorConfig } from "@/editorContext";
+import { bindedExposableFields, editorConfig } from "@/editor/editorContext";
 import ExposableTransfrom from "@/editor/fields/ExposableTransform";
 import { OrthographicCameraController } from "@/lib/scene/camera/CameraController";
 import ExposableNumber from "./fields/ExposableNumber";

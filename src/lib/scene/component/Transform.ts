@@ -2,7 +2,6 @@ import Vector3, { type Vector3Array } from "@/lib/math/Vector3";
 import NodeComponent from "@/lib/scene/component/NodeComponent";
 import Mat4 from "@/lib/math/Mat4";
 import Quaternion from "@/lib/math/Quaternion";
-import TransformField from "@/ui/fields/TransformField.svelte";
 import type { IObservable } from "@/lib/interface/IObservable";
 
 export default class Transform extends NodeComponent implements IObservable<Transform> {

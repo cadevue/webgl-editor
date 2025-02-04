@@ -1,11 +1,9 @@
 import Mat4 from "@/lib/math/Mat4";
 import Transform from "@/lib/scene/component/Transform";
 import { OrthographicCameraProjection, type CameraProjection } from "@/lib/scene/camera/CameraProjection";
-import type { IExposable } from "@/editor/InspectorExpose";
-import { bindedExposableFields } from "@/editorContext";
 import ExposableTransfrom from "@/editor/fields/ExposableTransform";
 
-export default class Camera implements IExposable {
+export default class Camera  {
     private _projection: CameraProjection;
     private _viewProjectionMatrix: Mat4 = Mat4.identity();
 
@@ -43,9 +41,5 @@ export default class Camera implements IExposable {
     get transform()  { return this._transform ; }
     get viewProjectionMatrix(): Mat4 {
         return this._viewProjectionMatrix;
-    }
-
-    bindComponents(): void {
-        bindedExposableFields.set([new ExposableTransfrom(this.transform)]);
     }
 }

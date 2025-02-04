@@ -14,7 +14,6 @@ export default class Shader {
     constructor(sources: Map<GLenum, string>) {
         const gl = renderContext.getWebGLRenderingContext();
 
-
         if (sources.size > 3) {
             throw new Error("Currently only supports 3 shaders");
         }

@@ -1,9 +1,6 @@
 /** Shared State */
 import { renderContext } from "@/renderContext";
 
-/** Utils */
-import DOMUtils from "@/lib/dom/DOMUtils";
-
 /** Rendering */
 import Camera from "@/lib/scene/camera/Camera";
 import Renderer from "@/lib/rendering/Renderer";
@@ -25,7 +22,7 @@ import type AppLayer from "@/lib/app/Layer";
 import Application from "@/lib/app/Application";
 import RenderCommand from "@/lib/rendering/RenderCommand";
 import Renderer2D from "@/lib/rendering/Renderer2D";
-import { ColorRGBA, HexToColorRGBA } from "@/lib/math/Color";
+import { ColorRGBA } from "@/lib/math/Color";
 
 class EditorLayer implements AppLayer {
     private _gl : WebGL2RenderingContext;
@@ -47,7 +44,7 @@ class EditorLayer implements AppLayer {
         this._gl = renderContext.getWebGLRenderingContext();
         const gl = this._gl;
 
-        this._texturedShader = ShaderLibrary.get(BuiltInShader.Textured2D)!;
+        this._texturedShader = ShaderLibrary.get(BuiltInShader.Sprite2D);
         this._texturedShader.bind();
         this._texturedShader.setInt("u_Texture", 0);
 

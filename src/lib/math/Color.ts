@@ -1,6 +1,15 @@
 import Vector4 from "@/lib/math/Vector4";
 
-export class ColorRGBA extends Vector4 {}
+export class ColorRGBA extends Vector4 {
+    static readonly WHITE = new ColorRGBA([1, 1, 1, 1]);
+    static readonly BLACK = new ColorRGBA([0, 0, 0, 1]);
+    static readonly RED = new ColorRGBA([1, 0, 0, 1]);
+    static readonly GREEN = new ColorRGBA([0, 1, 0, 1]);
+    static readonly BLUE = new ColorRGBA([0, 0, 1, 1]);
+    static readonly CYAN = new ColorRGBA([0, 1, 1, 1]);
+    static readonly MAGENTA = new ColorRGBA([1, 0, 1, 1]);
+    static readonly YELLOW = new ColorRGBA([1, 1, 0, 1]);
+}
 
 export function HexToColorRGBA(hex: string): ColorRGBA {
     let start = 0;

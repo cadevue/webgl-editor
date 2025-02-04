@@ -16,10 +16,11 @@ void main() {
 precision mediump float;
 
 uniform sampler2D u_Texture;
+uniform vec4 u_Color;
 
 varying vec2 v_TexCoord;
 
 void main() {
     vec2 uv_Coord = vec2(v_TexCoord.x, 1.0 - v_TexCoord.y); // Handle Flip
-    gl_FragColor = texture2D(u_Texture, uv_Coord);
+    gl_FragColor = texture2D(u_Texture, uv_Coord) * u_Color;
 }

@@ -3,15 +3,15 @@ import type { ShaderSource } from '../rendering/ShaderType';
 
 /** Import the Main Library */
 import Flat2DSource from '@/assets/shaders/Flat2D.glsl?raw';
-import Textured2DSource from '@/assets/shaders/Textured2D.glsl?raw';
-export enum BuiltInShader { Flat2D, Textured2D }
+import Sprite2D from '@/assets/shaders/Sprite2D.glsl?raw';
+export enum BuiltInShader { Flat2D, Sprite2D }
 
 export default class ShaderLibrary {
     private static _library: Map<string | BuiltInShader, Shader> = new Map();
 
     static init() {
         this._library.set(BuiltInShader.Flat2D, new Shader(ShaderLibrary.parseShaderSource(Flat2DSource)));
-        this._library.set(BuiltInShader.Textured2D, new Shader(ShaderLibrary.parseShaderSource(Textured2DSource)));
+        this._library.set(BuiltInShader.Sprite2D, new Shader(ShaderLibrary.parseShaderSource(Sprite2D)));
     }
 
     static get(name: BuiltInShader | string): Shader {

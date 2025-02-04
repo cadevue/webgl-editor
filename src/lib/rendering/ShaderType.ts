@@ -1,3 +1,5 @@
+export type ShaderSource = Map<GLenum, string>;
+
 export enum ShaderDataType {
     Float, Float2, Float3, Float4,
     Mat3, Mat4,

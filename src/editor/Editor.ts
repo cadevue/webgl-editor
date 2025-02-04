@@ -8,15 +8,14 @@ import DOMUtils from "@/lib/dom/DOMUtils";
 import Camera from "@/lib/scene/camera/Camera";
 import Renderer from "@/lib/rendering/Renderer";
 import RenderCommand from "@/lib/rendering/RenderCommand";
-import { Texture2D } from "@/lib/asset/Texture";
+import { Texture2D } from "@/lib/rendering/Texture";
 
 /** Scene */
 import Transform from "@/lib/scene/component/Transform";
 import Primitives from "@/lib/scene/Primitives";
 
 /** Input */
-import Input from "@/lib/event/Input";
-import { KeyCode } from "@/lib/event/InputType";
+import Input, { KeyCode } from "@/lib/event/Input";
 
 /** Misc */
 import ShaderLibrary, { BuiltInShader } from "@/lib/asset/ShaderLibrary";

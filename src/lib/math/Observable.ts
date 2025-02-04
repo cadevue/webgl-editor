@@ -1,5 +1,7 @@
 import type { IObservable } from "../interface/IObservable";
 
+/** Observable class FOR PRIMITIVE TYPES ONLY */
+// For more complex types, implements the IObservable interface manually
 export default class Observable<T> implements IObservable<T> {
     private _value: T;
     constructor(value: T) { 

@@ -1,9 +1,9 @@
-import Shader, { type ShaderSource } from '@/lib/rendering/Shader';
+import Shader from '../rendering/Shader';
+import type { ShaderSource } from '../rendering/ShaderType';
 
 /** Import the Main Library */
 import Flat2DSource from '@/assets/shaders/Flat2D.glsl?raw';
 import Textured2DSource from '@/assets/shaders/Textured2D.glsl?raw';
-
 export enum BuiltInShader { Flat2D, Textured2D }
 
 export default class ShaderLibrary {
@@ -28,7 +28,7 @@ export default class ShaderLibrary {
         }
         this._library.set(name, shader);
     }
-    
+
     static addFromSource(name: string, source: ShaderSource) {
         if (this._library.has(name)) {
             throw new Error(`Shader already exists: ${name}`);

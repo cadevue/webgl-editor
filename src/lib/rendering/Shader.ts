@@ -4,7 +4,6 @@ import type Vector3 from "@/lib/math/Vector3";
 import type Vector4 from "@/lib/math/Vector4";
 import type Mat4 from "@/lib/math/Mat4";
 
-export type ShaderSource = Map<GLenum, string>;
 
 export default class Shader {
     private _program: WebGLProgram;

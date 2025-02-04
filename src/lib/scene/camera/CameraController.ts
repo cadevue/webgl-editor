@@ -1,10 +1,9 @@
 import DOMUtils from "@/lib/dom/DOMUtils";
 import Camera from "./Camera";
 import { OrthographicCameraProjection } from "./CameraProjection";
-import Input from "@/lib/event/Input";
+import Input, { MouseButton } from "@/lib/event/Input";
 import MathUtils from "@/lib/math/MathUtils";
 import { renderContext } from "@/renderContext";
-import { MouseButton } from "@/lib/event/InputType";
 import Observable from "@/lib/math/Observable";
 
 /** Some default camera controller provided by the engine */

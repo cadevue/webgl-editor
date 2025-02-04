@@ -23,6 +23,7 @@ import Application from "@/lib/app/Application";
 import RenderCommand from "@/lib/rendering/RenderCommand";
 import Renderer2D from "@/lib/rendering/Renderer2D";
 import { ColorRGBA } from "@/lib/math/Color";
+import Vector2 from "@/lib/math/Vector2";
 
 class EditorLayer implements AppLayer {
     private _gl : WebGL2RenderingContext;
@@ -58,8 +59,8 @@ class EditorLayer implements AppLayer {
         this._controllableSquareTr.scale.set([0.8, 0.8, 1]);
         this._controllableSquareTr.position.set([-0.42, 0, 0]);
 
-        this._moonwrTex = new Texture2D("textures/moonwr.png");
-        this._itbTex = new Texture2D("textures/itb.png");
+        this._moonwrTex = new Texture2D({src: "textures/moonwr.png"});
+        this._itbTex = new Texture2D({src: "textures/itb.png"});
 
         const aspect = gl.canvas.width / gl.canvas.height;
         this._camera = Camera.createOrtographicCamera(-aspect, aspect, -1, 1, Number.MIN_VALUE, Number.MAX_VALUE);
@@ -115,7 +116,9 @@ class Sandbox2DLayer implements AppLayer {
 
         this._texturedSquareTr = new Transform();
         this._texturedSquareTr.position.set([-0.55, 0, 0]);
-        this._moonwrTex = new Texture2D("textures/moonwr.png");
+        this._moonwrTex = new Texture2D({
+            src: "textures/moonwr.png",
+        });
 
         const aspect = gl.canvas.width / gl.canvas.height;
         this._camera = Camera.createOrtographicCamera(-aspect, aspect, -1, 1, Number.MIN_VALUE, Number.MAX_VALUE);
@@ -127,10 +130,6 @@ class Sandbox2DLayer implements AppLayer {
     private bindProperties() {
         bindedExposableFields.set([
             new ExposableTransfrom(this._camera.transform, "Camera Transform"),
-            // new ExposableTransfrom(this._flatSquareTr, "Flat Square Transform"),
-            // new ExposableTransfrom(this._texturedSquareTr, "Textured Square Transform"),
-            // new ExposableNumber(this._cameraController.zoomSpeed, "Zoom Speed"),
-            // new ExposableNumber(this._cameraController.zoomLevel, "Zoom Level"),
         ]);
     }
 
@@ -143,8 +142,16 @@ class Sandbox2DLayer implements AppLayer {
         /** Draw */
         Renderer2D.beginScene(this._camera);
 
-        Renderer2D.drawQuadFlat(this._flatSquareTr, new ColorRGBA([0.3, 0.2, 0.8, 1]));
-        Renderer2D.drawQuadTextured(this._texturedSquareTr, this._moonwrTex);
+        Renderer2D.drawQuad({
+            transform: this._flatSquareTr,
+            color: new ColorRGBA([0.3, 0.2, 0.8, 1])
+        });
+
+        Renderer2D.drawQuad({
+            transform: this._texturedSquareTr,
+            texture: this._moonwrTex,
+            tiling: new Vector2([2, 2])
+        });
 
         Renderer2D.endScene();
     }

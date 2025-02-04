@@ -1,6 +1,7 @@
 import ShaderLibrary, { BuiltInShader } from "../asset/ShaderLibrary";
 import { ColorRGBA } from "../math/Color";
 import Mat4 from "../math/Mat4";
+import Vector2 from "../math/Vector2";
 import type Camera from "../scene/camera/Camera";
 import type Transform from "../scene/component/Transform";
 import { BufferElement, BufferLayout, IndexBuffer, VertexBuffer } from "./Buffer";
@@ -10,10 +11,22 @@ import { ShaderDataType } from "./ShaderType";
 import { Texture2D } from "./Texture";
 import VertexArray from "./VertexArray";
 
+export interface QuadParams {
+    transform: Transform;
+    texture?: Texture2D;
+    color?: ColorRGBA;
+    offset?: Vector2;
+    tiling?: Vector2;
+}
+
 export default class Renderer2D {
     private static _quadVertexArray: VertexArray;
     private static _spriteShader: Shader;
+
+    // Default Values
     private static _defaultTexture: Texture2D;
+    private static _vec2One: Vector2 = Vector2.ones();
+    private static _vec2Zero: Vector2 = Vector2.zeros();
 
     private static _viewProjectionMatrix: Mat4 = Mat4.identity();
 
@@ -51,7 +64,7 @@ export default class Renderer2D {
         Renderer2D._quadVertexArray.addVertexBuffer(vertexBuffer);
         Renderer2D._quadVertexArray.setIndexBuffer(indexBuffer);
 
-        Renderer2D._defaultTexture = new Texture2D("textures/white1x1.png");
+        Renderer2D._defaultTexture = new Texture2D({ width: 1, height: 1, color: ColorRGBA.WHITE })
     }
 
     static beginScene(camera: Camera) { 
@@ -61,16 +74,18 @@ export default class Renderer2D {
         Renderer2D._spriteShader.setMat4("u_ViewProjection", this._viewProjectionMatrix);
     }
 
-    static drawQuadFlat(transform: Transform, color?: ColorRGBA) {
-        Renderer2D.drawQuadTextured(transform, Renderer2D._defaultTexture, color);
-    }
-
-    static drawQuadTextured(transform: Transform, texture: Texture2D, color?: ColorRGBA) {
+    static drawQuad({ transform, texture, color, offset, tiling }: QuadParams) {
+        texture = texture || Renderer2D._defaultTexture;
         texture.bind();
         color = color || ColorRGBA.WHITE;
+        offset = offset || Renderer2D._vec2Zero;
+        tiling = tiling || Renderer2D._vec2One;
+
         Renderer2D._spriteShader.bind();
         Renderer2D._spriteShader.setMat4("u_Transform", transform.worldMatrix);
         Renderer2D._spriteShader.setFloat4("u_Color", color);
+        Renderer2D._spriteShader.setFloat2("u_Offset", offset);
+        Renderer2D._spriteShader.setFloat2("u_Tiling", tiling);
 
         Renderer2D._quadVertexArray.bind();
         RenderCommand.drawIndexed(Renderer2D._quadVertexArray);

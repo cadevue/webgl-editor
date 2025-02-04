@@ -134,6 +134,10 @@ export default class Input {
     }
 
     private static onMouseWheel(event: WheelEvent): void {
+        if (event.ctrlKey) {
+            event.preventDefault()
+        }
+
         Input._mouseWheelDelta = event.deltaY;
     }
 

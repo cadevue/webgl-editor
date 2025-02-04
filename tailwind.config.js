@@ -12,6 +12,11 @@ export default {
         },
         red: '#f14e3c'
       },
+      fontSize: {
+        '2xs': '.5rem',
+        '3xs': '.375rem',
+        '4xs': '.25rem',
+      }
     },
   },
   plugins: [],

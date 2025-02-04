@@ -25,7 +25,7 @@ import type AppLayer from "@/lib/app/Layer";
 import Application from "@/lib/app/Application";
 import RenderCommand from "@/lib/rendering/RenderCommand";
 import Renderer2D from "@/lib/rendering/Renderer2D";
-import { HexToColorRGBA } from "@/lib/math/Color";
+import { ColorRGBA, HexToColorRGBA } from "@/lib/math/Color";
 
 class EditorLayer implements AppLayer {
     private _gl : WebGL2RenderingContext;
@@ -49,7 +49,7 @@ class EditorLayer implements AppLayer {
 
         this._texturedShader = ShaderLibrary.get(BuiltInShader.Textured2D)!;
         this._texturedShader.bind();
-        this._texturedShader.uploadUniformInt("u_Texture", 0);
+        this._texturedShader.setInt("u_Texture", 0);
 
         this._staticSquare = Primitives.createSquareTextured(this._texturedShader);
         this._staticSquareTr = new Transform();
@@ -101,10 +101,10 @@ class EditorLayer implements AppLayer {
 
 class Sandbox2DLayer implements AppLayer {
     private _gl : WebGL2RenderingContext;
-    private _flatColorShader : Shader;
+    private _flatSquareTr : Transform;
+    private _texturedSquareTr : Transform;
 
-    private _staticSquare : VertexArray;
-    private _staticSquareTr : Transform;
+    private _moonwrTex : Texture2D;
 
     private _camera : Camera;
     private _cameraController : OrthographicCameraController;
@@ -113,15 +113,12 @@ class Sandbox2DLayer implements AppLayer {
         this._gl = renderContext.getWebGLRenderingContext();
         const gl = this._gl;
 
-        this._flatColorShader = ShaderLibrary.get(BuiltInShader.Textured2D);
-        // this._flatColorShader.bind();
-        // this._flatColorShader.uploadUniformInt("u_Texture", 0);
+        this._flatSquareTr = new Transform();
+        this._flatSquareTr.position.set([0.55, 0, 0]);
 
-        this._staticSquare = Primitives.createSquareFlat(this._flatColorShader);
-        this._staticSquareTr = new Transform();
-        this._staticSquareTr.position.set([0, 0, 0]);
-
-        // this._moonwrTex = new Texture2D("textures/moonwr.png");
+        this._texturedSquareTr = new Transform();
+        this._texturedSquareTr.position.set([-0.55, 0, 0]);
+        this._moonwrTex = new Texture2D("textures/moonwr.png");
 
         const aspect = gl.canvas.width / gl.canvas.height;
         this._camera = Camera.createOrtographicCamera(-aspect, aspect, -1, 1, Number.MIN_VALUE, Number.MAX_VALUE);
@@ -133,6 +130,8 @@ class Sandbox2DLayer implements AppLayer {
     private bindProperties() {
         bindedExposableFields.set([
             new ExposableTransfrom(this._camera.transform, "Camera Transform"),
+            new ExposableTransfrom(this._flatSquareTr, "Flat Square Transform"),
+            new ExposableTransfrom(this._texturedSquareTr, "Textured Square Transform"),
             new ExposableNumber(this._cameraController.zoomSpeed, "Zoom Speed"),
             new ExposableNumber(this._cameraController.zoomLevel, "Zoom Level")
         ]);
@@ -147,7 +146,8 @@ class Sandbox2DLayer implements AppLayer {
         /** Draw */
         Renderer2D.beginScene(this._camera);
 
-        Renderer2D.drawQuad(this._staticSquareTr, HexToColorRGBA("#ba3a2c"));
+        Renderer2D.drawQuadFlat(this._flatSquareTr, new ColorRGBA([0.3, 0.2, 0.8, 1]));
+        Renderer2D.drawQuadTextured(this._texturedSquareTr, this._moonwrTex);
 
         Renderer2D.endScene();
     }
@@ -156,7 +156,7 @@ class Sandbox2DLayer implements AppLayer {
 export default class Editor extends Application {
     constructor() {
         super();
-        this.pushLayer(new EditorLayer());
-        // this.pushLayer(new Sandbox2DLayer());
+        // this.pushLayer(new EditorLayer());
+        this.pushLayer(new Sandbox2DLayer());
     }
 }

@@ -18,7 +18,7 @@
 <SideLayout>
     <div class="absolute h-full bg-dark-800 left-0 top-0 w-0.5"></div>
     <h1 class="mb-4">Properties</h1>
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-8">
         <!-- Render all the exposable fields -->
         {#each fieldRenderers as renderer}
             <renderer.component {...renderer.props} />

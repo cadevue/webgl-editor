@@ -5,11 +5,17 @@ import LayerStack from "./LayerStack";
 import DOMUtils from "../dom/DOMUtils";
 import { renderContext } from "@/renderContext";
 import type AppLayer from "./Layer";
+import ShaderLibrary from "../asset/ShaderLibrary";
+import Renderer2D from "../rendering/Renderer2D";
 
 export default abstract class Application {
     private _layerStack: LayerStack = new LayerStack();
 
-    constructor() { Renderer.init(); }
+    constructor() { 
+        ShaderLibrary.init();
+        Renderer.init();
+        Renderer2D.init();
+    }
 
     pushLayer(layer: AppLayer) {
         this._layerStack.pushLayer(layer);

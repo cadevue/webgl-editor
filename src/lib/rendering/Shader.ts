@@ -76,55 +76,55 @@ export default class Shader {
         }
     }
 
-    uploadUniformMat4(name: string, matrix: Mat4) {
+    setMat4(name: string, matrix: Mat4) {
         const location = this.getUniformLocation(name);
         const gl = renderContext.getWebGLRenderingContext();
         gl.uniformMatrix4fv(location, false, matrix);
     }
 
-    uploadUniformFloat(name: string, value: number) {
+    setFloat(name: string, value: number) {
         const location = this.getUniformLocation(name);
         const gl = renderContext.getWebGLRenderingContext();
         gl.uniform1f(location, value);
     }
 
-    uploadUniformFloat2(name: string, value: Vector2) {
+    setFloat2(name: string, value: Vector2) {
         const location = this.getUniformLocation(name);
         const gl = renderContext.getWebGLRenderingContext();
         gl.uniform2f(location, value.x, value.y);
     }
 
-    uploadUniformFloat3(name: string, value: Vector3) {
+    setFloat3(name: string, value: Vector3) {
         const location = this.getUniformLocation(name);
         const gl = renderContext.getWebGLRenderingContext();
         gl.uniform3fv(location, value);
     }
 
-    uploadUniformFloat4(name: string, value: Vector4) {
+    setFloat4(name: string, value: Vector4) {
         const location = this.getUniformLocation(name);
         const gl = renderContext.getWebGLRenderingContext();
         gl.uniform4fv(location, value);
     }
 
-    uploadUniformInt(name: string, value: number) {
+    setInt(name: string, value: number) {
         const location = this.getUniformLocation(name);
         const gl = renderContext.getWebGLRenderingContext();
         gl.uniform1i(location, value);
     }
 
-    uploadUniformInt2(name: string, value: Vector2) {
+    setInt2(name: string, value: Vector2) {
         const location = this.getUniformLocation(name);
         const gl = renderContext.getWebGLRenderingContext();
         gl.uniform2i(location, value.x, value.y);
     }
 
-    uploadUniformInt3(name: string, value: Vector3) {
+    setInt3(name: string, value: Vector3) {
         const location = this.getUniformLocation(name);
         const gl = renderContext.getWebGLRenderingContext();
         gl.uniform3iv(location, value);
     }
 
-    uploadUniformInt4(name: string, value: Vector4) {
+    setInt4(name: string, value: Vector4) {
         const location = this.getUniformLocation(name);
         const gl = renderContext.getWebGLRenderingContext();
         gl.uniform4iv(location, value);

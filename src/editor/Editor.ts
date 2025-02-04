@@ -127,10 +127,10 @@ class Sandbox2DLayer implements AppLayer {
     private bindProperties() {
         bindedExposableFields.set([
             new ExposableTransfrom(this._camera.transform, "Camera Transform"),
-            new ExposableTransfrom(this._flatSquareTr, "Flat Square Transform"),
-            new ExposableTransfrom(this._texturedSquareTr, "Textured Square Transform"),
-            new ExposableNumber(this._cameraController.zoomSpeed, "Zoom Speed"),
-            new ExposableNumber(this._cameraController.zoomLevel, "Zoom Level")
+            // new ExposableTransfrom(this._flatSquareTr, "Flat Square Transform"),
+            // new ExposableTransfrom(this._texturedSquareTr, "Textured Square Transform"),
+            // new ExposableNumber(this._cameraController.zoomSpeed, "Zoom Speed"),
+            // new ExposableNumber(this._cameraController.zoomLevel, "Zoom Level"),
         ]);
     }
 

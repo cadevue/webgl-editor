@@ -1,5 +1,6 @@
 import { renderContext } from "@/renderContext";
 import GLMemory from "./GLMemory";
+import type { ColorRGBA } from "../math/Color";
 
 export abstract class Texture {
     public abstract get width(): number;
@@ -36,6 +37,8 @@ export class Texture2D extends Texture {
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 0, 255, 255]));
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 
         // Load the texture image
         const image = new Image();

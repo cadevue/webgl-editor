@@ -2,15 +2,13 @@ import Shader from '../rendering/Shader';
 import type { ShaderSource } from '../rendering/ShaderType';
 
 /** Import the Main Library */
-import Flat2DSource from '@/assets/shaders/Flat2D.glsl?raw';
 import Sprite2D from '@/assets/shaders/Sprite2D.glsl?raw';
-export enum BuiltInShader { Flat2D, Sprite2D }
+export enum BuiltInShader { Sprite2D }
 
 export default class ShaderLibrary {
     private static _library: Map<string | BuiltInShader, Shader> = new Map();
 
     static init() {
-        this._library.set(BuiltInShader.Flat2D, new Shader(ShaderLibrary.parseShaderSource(Flat2DSource)));
         this._library.set(BuiltInShader.Sprite2D, new Shader(ShaderLibrary.parseShaderSource(Sprite2D)));
     }
 

@@ -1,4 +1,4 @@
-import Vector4 from "@/lib/math/Vector4";
+import Vector4, { type Vector4Array } from "@/lib/math/Vector4";
 
 export class ColorRGBA extends Vector4 {
     static readonly WHITE = new ColorRGBA([1, 1, 1, 1]);
@@ -9,6 +9,10 @@ export class ColorRGBA extends Vector4 {
     static readonly CYAN = new ColorRGBA([0, 1, 1, 1]);
     static readonly MAGENTA = new ColorRGBA([1, 0, 1, 1]);
     static readonly YELLOW = new ColorRGBA([1, 1, 0, 1]);
+
+    toArrayDenormalized() : Vector4Array {
+        return [this[0] * 255, this[1] * 255, this[2] * 255, this[3] * 255];
+    }
 }
 
 export function HexToColorRGBA(hex: string): ColorRGBA {

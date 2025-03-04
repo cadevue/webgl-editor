@@ -3,16 +3,16 @@ import type { ShaderSource } from '../rendering/ShaderType';
 
 /** Import the Main Library */
 import Sprite2D from '@/assets/shaders/Sprite2D.glsl?raw';
-export enum BuiltInShader { Sprite2D }
+export enum BuiltInShaderType { Sprite2D }
 
 export default class ShaderLibrary {
-    private static _library: Map<string | BuiltInShader, Shader> = new Map();
+    private static _library: Map<string | BuiltInShaderType, Shader> = new Map();
 
     static init() {
-        this._library.set(BuiltInShader.Sprite2D, new Shader(ShaderLibrary.parseShaderSource(Sprite2D)));
+        this._library.set(BuiltInShaderType.Sprite2D, new Shader(ShaderLibrary.parseShaderSource(Sprite2D)));
     }
 
-    static get(name: BuiltInShader | string): Shader {
+    static get(name: BuiltInShaderType | string): Shader {
         if (!this._library.has(name)) { 
             throw new Error(`Shader not found: ${name}`);
         }

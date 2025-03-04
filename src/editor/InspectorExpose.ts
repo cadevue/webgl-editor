@@ -11,6 +11,7 @@ export interface IExposableField {
 }
 
 export type FieldRendererComponent = ConstructorOfATypedSvelteComponent | Component<any, any, any>; // Svelte Component
+
 // Field Renderer for a specific NodeComponent type
 export interface FieldRenderer {
     component: FieldRendererComponent;

@@ -1,4 +1,4 @@
-import ShaderLibrary, { BuiltInShader } from "../asset/ShaderLibrary";
+import ShaderLibrary, { BuiltInShaderType } from "../asset/ShaderLibrary";
 import { ColorRGBA } from "../math/Color";
 import Mat4 from "../math/Mat4";
 import Vector2 from "../math/Vector2";
@@ -31,7 +31,7 @@ export default class Renderer2D {
     private static _viewProjectionMatrix: Mat4 = Mat4.identity();
 
     static init() {
-        // Vertex Buffer
+        // Vertex Buffer of a Quad
         const positions = [
             -0.5, -0.5, 0.0, 0.0,
              0.5, -0.5, 1.0, 0.0,
@@ -49,11 +49,12 @@ export default class Renderer2D {
             vertexBuffer.setLayout(layout);
         })();
 
-        // Index Buffer
+        // Index Buffer of a Quad
         const indices = [ 0, 1, 2, 2, 3, 0 ];
         const indexBuffer = new IndexBuffer(new Uint16Array(indices));
 
-        Renderer2D._spriteShader = ShaderLibrary.get(BuiltInShader.Sprite2D);
+        // Sprite Shader
+        Renderer2D._spriteShader = ShaderLibrary.get(BuiltInShaderType.Sprite2D);
         Renderer2D._spriteShader.bind();
         Renderer2D._spriteShader.setInt("u_Texture", 0);
 
@@ -68,7 +69,7 @@ export default class Renderer2D {
     }
 
     static beginScene(camera: Camera) { 
-        Renderer2D._viewProjectionMatrix = Mat4.copy(camera.viewProjectionMatrix); // To avoid inconsistencies
+        Renderer2D._viewProjectionMatrix = Mat4.copy(camera.viewProjectionMatrix);
 
         Renderer2D._spriteShader.bind();
         Renderer2D._spriteShader.setMat4("u_ViewProjection", this._viewProjectionMatrix);

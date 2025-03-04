@@ -3,27 +3,30 @@ import { renderContext } from "@/renderContext";
 
 /** Rendering */
 import Camera from "@/lib/scene/camera/Camera";
-import Renderer from "@/lib/rendering/Renderer";
+import Renderer3D from "@/lib/rendering/Renderer3D";
 import { Texture2D } from "@/lib/rendering/Texture";
 
 /** Scene */
 import Transform from "@/lib/scene/component/Transform";
 import Primitives from "@/lib/scene/Primitives";
 
-/** Misc */
-import ShaderLibrary, { BuiltInShader } from "@/lib/asset/ShaderLibrary";
+/** Editor */
 import { bindedExposableFields, editorConfig } from "@/editor/editorContext";
 import ExposableTransfrom from "@/editor/fields/ExposableTransform";
-import { OrthographicCameraController } from "@/lib/scene/camera/CameraController";
-import ExposableNumber from "./fields/ExposableNumber";
+import ExposableNumber from "@/editor/fields/ExposableNumber";
+
+/** Rendering */
+import ShaderLibrary, { BuiltInShaderType } from "@/lib/asset/ShaderLibrary";
 import type VertexArray from "@/lib/rendering/VertexArray";
 import type Shader from "@/lib/rendering/Shader";
-import type AppLayer from "@/lib/app/Layer";
-import Application from "@/lib/app/Application";
 import RenderCommand from "@/lib/rendering/RenderCommand";
 import Renderer2D from "@/lib/rendering/Renderer2D";
+import { OrthographicCameraController } from "@/lib/scene/camera/CameraController";
 import { ColorRGBA } from "@/lib/math/Color";
-import Vector2 from "@/lib/math/Vector2";
+
+/** Application */
+import Application from "@/lib/app/Application";
+import type AppLayer from "@/lib/app/Layer";
 
 class EditorLayer implements AppLayer {
     private _gl : WebGL2RenderingContext;
@@ -45,7 +48,7 @@ class EditorLayer implements AppLayer {
         this._gl = renderContext.getWebGLRenderingContext();
         const gl = this._gl;
 
-        this._texturedShader = ShaderLibrary.get(BuiltInShader.Sprite2D);
+        this._texturedShader = ShaderLibrary.get(BuiltInShaderType.Sprite2D);
         this._texturedShader.bind();
         this._texturedShader.setInt("u_Texture", 0);
 
@@ -85,15 +88,15 @@ class EditorLayer implements AppLayer {
         RenderCommand.clear();
 
         /** Draw */
-        Renderer.beginScene(this._camera);
+        Renderer3D.beginScene(this._camera);
 
         this._moonwrTex.bind();
-        Renderer.submit(this._texturedShader, this._staticSquare, this._staticSquareTr);
+        Renderer3D.submit(this._texturedShader, this._staticSquare, this._staticSquareTr);
 
         this._itbTex.bind();
-        Renderer.submit(this._texturedShader, this._controllableSquare, this._controllableSquareTr);
+        Renderer3D.submit(this._texturedShader, this._controllableSquare, this._controllableSquareTr);
 
-        Renderer.endScene();
+        Renderer3D.endScene();
     }
 }
 
@@ -144,13 +147,12 @@ class Sandbox2DLayer implements AppLayer {
 
         Renderer2D.drawQuad({
             transform: this._flatSquareTr,
-            color: new ColorRGBA([0.3, 0.2, 0.8, 1])
+            color: new ColorRGBA([0.25, 0.25, 0.8, 1])
         });
 
         Renderer2D.drawQuad({
             transform: this._texturedSquareTr,
             texture: this._moonwrTex,
-            tiling: new Vector2([2, 2])
         });
 
         Renderer2D.endScene();

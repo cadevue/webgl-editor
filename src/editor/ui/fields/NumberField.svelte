@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type Observable from "@/lib/math/Observable";
+    import type Observable from "@/lib/math/Observable";
 
     const { target, label } : { target: Observable<number>, label?: string } = $props();
 

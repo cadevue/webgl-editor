@@ -6,7 +6,7 @@ import Shader from "@/lib/rendering/Shader";
 import VertexArray from "@/lib/rendering/VertexArray";
 import { renderContext } from "@/renderContext";
 
-export default class Renderer {
+export default class Renderer3D {
     private static _viewProjectionMatrix: Mat4 = Mat4.identity();
 
     static init() {

@@ -1,6 +1,6 @@
 import Input from "../input/Input";
 import RenderCommand from "../rendering/RenderCommand";
-import Renderer from "../rendering/Renderer";
+import Renderer3D from "../rendering/Renderer3D";
 import LayerStack from "./LayerStack";
 import DOMUtils from "../dom/DOMUtils";
 import { renderContext } from "@/renderContext";
@@ -13,7 +13,7 @@ export default abstract class Application {
 
     constructor() { 
         ShaderLibrary.init();
-        Renderer.init();
+        Renderer3D.init();
         Renderer2D.init();
     }
 

@@ -4,6 +4,10 @@ import NumberField from "../ui/fields/NumberField.svelte";
 
 export default class ExposableNumber extends ExposableField<Observable<number>> {
     constructor(target: Observable<number>, label?: string) {
-        super(target, NumberField, label);
+        super(
+            target,         // Value that will be exposed
+            NumberField,    // Field renderer component
+            label           // Label for the field
+        );
     }
 }

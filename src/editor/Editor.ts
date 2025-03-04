@@ -27,6 +27,7 @@ import { ColorRGBA } from "@/lib/math/Color";
 /** Application */
 import Application from "@/lib/app/Application";
 import type AppLayer from "@/lib/app/Layer";
+import Vector3 from "@/lib/math/Vector3";
 
 class EditorLayer implements AppLayer {
     private _gl : WebGL2RenderingContext;

@@ -1,4 +1,4 @@
-import Vector3, { type Vector3Array } from "@/lib/math/Vector3";
+import Vector3, { type Vector3Array, type Vector3Like } from "@/lib/math/Vector3";
 import NodeComponent from "@/lib/scene/component/NodeComponent";
 import Mat4 from "@/lib/math/Mat4";
 import Quaternion from "@/lib/math/Quaternion";
@@ -23,19 +23,19 @@ export default class Transform extends NodeComponent implements IObservable<Tran
     get rotation(): Vector3 { return this._rotation; }
     get scale()   : Vector3 { return this._scale; }
 
-    set position(value: Vector3Array) { 
+    set position(value: Vector3Like) {
         this._position.x = value[0];
         this._position.y = value[1];
         this._position.z = value[2];
     }
 
-    set rotation(value: Vector3Array) { 
+    set rotation(value: Vector3Like) {
         this._rotation.x = value[0];
         this._rotation.y = value[1];
         this._rotation.z = value[2];
     }
 
-    set scale(value: Vector3Array) { 
+    set scale(value: Vector3Like) {
         this._scale.x = value[0];
         this._scale.y = value[1];
         this._scale.z = value[2];
@@ -50,16 +50,19 @@ export default class Transform extends NodeComponent implements IObservable<Tran
         return this._worldMatrix;
     }
 
-    translate(translation: Vector3): void {
+    translate(translation: Vector3Like): void {
         Vector3.add(this.position, translation, this.position);
+        this.calculateWorldMatrix();
     }
 
-    rotate(rotation: Vector3): void {
+    rotate(rotation: Vector3Like): void {
         Vector3.add(this.rotation, rotation, this.rotation);
+        this.calculateWorldMatrix();
     }
 
-    scaleBy(scale: Vector3): void {
+    scaleBy(scale: Vector3Like): void {
         Vector3.multiply(this.scale, scale, this.scale);
+        this.calculateWorldMatrix();
     }
 
     /** Dirty State Management */

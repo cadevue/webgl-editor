@@ -11,7 +11,7 @@ import { ShaderDataType } from "./ShaderType";
 import { Texture2D } from "./Texture";
 import VertexArray from "./VertexArray";
 
-export interface QuadParams {
+export interface QuadProperties {
     transform: Transform;
     texture?: Texture2D;
     color?: ColorRGBA;
@@ -75,7 +75,7 @@ export default class Renderer2D {
         Renderer2D._spriteShader.setMat4("u_ViewProjection", this._viewProjectionMatrix);
     }
 
-    static drawQuad({ transform, texture, color, offset, tiling }: QuadParams) {
+    static drawQuad({ transform, texture, color, offset, tiling }: QuadProperties) {
         texture = texture || Renderer2D._defaultTexture;
         texture.bind();
         color = color || ColorRGBA.WHITE;

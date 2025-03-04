@@ -1,6 +1,7 @@
 import type { IObservable } from "@/lib/interface/IObservable";
 
 export type Vector2Array = [number, number];
+export type Vector2Like = Vector2 | Vector2Array;
 
 export default class Vector2 extends Float32Array implements IObservable<Vector2> {
     constructor(numbers?: ArrayLike<number>) {
@@ -68,42 +69,42 @@ export default class Vector2 extends Float32Array implements IObservable<Vector2
         return dst;
     }
 
-    static copy(v: Vector2, dst?: Vector2) : Vector2 {
+    static copy(v: Vector2Like, dst?: Vector2) : Vector2 {
         dst = dst || new Vector2();
         dst[0] = v[0];
         dst[1] = v[1];
         return dst;
     }
 
-    static add(a: Vector2, b: Vector2, dst?: Vector2) : Vector2 {
+    static add(a: Vector2Like, b: Vector2Like, dst?: Vector2) : Vector2 {
         dst = dst || new Vector2();
         dst[0] = a[0] + b[0];
         dst[1] = a[1] + b[1];
         return dst;
     }
 
-    static subtract(a: Vector2, b: Vector2, dst?: Vector2) : Vector2 {
+    static subtract(a: Vector2Like, b: Vector2Like, dst?: Vector2) : Vector2 {
         dst = dst || new Vector2();
         dst[0] = a[0] - b[0];
         dst[1] = a[1] - b[1];
         return dst;
     }
 
-    static multiply(a: Vector2, b: Vector2, dst?: Vector2) : Vector2 {
+    static multiply(a: Vector2Like, b: Vector2Like, dst?: Vector2) : Vector2 {
         dst = dst || new Vector2();
         dst[0] = a[0] * b[0];
         dst[1] = a[1] * b[1];
         return dst;
     }
 
-    static scale(v: Vector2, s: number, dst?: Vector2) : Vector2 {
+    static scale(v: Vector2Like, s: number, dst?: Vector2) : Vector2 {
         dst = dst || new Vector2();
         dst[0] = v[0] * s;
         dst[1] = v[1] * s;
         return dst;
     }
 
-    static normalize(v: Vector2, dst?: Vector2) : Vector2 {
+    static normalize(v: Vector2Like, dst?: Vector2) : Vector2 {
         dst = dst || new Vector2();
         const length = Math.sqrt(v[0] * v[0] + v[1] * v[1]);
         if (length > Number.EPSILON) {
@@ -113,25 +114,25 @@ export default class Vector2 extends Float32Array implements IObservable<Vector2
         return dst;
     }
 
-    static lengthSq(v: Vector2) : number {
+    static lengthSq(v: Vector2Like) : number {
         return v[0] * v[0] + v[1] * v[1];
     }
 
-    static length(v: Vector2) : number {
+    static length(v: Vector2Like) : number {
         return Math.sqrt(Vector2.lengthSq(v));
     }
 
-    static dot(a: Vector2, b: Vector2) : number {
+    static dot(a: Vector2Like, b: Vector2Like) : number {
         return a[0] * b[0] + a[1] * b[1];
     }
 
-    static distanceSq(a: Vector2, b: Vector2) : number {
+    static distanceSq(a: Vector2Like, b: Vector2Like) : number {
         const dx = a[0] - b[0];
         const dy = a[1] - b[1];
         return dx * dx + dy * dy;
     }
 
-    static distance(a: Vector2, b: Vector2) : number {
+    static distance(a: Vector2Like, b: Vector2Like) : number {
         return Math.sqrt(Vector2.distanceSq(a, b));
     }
 }

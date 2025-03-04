@@ -2,6 +2,7 @@ import type { IObservable } from "@/lib/interface/IObservable";
 import type Mat4 from "@/lib/math/Mat4";
 
 export type Vector4Array = [number, number, number, number];
+export type Vector4Like = Vector4 | Vector4Array;
 
 export default class Vector4 extends Float32Array implements IObservable<Vector4> {
     constructor(numbers?: ArrayLike<number>) {
@@ -83,7 +84,7 @@ export default class Vector4 extends Float32Array implements IObservable<Vector4
         return dst;
     }
 
-    static copy(v: Vector4, dst?: Vector4) : Vector4 {
+    static copy(v: Vector4Like, dst?: Vector4) : Vector4 {
         dst = dst || new Vector4();
         dst[0] = v[0];
         dst[1] = v[1];
@@ -92,7 +93,7 @@ export default class Vector4 extends Float32Array implements IObservable<Vector4
         return dst;
     }
 
-    static add(a: Vector4, b: Vector4, dst?: Vector4) : Vector4 {
+    static add(a: Vector4Like, b: Vector4Like, dst?: Vector4) : Vector4 {
         dst = dst || new Vector4();
         dst[0] = a[0] + b[0];
         dst[1] = a[1] + b[1];
@@ -101,7 +102,7 @@ export default class Vector4 extends Float32Array implements IObservable<Vector4
         return dst;
     }
 
-    static subtract(a: Vector4, b: Vector4, dst?: Vector4) : Vector4 {
+    static subtract(a: Vector4Like, b: Vector4Like, dst?: Vector4) : Vector4 {
         dst = dst || new Vector4();
         dst[0] = a[0] - b[0];
         dst[1] = a[1] - b[1];
@@ -110,7 +111,7 @@ export default class Vector4 extends Float32Array implements IObservable<Vector4
         return dst;
     }
 
-    static multiply(a: Vector4, b: Vector4, dst?: Vector4) : Vector4 {
+    static multiply(a: Vector4Like, b: Vector4Like, dst?: Vector4) : Vector4 {
         dst = dst || new Vector4();
         dst[0] = a[0] * b[0];
         dst[1] = a[1] * b[1];
@@ -119,7 +120,7 @@ export default class Vector4 extends Float32Array implements IObservable<Vector4
         return dst;
     }
 
-    static scale(v: Vector4, s: number, dst?: Vector4) : Vector4 {
+    static scale(v: Vector4Like, s: number, dst?: Vector4) : Vector4 {
         dst = dst || new Vector4();
         dst[0] = v[0] * s;
         dst[1] = v[1] * s;
@@ -128,7 +129,7 @@ export default class Vector4 extends Float32Array implements IObservable<Vector4
         return dst;
     }
 
-    static normalize(v: Vector4, dst?: Vector4) : Vector4 {
+    static normalize(v: Vector4Like, dst?: Vector4) : Vector4 {
         dst = dst || new Vector4();
         const length = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2] + v[3] * v[3]);
         if (length > Number.EPSILON) {
@@ -140,11 +141,11 @@ export default class Vector4 extends Float32Array implements IObservable<Vector4
         return dst;
     }
 
-    static dot(a: Vector4, b: Vector4) : number {    
+    static dot(a: Vector4Like, b: Vector4) : number {
         return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
     }
 
-    static distanceSquared(a: Vector4, b: Vector4) : number {
+    static distanceSquared(a: Vector4Like, b: Vector4Like) : number {
         const dx = a[0] - b[0];
         const dy = a[1] - b[1];
         const dz = a[2] - b[2];
@@ -152,11 +153,11 @@ export default class Vector4 extends Float32Array implements IObservable<Vector4
         return dx * dx + dy * dy + dz * dz + dw * dw;
     }
 
-    static distance(a: Vector4, b: Vector4) : number {
+    static distance(a: Vector4Like, b: Vector4Like) : number {
         return Math.sqrt(Vector4.distanceSquared(a, b));
     }
 
-    static transformMat4(v: Vector4, m: Mat4, dst?: Vector4) : Vector4 {
+    static transformMat4(v: Vector4Like, m: Mat4, dst?: Vector4) : Vector4 {
         dst = dst || new Vector4();
         for (let i = 0; i < 4; i++) {
             dst[i] = 0;

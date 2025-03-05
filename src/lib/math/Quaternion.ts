@@ -1,8 +1,8 @@
-import Vector3 from "@/lib/math/Vector3";
+import Vector3, { type Vector3Like } from "@/lib/math/Vector3";
 import Vector4 from "@/lib/math/Vector4";
 
 export default class Quaternion extends Vector4 {
-    static fromEuler(euler: Vector3, dst?: Quaternion) : Quaternion {
+    static fromEuler(euler: Vector3Like, dst?: Quaternion) : Quaternion {
         dst = dst || new Quaternion();
 
         let x = euler[0],

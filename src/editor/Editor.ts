@@ -161,8 +161,8 @@ class Sandbox2DLayer implements AppLayer {
 }
 
 export default class Editor extends Application {
-    constructor() {
-        super();
+    constructor(container: HTMLElement) {
+        super(container);
         // this.pushLayer(new EditorLayer());
         this.pushLayer(new Sandbox2DLayer());
     }

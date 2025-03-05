@@ -1,4 +1,4 @@
-import Vector3, { type Vector3Array, type Vector3Like } from "@/lib/math/Vector3";
+import Vector3, { type Vector3Like } from "@/lib/math/Vector3";
 import NodeComponent from "@/lib/scene/component/NodeComponent";
 import Mat4 from "@/lib/math/Mat4";
 import Quaternion from "@/lib/math/Quaternion";

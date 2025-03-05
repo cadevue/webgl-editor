@@ -1,4 +1,4 @@
-import Vector3 from "@/lib/math/Vector3";
+import Vector3, { type Vector3Like } from "@/lib/math/Vector3";
 import MathUtils from "@/lib/math/MathUtils";
 import type Quaternion from "@/lib/math/Quaternion";
 
@@ -406,7 +406,7 @@ export default class Mat4 extends Float32Array {
         return dst;
     }
 
-    static lookAt(cameraPosition: Vector3, target: Vector3, up: Vector3, dst?: Mat4): Mat4 {
+    static lookAt(cameraPosition: Vector3Like, target: Vector3Like, up: Vector3Like, dst?: Mat4): Mat4 {
         dst = dst || new Mat4();
         const zAxis = Vector3.normalize(Vector3.subtract(cameraPosition, target));
         const xAxis = Vector3.normalize(Vector3.cross(up, zAxis));
@@ -528,7 +528,7 @@ export default class Mat4 extends Float32Array {
         return dst;
     }
 
-    static translation(v: Vector3, dst?: Mat4): Mat4 {
+    static translation(v: Vector3Like, dst?: Mat4): Mat4 {
         dst = dst || new Mat4();
         
         dst[12] = v[0];
@@ -538,7 +538,7 @@ export default class Mat4 extends Float32Array {
         return dst;
     }
 
-    static translate(m: Mat4, v: Vector3, dst?: Mat4): Mat4 {
+    static translate(m: Mat4, v: Vector3Like, dst?: Mat4): Mat4 {
         dst = dst || new Mat4();
         const m00 = m[0];
         const m01 = m[1];
@@ -772,7 +772,7 @@ export default class Mat4 extends Float32Array {
         return dst;
     }
 
-    static axisRotation(axis: Vector3, radians: number, dst?: Mat4): Mat4 {
+    static axisRotation(axis: Vector3Like, radians: number, dst?: Mat4): Mat4 {
         dst = dst || new Mat4();
         let x = axis[0];
         let y = axis[1];
@@ -809,7 +809,7 @@ export default class Mat4 extends Float32Array {
         return dst;
     }
 
-    static axisRotate(m: Mat4, axis: Vector3, radians: number, dst?: Mat4): Mat4 {
+    static axisRotate(m: Mat4, axis: Vector3Like, radians: number, dst?: Mat4): Mat4 {
         dst = dst || new Mat4();
 
         let x = axis[0];
@@ -907,7 +907,7 @@ export default class Mat4 extends Float32Array {
         return dst;
     }
 
-    static scale(m: Mat4, v: Vector3, dst?: Mat4): Mat4 {
+    static scale(m: Mat4, v: Vector3Like, dst?: Mat4): Mat4 {
         const sx = v[0];
         const sy = v[1];
         const sz = v[2];
@@ -961,7 +961,7 @@ export default class Mat4 extends Float32Array {
         return dst;
     }
 
-    static compose(translation: Vector3, quaternion: Quaternion, scale: Vector3, dst?: Mat4): Mat4 {
+    static compose(translation: Vector3Like, quaternion: Quaternion, scale: Vector3Like, dst?: Mat4): Mat4 {
         dst = dst || new Mat4();
         const x = quaternion[0],
               y = quaternion[1],

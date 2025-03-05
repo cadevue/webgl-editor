@@ -11,7 +11,26 @@ import Renderer2D from "../rendering/Renderer2D";
 export default abstract class Application {
     private _layerStack: LayerStack = new LayerStack();
 
-    constructor() { 
+    constructor(container: HTMLElement) {
+        const canvas = document.createElement("canvas");
+        canvas.id = "main-canvas";
+        canvas.className = "w-full h-full";
+
+        container.appendChild(canvas);
+
+        DOMUtils.initCanvas(canvas);
+        Input.init(canvas);
+
+        /** Initialize WebGL */
+        if (!renderContext.isInitialized()) {
+            const webglRenderCtx = canvas.getContext("webgl2");
+            if (!webglRenderCtx) {
+                console.error("WebGL 2 is not supported");
+                return;
+            }
+            renderContext.setWebGLRenderingContext(webglRenderCtx);
+        }
+
         ShaderLibrary.init();
         Renderer3D.init();
         Renderer2D.init();

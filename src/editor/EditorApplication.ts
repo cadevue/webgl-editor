@@ -27,81 +27,8 @@ import { ColorRGBA } from "@/lib/math/Color";
 /** Application */
 import Application from "@/lib/app/Application";
 import type AppLayer from "@/lib/app/Layer";
-import Vector3 from "@/lib/math/Vector3";
 
 class EditorLayer implements AppLayer {
-    private _gl : WebGL2RenderingContext;
-    private _texturedShader : Shader;
-
-    private _staticSquare : VertexArray;
-    private _staticSquareTr : Transform;
-    
-    private _controllableSquare : VertexArray;
-    private _controllableSquareTr : Transform;
-
-    private _moonwrTex : Texture2D;
-    private _itbTex : Texture2D;
-
-    private _camera : Camera;
-    private _cameraController : OrthographicCameraController;
-
-    constructor() {
-        this._gl = renderContext.getWebGLRenderingContext();
-        const gl = this._gl;
-
-        this._texturedShader = ShaderLibrary.get(BuiltInShaderType.Sprite2D);
-        this._texturedShader.bind();
-        this._texturedShader.setInt("u_Texture", 0);
-
-        this._staticSquare = Primitives.createSquareTextured(this._texturedShader);
-        this._staticSquareTr = new Transform();
-        this._staticSquareTr.scale.set([0.8, 0.8, 1]);
-        this._staticSquareTr.position.set([0.42, 0, 0]);
-
-        this._controllableSquare = Primitives.createSquareTextured(this._texturedShader);
-        this._controllableSquareTr = new Transform();
-        this._controllableSquareTr.scale.set([0.8, 0.8, 1]);
-        this._controllableSquareTr.position.set([-0.42, 0, 0]);
-
-        this._moonwrTex = new Texture2D({src: "textures/moonwr.png"});
-        this._itbTex = new Texture2D({src: "textures/itb.png"});
-
-        const aspect = gl.canvas.width / gl.canvas.height;
-        this._camera = Camera.createOrtographicCamera(-aspect, aspect, -1, 1, Number.MIN_VALUE, Number.MAX_VALUE);
-        this._cameraController = new OrthographicCameraController(aspect, this._camera);
-
-        this.bindProperties();
-    }
-
-    private bindProperties() {
-        bindedExposableFields.set([
-            new ExposableTransfrom(this._controllableSquareTr, "Square Transform"),
-            new ExposableTransfrom(this._camera.transform, "Camera Transform"),
-            new ExposableNumber(this._cameraController.zoomSpeed, "Zoom Speed"),
-            new ExposableNumber(this._cameraController.zoomLevel, "Zoom Level")
-        ]);
-    }
-
-    onUpdate(deltaTime: number) {
-        this._cameraController.onUpdate(deltaTime);
-
-        RenderCommand.setClearColor(editorConfig.viewportColor);
-        RenderCommand.clear();
-
-        /** Draw */
-        Renderer3D.beginScene(this._camera);
-
-        this._moonwrTex.bind();
-        Renderer3D.submit(this._texturedShader, this._staticSquare, this._staticSquareTr);
-
-        this._itbTex.bind();
-        Renderer3D.submit(this._texturedShader, this._controllableSquare, this._controllableSquareTr);
-
-        Renderer3D.endScene();
-    }
-}
-
-class Sandbox2DLayer implements AppLayer {
     private _gl : WebGL2RenderingContext;
     private _flatSquareTr : Transform;
     private _texturedSquareTr : Transform;
@@ -160,10 +87,9 @@ class Sandbox2DLayer implements AppLayer {
     }
 }
 
-export default class Editor extends Application {
+export default class EditorApplication extends Application {
     constructor(container: HTMLElement) {
         super(container);
-        // this.pushLayer(new EditorLayer());
-        this.pushLayer(new Sandbox2DLayer());
+        this.pushLayer(new EditorLayer());
     }
 }

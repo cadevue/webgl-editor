@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
 
-    import Editor from "@/editor/Editor";
+    import EditorApplication from "@/editor/EditorApplication";
     import type Application from "@/lib/app/Application";
 
     let canvasContainer : HTMLDivElement | null = $state(null);
@@ -12,7 +12,7 @@
             throw new Error("Canvas container not found");
         }
 
-        const app : Application = new Editor(canvasContainer); // The editor application
+        const app : Application = new EditorApplication(canvasContainer); // The editor application
         app.run();
     }
 

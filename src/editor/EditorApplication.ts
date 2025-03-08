@@ -8,7 +8,6 @@ import { Texture2D } from "@/lib/rendering/Texture";
 
 /** Scene */
 import Transform from "@/lib/scene/component/Transform";
-import Primitives from "@/lib/scene/Primitives";
 
 /** Editor */
 import { bindedExposableFields, editorConfig } from "@/editor/editorContext";

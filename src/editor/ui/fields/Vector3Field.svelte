@@ -12,8 +12,17 @@
     let y = $state(target.y);
     let z = $state(target.z);
 
+    let changeMadeByUI = $state(false);
+
     /** 2-way binding */
     target.subscribe(() => {
+        if (changeMadeByUI) {
+            changeMadeByUI = false;
+            return;
+        }
+
+        console.log("Vector3Field: target changed");
+
         xInput?.blur();
         yInput?.blur();
         zInput?.blur();
@@ -24,28 +33,27 @@
         z = parseFloat(target.z.toFixed(3));
     });
 
-    $effect(() => {
-        // Application logic (target) listen to changes made by UI through state & effect
-        target.x = x;
-        target.y = y;
-        target.z = z;
-    });
+    function handleInputChange() {
+        changeMadeByUI = true;
+        target.set([x, y, z]);
+    }
+
 </script>
 
 <div class="flex flex-col gap-1">
     <h3>{label || "Vector3"}</h3>
-    <div class="flex gap-1">
+    <div class="flex gap-2">
         <div class="flex gap-1 items-center">
             <label class="text-xs" for="x">X</label>
-            <input type="number" bind:value={x} class="p-1 text-xs w-12 rounded-sm bg-light" step="0.025" id="x" bind:this={xInput} />
+            <input type="number" bind:value={x} class="w-14" step="0.025" id="x" bind:this={xInput} oninput={handleInputChange} />
         </div>
         <div class="flex gap-1 items-center">
             <label class="text-xs" for="y">Y</label>
-            <input type="number" bind:value={y} class="p-1 text-xs w-12 rounded-sm bg-light" step="0.025" id="y" bind:this={yInput} />
+            <input type="number" bind:value={y} class="w-14" step="0.025" id="y" bind:this={yInput} oninput={handleInputChange} />
         </div>
         <div class="flex gap-1 items-center">
             <label class="text-xs" for="z">Z</label>
-            <input type="number" bind:value={z} class="p-1 text-xs w-12 rounded-sm bg-light" step="0.025" id="z" bind:this={zInput} />
+            <input type="number" bind:value={z} class="w-14" step="0.025" id="z" bind:this={zInput} oninput={handleInputChange} />
         </div>
     </div>
 </div>

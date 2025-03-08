@@ -40,7 +40,7 @@ export default class Vector4 extends Float32Array implements IObservable<Vector4
     set b(value: number) { this.z = value; }
     set a(value: number) { this.w = value; }
 
-    set(values: Vector4Array) {
+    set(values: Vector4Like) {
         this[0] = values[0];
         this[1] = values[1];
         this[2] = values[2];

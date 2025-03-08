@@ -31,7 +31,7 @@ export default class Vector2 extends Float32Array implements IObservable<Vector2
     set r(value: number) { this.x = value; }
     set g(value: number) { this.y = value; }
 
-    set(values: Vector2Array) {
+    set(values: Vector2Like) {
         this[0] = values[0];
         this[1] = values[1];
 

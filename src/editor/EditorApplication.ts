@@ -1,5 +1,5 @@
 /** Shared State */
-import { renderContext } from "@/renderContext";
+import { glContext } from "@/lib/glContext";
 
 /** Rendering */
 import Camera from "@/lib/scene/camera/Camera";
@@ -39,7 +39,7 @@ class EditorLayer implements AppLayer {
     private _cameraController : OrthographicCameraController;
 
     constructor() {
-        this._gl = renderContext.getWebGLRenderingContext();
+        this._gl = glContext.getWebGLRenderingContext();
         const gl = this._gl;
 
         this._flatSquareTr = new Transform();

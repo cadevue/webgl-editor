@@ -3,7 +3,7 @@ import RenderCommand from "../rendering/RenderCommand";
 import Renderer3D from "../rendering/Renderer3D";
 import LayerStack from "./LayerStack";
 import DOMUtils from "../dom/DOMUtils";
-import { renderContext } from "@/renderContext";
+import { glContext } from "@/lib/glContext";
 import type AppLayer from "./Layer";
 import ShaderLibrary from "../asset/ShaderLibrary";
 import Renderer2D from "../rendering/Renderer2D";
@@ -22,13 +22,13 @@ export default abstract class Application {
         Input.init(canvas);
 
         /** Initialize WebGL */
-        if (!renderContext.isInitialized()) {
+        if (!glContext.isInitialized()) {
             const webglRenderCtx = canvas.getContext("webgl2");
             if (!webglRenderCtx) {
                 console.error("WebGL 2 is not supported");
                 return;
             }
-            renderContext.setWebGLRenderingContext(webglRenderCtx);
+            glContext.setWebGLRenderingContext(webglRenderCtx);
         }
 
         ShaderLibrary.init();
@@ -45,7 +45,7 @@ export default abstract class Application {
     }
 
     run() {
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
 
         let needResize = false;
         const update = (deltaTime: number) => {

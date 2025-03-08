@@ -4,13 +4,13 @@ import Transform from "@/lib/scene/component/Transform";
 import RenderCommand from "@/lib/rendering/RenderCommand";
 import Shader from "@/lib/rendering/Shader";
 import VertexArray from "@/lib/rendering/VertexArray";
-import { renderContext } from "@/renderContext";
+import { glContext } from "@/lib/glContext";
 
 export default class Renderer3D {
     private static _viewProjectionMatrix: Mat4 = Mat4.identity();
 
     static init() {
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 

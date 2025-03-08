@@ -1,4 +1,4 @@
-import { renderContext } from "@/renderContext";
+import { glContext } from "@/lib/glContext";
 import GLResourceManager from "./GLResourceManager";
 import { ColorRGBA } from "../math/Color";
 
@@ -42,7 +42,7 @@ export class Texture2D extends Texture {
         color = color || ColorRGBA.MAGENTA;
         this._path = "";
 
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
 
         this._texture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, this._texture);
@@ -77,7 +77,7 @@ export class Texture2D extends Texture {
     }
 
     public bind(slot? : TextureSlot): void { 
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
         slot = slot || gl.TEXTURE0;
         gl.activeTexture(slot);
         gl.bindTexture(gl.TEXTURE_2D, this._texture);

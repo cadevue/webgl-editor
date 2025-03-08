@@ -1,4 +1,4 @@
-import { renderContext } from "@/renderContext";
+import { glContext } from "@/lib/glContext";
 import { getSizeOfShaderDataType, shaderDataTypeToString, type ShaderDataType } from "@/lib/rendering/ShaderType";
 import GLResourceManager from "./GLResourceManager";
 
@@ -72,7 +72,7 @@ export class VertexBuffer {
     private _layout : BufferLayout | null;
 
     constructor({ size, data, layout }: VertexBufferParams) {
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
 
         this._buffer = gl.createBuffer() as WebGLBuffer;
         gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer);
@@ -93,12 +93,12 @@ export class VertexBuffer {
     }
 
     bind() {
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
         gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer);
     }
 
     unbind() {
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
     }
 
@@ -111,7 +111,7 @@ export class IndexBuffer {
     private _count  : number;
 
     constructor(data: Uint16Array) {
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
 
         this._buffer = gl.createBuffer() as WebGLBuffer;
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._buffer);
@@ -123,12 +123,12 @@ export class IndexBuffer {
     }
 
     bind() {
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._buffer);
     }
 
     unbind() {
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
     }
 

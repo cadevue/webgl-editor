@@ -3,7 +3,7 @@ import Camera from "./Camera";
 import { OrthographicCameraProjection } from "./CameraProjection";
 import Input, { MouseButton } from "@/lib/input/Input";
 import MathUtils from "@/lib/math/MathUtils";
-import { renderContext } from "@/renderContext";
+import { glContext } from "@/lib/glContext";
 import Observable from "@/lib/math/Observable";
 
 /** Some default camera controller provided by the engine */
@@ -48,7 +48,7 @@ export class OrthographicCameraController {
     }
 
     onUpdate(deltaTime : number) {
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
 
         /** Zoom */
         const wheelDelta = Input.getMouseWheelDelta();

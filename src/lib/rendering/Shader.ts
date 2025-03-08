@@ -1,4 +1,4 @@
-import { renderContext } from "@/renderContext";
+import { glContext } from "@/lib/glContext";
 import type Vector2 from "@/lib/math/Vector2";
 import type Vector3 from "@/lib/math/Vector3";
 import type Vector4 from "@/lib/math/Vector4";
@@ -12,7 +12,7 @@ export default class Shader {
     get program()   { return this._program; }
 
     constructor(sources: Map<GLenum, string>) {
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
 
         if (sources.size > 3) {
             throw new Error("Currently only supports 3 shaders");
@@ -49,22 +49,22 @@ export default class Shader {
     }
 
     bind() {
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
         gl.useProgram(this._program);
-        renderContext.setActiveShader(this);
+        glContext.setActiveShader(this);
     }
 
     unbind() {
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
         gl.useProgram(null);
-        renderContext.setActiveShader(null);
+        glContext.setActiveShader(null);
     }
 
     private getUniformLocation(name: string): WebGLUniformLocation {
         if (this._uniformCache.has(name)) {
             return this._uniformCache.get(name) as WebGLUniformLocation;
         } else {
-            const gl = renderContext.getWebGLRenderingContext();
+            const gl = glContext.getWebGLRenderingContext();
             const location = gl.getUniformLocation(this._program, name);
             if (location) {
                 this._uniformCache.set(name, location);
@@ -77,55 +77,55 @@ export default class Shader {
 
     setMat4(name: string, matrix: Mat4) {
         const location = this.getUniformLocation(name);
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
         gl.uniformMatrix4fv(location, false, matrix);
     }
 
     setFloat(name: string, value: number) {
         const location = this.getUniformLocation(name);
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
         gl.uniform1f(location, value);
     }
 
     setFloat2(name: string, value: Vector2) {
         const location = this.getUniformLocation(name);
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
         gl.uniform2f(location, value.x, value.y);
     }
 
     setFloat3(name: string, value: Vector3) {
         const location = this.getUniformLocation(name);
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
         gl.uniform3fv(location, value);
     }
 
     setFloat4(name: string, value: Vector4) {
         const location = this.getUniformLocation(name);
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
         gl.uniform4fv(location, value);
     }
 
     setInt(name: string, value: number) {
         const location = this.getUniformLocation(name);
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
         gl.uniform1i(location, value);
     }
 
     setInt2(name: string, value: Vector2) {
         const location = this.getUniformLocation(name);
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
         gl.uniform2i(location, value.x, value.y);
     }
 
     setInt3(name: string, value: Vector3) {
         const location = this.getUniformLocation(name);
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
         gl.uniform3iv(location, value);
     }
 
     setInt4(name: string, value: Vector4) {
         const location = this.getUniformLocation(name);
-        const gl = renderContext.getWebGLRenderingContext();
+        const gl = glContext.getWebGLRenderingContext();
         gl.uniform4iv(location, value);
     }
 }

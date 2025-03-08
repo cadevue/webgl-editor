@@ -1,4 +1,4 @@
-import { renderContext } from "@/renderContext";
+import { glContext } from "@/lib/glContext";
 
 /** Automatic Cleanup Management for WebGL Resources */
 type WebGLResource =
@@ -16,7 +16,7 @@ function getOrCreateRegistry<T extends WebGLResource>(
     resourceType: new (...args: any[]) => T,
     deleteFn: (gl: WebGL2RenderingContext, resource: T) => void
 ) {
-    const gl = renderContext.getWebGLRenderingContext();
+    const gl = glContext.getWebGLRenderingContext();
     if (!glResourceRegistries.has(resourceType)) {
         const registry = new FinalizationRegistry<T>((resource) => {
             deleteFn(gl, resource);
@@ -32,7 +32,7 @@ function registerResource<T extends WebGLResource>(
     owner: any,
     resource: T
 ) {
-    const gl = renderContext.getWebGLRenderingContext();
+    const gl = glContext.getWebGLRenderingContext();
     const type = resource.constructor as new (...args: any[]) => T;
 
     // Determine the correct deletion function

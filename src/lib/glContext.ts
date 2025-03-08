@@ -1,49 +1,43 @@
 import type Shader from "@/lib/rendering/Shader";
 
-//////////////////////////////////
-/** Rendering Specific Context **/
-//////////////////////////////////
 type GLContext = {
-    initialized: boolean;
     gl: WebGL2RenderingContext | null;
     activeShader: Shader | null;
 }
 
-const _renderContext : GLContext = {
-    initialized: false,
+const _glContext : GLContext = {
     gl: null,
     activeShader: null,
 };
 
 function getWebGLRenderingContext() {
-    if (!_renderContext.gl) {
+    if (!_glContext.gl) {
         throw new Error("WebGL context not initialized");
     }
 
-    return _renderContext.gl;
+    return _glContext.gl;
 }
 
 function setWebGLRenderingContext(gl: WebGL2RenderingContext) {
-    _renderContext.gl = gl;
-    _renderContext.initialized = true;
+    _glContext.gl = gl;
 }
 
 function getActiveShader() {
-    if (!_renderContext.activeShader) {
+    if (!_glContext.activeShader) {
         throw new Error("No active shader");
     }
-    return _renderContext.activeShader;
+    return _glContext.activeShader;
 }
 
 function setActiveShader(shader: Shader | null) {
-    _renderContext.activeShader = shader;
+    _glContext.activeShader = shader;
 }
 
 function isInitialized() {
-    return _renderContext.initialized;
+    return _glContext.gl !== null;
 }
 
-export const renderContext = {
+export const glContext = {
     getWebGLRenderingContext,
     setWebGLRenderingContext,
     getActiveShader,

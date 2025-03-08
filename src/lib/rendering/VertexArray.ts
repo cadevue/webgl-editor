@@ -1,7 +1,7 @@
 import type { IndexBuffer, VertexBuffer } from "@/lib/rendering/Buffer";
 import { renderContext } from "@/renderContext";
 import { getCountOfShaderDataType, shaderDataTypeToGLType } from "@/lib/rendering/ShaderType";
-import GLMemory from "./GLMemory";
+import GLResourceManager from "./GLResourceManager";
 
 /** VERTEX ARRAY */
 export default class VertexArray {
@@ -16,7 +16,7 @@ export default class VertexArray {
         this._vertexBuffers = [];
         this._indexBuffer = null;
 
-        GLMemory.registerResource(this, this._vertexArray);
+        GLResourceManager.registerResource(this, this._vertexArray);
     }
 
     bind() {

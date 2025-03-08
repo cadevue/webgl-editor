@@ -1,6 +1,6 @@
 import { renderContext } from "@/renderContext";
 import { getSizeOfShaderDataType, shaderDataTypeToString, type ShaderDataType } from "@/lib/rendering/ShaderType";
-import GLMemory from "./GLMemory";
+import GLResourceManager from "./GLResourceManager";
 
 /** BUFFER ELEMENT */
 export class BufferElement {
@@ -61,20 +61,31 @@ export class BufferLayout {
 }
 
 /** VERTEX BUFFER */
+export interface VertexBufferParams {
+    size: number;
+    data?: Float32Array;
+    layout?: BufferLayout;
+}
+
 export class VertexBuffer {
     private _buffer : WebGLBuffer;
     private _layout : BufferLayout | null;
 
-    constructor(data: Float32Array, layout?: BufferLayout) {
+    constructor({ size, data, layout }: VertexBufferParams) {
         const gl = renderContext.getWebGLRenderingContext();
 
         this._buffer = gl.createBuffer() as WebGLBuffer;
         gl.bindBuffer(gl.ARRAY_BUFFER, this._buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+        if (data) {
+            gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+        } else {
+            gl.bufferData(gl.ARRAY_BUFFER, size, gl.DYNAMIC_DRAW);
+        }
+
 
         this._layout = layout || null;
 
-        GLMemory.registerResource(this, this._buffer);
+        GLResourceManager.registerResource(this, this._buffer);
     }
 
     setLayout(layout: BufferLayout) {
@@ -108,7 +119,7 @@ export class IndexBuffer {
 
         this._count = data.length;
 
-        GLMemory.registerResource(this, this._buffer);
+        GLResourceManager.registerResource(this, this._buffer);
     }
 
     bind() {

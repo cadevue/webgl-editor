@@ -1,5 +1,5 @@
 import { renderContext } from "@/renderContext";
-import GLMemory from "./GLMemory";
+import GLResourceManager from "./GLResourceManager";
 import { ColorRGBA } from "../math/Color";
 
 export interface TextureCreateParams {
@@ -30,13 +30,13 @@ export class Texture2D extends Texture {
     get width(): number { return this._width; }
     get height(): number { return this._height; }
 
-    public constructor({ width, height, color, src: path } : TextureCreateParams) {
+    public constructor({ width, height, color, src } : TextureCreateParams) {
         super();
         this._width  = width || 0;
         this._height = height || 0;
 
-        if (!color && !path) {
-            console.warn("Creating a texture without a path or color will default to a 1x1 pixel magenta color");
+        if (!color && !src) {
+            console.warn("Creating a texture without a source path or color will default to a 1x1 pixel magenta color");
         }
 
         color = color || ColorRGBA.MAGENTA;
@@ -52,13 +52,12 @@ export class Texture2D extends Texture {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 
-        if (path) {
-            // Create a texture and set it to a 1x1 pixel magenta color
-            this._path = path;
+        if (src) {
+            this._path = src;
 
             // Load the texture image
             const image = new Image();
-            image.src = path;
+            image.src = src;
             image.onload = () => {
                 this._width = image.width;
                 this._height = image.height;
@@ -70,11 +69,11 @@ export class Texture2D extends Texture {
             }
 
             image.onerror = () => {
-                console.error(`Failed to load texture from path: ${path}`);
+                console.error(`Failed to load texture from path: ${src}`);
             }
         }
 
-        GLMemory.registerResource(this, this._texture);
+        GLResourceManager.registerResource(this, this._texture);
     }
 
     public bind(slot? : TextureSlot): void { 

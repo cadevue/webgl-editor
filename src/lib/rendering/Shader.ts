@@ -3,7 +3,7 @@ import type Vector2 from "@/lib/math/Vector2";
 import type Vector3 from "@/lib/math/Vector3";
 import type Vector4 from "@/lib/math/Vector4";
 import type Mat4 from "@/lib/math/Mat4";
-import GLMemory from "./GLMemory";
+import GLResourceManager from "./GLResourceManager";
 
 export default class Shader {
     private _program: WebGLProgram;
@@ -45,7 +45,7 @@ export default class Shader {
             throw new Error("Failed to link shader program: " + gl.getProgramInfoLog(this._program));
         }
 
-        GLMemory.registerResource(this, this._program);
+        GLResourceManager.registerResource(this, this._program);
     }
 
     bind() {

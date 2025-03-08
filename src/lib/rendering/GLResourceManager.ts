@@ -1,5 +1,6 @@
 import { renderContext } from "@/renderContext";
 
+/** Automatic Cleanup Management for WebGL Resources */
 type WebGLResource =
     | WebGLBuffer
     | WebGLProgram
@@ -57,8 +58,8 @@ function registerResource<T extends WebGLResource>(
 // WebGL Resource Management
 // Automatically clean up WebGL resources when they are no longer needed using FinalizationRegistry
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/FinalizationRegistry
-const GLMemory = {
+const GLResourceManager = {
     registerResource
 } as const;
 
-export default GLMemory;
+export default GLResourceManager;

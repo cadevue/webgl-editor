@@ -20,38 +20,39 @@ export interface QuadProperties {
 }
 
 export default class Renderer2D {
+    /** Rendering */
     private static _quadVertexArray: VertexArray;
     private static _spriteShader: Shader;
 
-    // Default Values
-    private static _defaultTexture: Texture2D;
-    private static _vec2One: Vector2 = Vector2.ones();
-    private static _vec2Zero: Vector2 = Vector2.zeros();
+    /** Default Values */
+    private static  _defaultTexture: Texture2D;
+    private static readonly _vec2One: Vector2 = Vector2.ones();
+    private static readonly _vec2Zero: Vector2 = Vector2.zeros();
 
     private static _viewProjectionMatrix: Mat4 = Mat4.identity();
 
     static init() {
         // Vertex Buffer of a Quad
-        const positions = [
+        const quadPositions = [
             -0.5, -0.5, 0.0, 0.0,
              0.5, -0.5, 1.0, 0.0,
              0.5,  0.5, 1.0, 1.0,
             -0.5,  0.5, 0.0, 1.0,
         ];
-        const vertexBuffer = new VertexBuffer(new Float32Array(positions));
-
-        // Vertex Buffer Layout definition
-        (() => {
-            const layout = new BufferLayout([
-                new BufferElement("a_Position", ShaderDataType.Float2),
-                new BufferElement("a_TexCoord", ShaderDataType.Float2),
-            ]);
-            vertexBuffer.setLayout(layout);
-        })();
+        const quadVertexBuffer = new VertexBuffer(
+            {
+                size: quadPositions.length * Float32Array.BYTES_PER_ELEMENT,
+                data: new Float32Array(quadPositions),
+                layout: new BufferLayout([
+                    new BufferElement("a_Position", ShaderDataType.Float2),
+                    new BufferElement("a_TexCoord", ShaderDataType.Float2),
+                ])
+            }
+        );
 
         // Index Buffer of a Quad
-        const indices = [ 0, 1, 2, 2, 3, 0 ];
-        const indexBuffer = new IndexBuffer(new Uint16Array(indices));
+        const quadIndices = [ 0, 1, 2, 2, 3, 0 ];
+        const quadIndexBuffer = new IndexBuffer(new Uint16Array(quadIndices));
 
         // Sprite Shader
         Renderer2D._spriteShader = ShaderLibrary.get(BuiltInShaderType.Sprite2D);
@@ -62,8 +63,8 @@ export default class Renderer2D {
         Renderer2D._quadVertexArray = new VertexArray();
 
         // Bind Vertex Array and Buffers
-        Renderer2D._quadVertexArray.addVertexBuffer(vertexBuffer);
-        Renderer2D._quadVertexArray.setIndexBuffer(indexBuffer);
+        Renderer2D._quadVertexArray.addVertexBuffer(quadVertexBuffer);
+        Renderer2D._quadVertexArray.setIndexBuffer(quadIndexBuffer);
 
         Renderer2D._defaultTexture = new Texture2D({ width: 1, height: 1, color: ColorRGBA.WHITE })
     }

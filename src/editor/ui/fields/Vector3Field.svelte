@@ -37,15 +37,15 @@
     <div class="flex gap-1">
         <div class="flex gap-1 items-center">
             <label class="text-xs" for="x">X</label>
-            <input type="number" bind:value={x} class="p-1 text-xs w-12 rounded-sm" step="0.025" id="x" bind:this={xInput} />
+            <input type="number" bind:value={x} class="p-1 text-xs w-12 rounded-sm bg-light" step="0.025" id="x" bind:this={xInput} />
         </div>
         <div class="flex gap-1 items-center">
             <label class="text-xs" for="y">Y</label>
-            <input type="number" bind:value={y} class="p-1 text-xs w-12 rounded-sm" step="0.025" id="y" bind:this={yInput} />
+            <input type="number" bind:value={y} class="p-1 text-xs w-12 rounded-sm bg-light" step="0.025" id="y" bind:this={yInput} />
         </div>
         <div class="flex gap-1 items-center">
             <label class="text-xs" for="z">Z</label>
-            <input type="number" bind:value={z} class="p-1 text-xs w-12 rounded-sm" step="0.025" id="z" bind:this={zInput} />
+            <input type="number" bind:value={z} class="p-1 text-xs w-12 rounded-sm bg-light" step="0.025" id="z" bind:this={zInput} />
         </div>
     </div>
 </div>

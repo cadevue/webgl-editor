@@ -6,7 +6,7 @@
     <div class="flex flex-col gap-8 h-full">
         <div class="absolute h-full bg-dark-800 right-0 top-0 w-0.5"></div>
         <div>
-            <h1 class="text-red">Webジーエル Engine</h1>
+            <h1 class="text-red">Cadeジーエル Engine</h1>
             <p>made by 
                 <a href="https://cadevue.com/" target="_blank" rel="noopener noreferrer">Cadevue</a>
             </p>

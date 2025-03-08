@@ -3,7 +3,6 @@ import { glContext } from "@/lib/glContext";
 
 /** Rendering */
 import Camera from "@/lib/scene/camera/Camera";
-import Renderer3D from "@/lib/rendering/Renderer3D";
 import { Texture2D } from "@/lib/rendering/Texture";
 
 /** Scene */
@@ -12,12 +11,8 @@ import Transform from "@/lib/scene/component/Transform";
 /** Editor */
 import { bindedExposableFields, editorConfig } from "@/editor/editorContext";
 import ExposableTransfrom from "@/editor/fields/ExposableTransform";
-import ExposableNumber from "@/editor/fields/ExposableNumber";
 
 /** Rendering */
-import ShaderLibrary, { BuiltInShaderType } from "@/lib/asset/ShaderLibrary";
-import type VertexArray from "@/lib/rendering/VertexArray";
-import type Shader from "@/lib/rendering/Shader";
 import RenderCommand from "@/lib/rendering/RenderCommand";
 import Renderer2D from "@/lib/rendering/Renderer2D";
 import { OrthographicCameraController } from "@/lib/scene/camera/CameraController";
@@ -33,6 +28,7 @@ class EditorLayer implements AppLayer {
     private _texturedSquareTr : Transform;
 
     private _moonwrTex : Texture2D;
+    private _quadColor : ColorRGBA = new ColorRGBA([0.25, 0.25, 0.8, 1]);
 
     private _camera : Camera;
     private _cameraController : OrthographicCameraController;
@@ -74,7 +70,7 @@ class EditorLayer implements AppLayer {
 
         Renderer2D.drawQuad({
             transform: this._flatSquareTr,
-            color: new ColorRGBA([0.25, 0.25, 0.8, 1])
+            color: this._quadColor,
         });
 
         Renderer2D.drawQuad({

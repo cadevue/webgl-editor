@@ -21,21 +21,15 @@ export default class Transform implements IObservable<Transform> {
     get scale()   : Vector3 { return this._scale; }
 
     set position(value: Vector3Like) {
-        this._position.x = value[0];
-        this._position.y = value[1];
-        this._position.z = value[2];
+        this._position.set(value);
     }
 
     set rotation(value: Vector3Like) {
-        this._rotation.x = value[0];
-        this._rotation.y = value[1];
-        this._rotation.z = value[2];
+        this._rotation.set(value);
     }
 
     set scale(value: Vector3Like) {
-        this._scale.x = value[0];
-        this._scale.y = value[1];
-        this._scale.z = value[2];
+        this._scale.set(value);
     }
 
     private calculateWorldMatrix(): void {

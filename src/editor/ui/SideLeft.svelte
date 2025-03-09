@@ -6,14 +6,14 @@
     <div class="flex flex-col gap-8 h-full">
         <div class="absolute h-full bg-dark-800 right-0 top-0 w-0.5"></div>
         <div>
-            <h1 class="text-red">Cadeジーエル Engine</h1>
-            <p>made by 
+            <h1 class="text-red">Cadeジーエル Editor</h1>
+            <p>Made by 
                 <a href="https://cadevue.com/" target="_blank" rel="noopener noreferrer">Cadevue</a>
             </p>
         </div>
         <div>
             <p>Scene</p>
-            <h1>Untitled</h1>
+            <h1>Sample</h1>
         </div>
         <div>
             <h1>Hierarchy</h1>

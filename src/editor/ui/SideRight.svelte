@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { IExposableField } from "@/editor/InspectorExpose";
-    import { bindedExposableFields } from "../editorContext";
 
     import SideLayout from "./layouts/SideLayout.svelte";
+    import { EditorController } from "../EditorController";
 
     /** List of components to render */
     let fields : IExposableField[] = $state([]);
@@ -10,8 +10,8 @@
     let fieldRenderers = $derived(fields.map((prop) => prop.getFieldRenderer()));
 
     /** Listen if the components have changed (e.g. new object selected) */
-    bindedExposableFields.subscribe(() => {
-        fields = bindedExposableFields.get();
+    EditorController.ExposedFields.subscribe(() => {
+        fields = EditorController.ExposedFields.get();
     });
 </script>
 

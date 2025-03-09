@@ -9,7 +9,7 @@ import { Texture2D } from "@/lib/rendering/Texture";
 import Transform from "@/lib/scene/component/Transform";
 
 /** Editor */
-import { bindedExposableFields, editorConfig } from "@/editor/editorContext";
+import { EditorController } from "@/editor/EditorController";
 import ExposableTransfrom from "@/editor/fields/ExposableTransform";
 
 /** Rendering */
@@ -37,6 +37,8 @@ class EditorLayer implements AppLayer {
         this._gl = glContext.getWebGLRenderingContext();
         const gl = this._gl;
 
+        EditorController.Init();
+
         this._flatSquareTr = new Transform();
         this._flatSquareTr.position.set([0.55, 0, 0]);
 
@@ -54,7 +56,7 @@ class EditorLayer implements AppLayer {
     }
 
     private bindProperties() {
-        bindedExposableFields.set([
+        EditorController.ExposedFields.set([
             new ExposableTransfrom(this._camera.transform, "Camera Transform"),
         ]);
     }
@@ -62,7 +64,7 @@ class EditorLayer implements AppLayer {
     onUpdate(deltaTime: number) {
         this._cameraController.onUpdate(deltaTime);
 
-        RenderCommand.setClearColor(editorConfig.viewportColor);
+        RenderCommand.setClearColor(EditorController.Config.ViewportColor);
         RenderCommand.clear();
 
         /** Draw */

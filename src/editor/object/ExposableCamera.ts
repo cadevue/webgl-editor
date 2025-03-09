@@ -1,4 +1,4 @@
-import { bindedExposableFields } from "@/editor/editorContext";
+import { bindedExposableFields } from "@/editor/EditorController";
 import type { IExposable } from "../InspectorExpose";
 import ExposableTransfrom from "../fields/ExposableTransform";
 import type Camera from "@/lib/scene/camera/Camera";

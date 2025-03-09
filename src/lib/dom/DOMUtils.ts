@@ -72,6 +72,9 @@ function initCanvas(canvas : HTMLCanvasElement) {
 
 function setCursor(cursor : string) {
     document.body.style.cursor = cursor;
+    document.querySelectorAll("*").forEach(el => {
+        (el as HTMLElement).style.cursor = cursor;
+    });
 }
 
 const DOMUtils = {

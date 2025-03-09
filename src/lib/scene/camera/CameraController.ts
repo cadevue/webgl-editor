@@ -17,6 +17,8 @@ export class OrthographicCameraController {
     private _zoomLevel : Observable<number> = new Observable(1);
     private _zoomSpeed : Observable<number> = new Observable(0.1);
 
+    private _dragging : boolean = false;
+
     get zoomLevel() { return this._zoomLevel; }
     get zoomSpeed() { return this._zoomSpeed; }
     get camera() { return this._camera; }
@@ -60,14 +62,20 @@ export class OrthographicCameraController {
 
         /** Drag */
         if (Input.isMouseButtonPressed(MouseButton.Middle)) {
-            DOMUtils.setCursor("grab");
+            if (!this._dragging) {
+                this._dragging = true;
+                DOMUtils.setCursor("grabbing");
+            }
             const delta = Input.getMouseDelta(); // Screen Space
             const [width, height] = [gl.canvas.width, gl.canvas.height];
 
-            this._camera.transform.position.x -= delta.x / width * 2 * this._zoomLevel.value;
-            this._camera.transform.position.y += delta.y / height * 2 * this._zoomLevel.value;
+            this._camera.transform.position.x -= delta.x / width * 3 * this._zoomLevel.value;
+            this._camera.transform.position.y += delta.y / height * 3 * this._zoomLevel.value;
         } else {
-            DOMUtils.setCursor("default");
+            if (this._dragging) {
+                this._dragging = false;
+                DOMUtils.setCursor("auto");
+            }
         }
     }
 }

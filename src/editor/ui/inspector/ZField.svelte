@@ -1,20 +1,19 @@
 <script lang="ts">
     import { EditorController } from "@/editor/EditorController";
-    import Vector3 from "@/lib/math/Vector3";
     import { onMount } from "svelte";
 
-    const { label, target } : { label?: string, target: Vector3 } = $props();
+    import Vector3 from "@/lib/math/Vector3";
 
-    // Temporary solution
-    let xInput : HTMLInputElement | null = null,
-        yInput : HTMLInputElement | null = null;
+    const { label, target, dragSpeed : propsDragSpeed } : { label?: string, target: Vector3, dragSpeed?: number } = $props();
+
+    let zInput : HTMLInputElement | null = null;
 
     let changeMadeByUI = false;
     let isMounted = false;
+    const dragSpeed = propsDragSpeed || 0.01;
 
     function syncUI() {
-        xInput!.value = target.x.toFixed(3);
-        yInput!.value = target.y.toFixed(3);
+        zInput!.value = target.z.toFixed(3);
     }
 
     /** 2-way binding */
@@ -28,9 +27,7 @@
             return;
         }
 
-        xInput?.blur();
-        yInput?.blur();
-
+        zInput?.blur();
         syncUI();
     });
 
@@ -44,10 +41,9 @@
     function handleInputChange() {
         changeMadeByUI = true;
 
-        const x = parseFloat(xInput!.value || "0");
-        const y = parseFloat(yInput!.value || "0");
+        const z = parseFloat(zInput!.value || "0");
 
-        target.set([x, y, 0]);
+        target.set([0, 0, z]);
     }
 
     function handleMouseEnter(input: HTMLInputElement) {
@@ -59,30 +55,21 @@
     }
 
     function handleDrag(e: MouseEvent, input: HTMLInputElement) {
-        input!.value = (parseFloat(input!.value) + e.movementX * 0.01).toFixed(3);
+        input!.value = (parseFloat(input!.value) + e.movementX * dragSpeed).toFixed(3);
         handleInputChange();
     }
 </script>
 
 <div class="flex flex-col gap-1">
-    <h3>{label || "Vector3"}</h3>
-    <div class="flex gap-2">
-        <div class="flex gap-1 items-center">
-            <label class="text-xs px-1 select-none" for="x"
-                onmouseenter={() => handleMouseEnter(xInput!)}
+    <h3>{label || "Z Field"}</h3>
+    <div class="flex">
+        <div class="flex items-center">
+            <label class="text-xs pr-1.5 select-none cursor-ew-resize" for="x"
+                onmouseenter={() => handleMouseEnter(zInput!)}
                 onmouseleave={handleMouseLeave}
-            > X </label>
-            <input type="number" class="w-20" step="0.001" id="x" bind:this={xInput} 
+            > Z </label>
+            <input type="number" class="w-16" step="0.001" id="x" bind:this={zInput}
                 oninput={handleInputChange} onblur={syncUI}
-            />
-        </div>
-        <div class="flex gap-1 items-center">
-            <label class="text-xs px-1 select-none" for="y"
-                onmouseenter={() => handleMouseEnter(yInput!)}
-                onmouseleave={handleMouseLeave}
-            > Y </label>
-            <input type="number"  class="w-20" step="0.001" id="y" bind:this={yInput} 
-                oninput={handleInputChange} onblur={syncUI} 
             />
         </div>
     </div>

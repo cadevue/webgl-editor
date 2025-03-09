@@ -1,7 +1,7 @@
 import Mat4 from "@/lib/math/Mat4";
 import Transform from "@/lib/scene/component/Transform";
 import { OrthographicCameraProjection, type CameraProjection } from "@/lib/scene/camera/CameraProjection";
-import ExposableTransfrom from "@/editor/fields/ExposableTransform";
+import ExposableTransfrom from "@/editor/fields/ExposableTransform2D";
 
 export default class Camera  {
     private _projection: CameraProjection;

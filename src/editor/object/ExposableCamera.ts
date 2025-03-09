@@ -1,6 +1,6 @@
 import { bindedExposableFields } from "@/editor/EditorController";
 import type { IExposable } from "../InspectorExpose";
-import ExposableTransfrom from "../fields/ExposableTransform";
+import ExposableTransfrom from "../fields/ExposableTransform2D";
 import type Camera from "@/lib/scene/camera/Camera";
 
 export default class ExposableCamera implements IExposable {

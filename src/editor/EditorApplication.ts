@@ -10,7 +10,7 @@ import Transform from "@/lib/scene/component/Transform";
 
 /** Editor */
 import { EditorController } from "@/editor/EditorController";
-import ExposableTransfrom from "@/editor/fields/ExposableTransform";
+import ExposableTransfrom2D from "@/editor/fields/ExposableTransform2D";
 
 /** Rendering */
 import RenderCommand from "@/lib/rendering/RenderCommand";
@@ -57,7 +57,8 @@ class EditorLayer implements AppLayer {
 
     private bindProperties() {
         EditorController.ExposedFields.set([
-            new ExposableTransfrom(this._camera.transform, "Camera Transform"),
+            // new ExposableTransfrom2D(this._camera.transform, "Camera Transform"),
+            new ExposableTransfrom2D(this._texturedSquareTr, "Textured Square Transform"),
         ]);
     }
 

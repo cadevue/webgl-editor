@@ -7,7 +7,7 @@ export default class Quaternion extends Vector4 {
 
         let x = euler[0],
         y = euler[1],
-        z = euler[2];
+        z = -euler[2];
 
         const halfToRad = (0.5 * Math.PI) / 180.0;
 

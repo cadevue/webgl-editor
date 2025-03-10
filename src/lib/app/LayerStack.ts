@@ -14,25 +14,12 @@ export default class LayerStack {
         layer.onAttach?.();
     }
 
-    pushOverlay(overlay: AppLayer) {
-        this._layers.push(overlay);
-        overlay.onAttach?.();
-    }
-
     popLayer(layer: AppLayer) {
         const index = this._layers.indexOf(layer);
         if (index !== -1) {
             this._layers.splice(index, 1);
             this._layerInsertIndex--;
             layer.onDetach?.();
-        }
-    }
-
-    popOverlay(overlay: AppLayer) {
-        const index = this._layers.indexOf(overlay);
-        if (index !== -1) {
-            this._layers.splice(index, 1);
-            overlay.onDetach?.();
         }
     }
 }

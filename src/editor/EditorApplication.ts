@@ -21,11 +21,14 @@ import { ColorRGBA } from "@/lib/math/Color";
 /** Application */
 import Application from "@/lib/app/Application";
 import type AppLayer from "@/lib/app/Layer";
+import Scene from "@/lib/scene/Scene";
+import SceneNode from "@/lib/scene/SceneNode";
 
 class EditorLayer implements AppLayer {
     private _gl : WebGL2RenderingContext;
-    private _flatSquareTr : Transform;
-    private _texturedSquareTr : Transform;
+
+    private _flatSquareNode : SceneNode;
+    private _texturedSquareNode : SceneNode;
 
     private _moonwrTex : Texture2D;
     private _quadColor : ColorRGBA = new ColorRGBA([0.25, 0.25, 0.8, 1]);
@@ -33,17 +36,24 @@ class EditorLayer implements AppLayer {
     private _camera : Camera;
     private _cameraController : OrthographicCameraController;
 
+    private _scene : Scene;
+
     constructor() {
         this._gl = glContext.getWebGLRenderingContext();
         const gl = this._gl;
 
         EditorController.Init();
 
-        this._flatSquareTr = new Transform();
-        this._flatSquareTr.position.set([0.55, 0, 0]);
+        this._scene = new Scene();
 
-        this._texturedSquareTr = new Transform();
-        this._texturedSquareTr.position.set([-0.55, 0, 0]);
+        this._texturedSquareNode = new SceneNode();
+        this._texturedSquareNode.transform.position.set([-0.55, 0, 0]);
+        this._scene.addNode(this._texturedSquareNode);
+
+        this._flatSquareNode = new SceneNode();
+        this._flatSquareNode.transform.position.set([0.55, 0, 0]);
+        this._texturedSquareNode.addChild(this._flatSquareNode);
+
         this._moonwrTex = new Texture2D({
             src: "textures/moonwr.png",
         });
@@ -57,8 +67,7 @@ class EditorLayer implements AppLayer {
 
     private bindProperties() {
         EditorController.ExposedFields.set([
-            // new ExposableTransfrom2D(this._camera.transform, "Camera Transform"),
-            new ExposableTransfrom2D(this._texturedSquareTr, "Textured Square Transform"),
+            new ExposableTransfrom2D(this._texturedSquareNode.transform, "Transform"),
         ]);
     }
 
@@ -72,12 +81,12 @@ class EditorLayer implements AppLayer {
         Renderer2D.beginScene(this._camera);
 
         Renderer2D.drawQuad({
-            transform: this._flatSquareTr,
+            transform: this._flatSquareNode.transform,
             color: this._quadColor,
         });
 
         Renderer2D.drawQuad({
-            transform: this._texturedSquareTr,
+            transform: this._texturedSquareNode.transform,
             texture: this._moonwrTex,
         });
 

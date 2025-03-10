@@ -2,18 +2,25 @@ import Vector3, { type Vector3Like } from "@/lib/math/Vector3";
 import Mat4 from "@/lib/math/Mat4";
 import Quaternion from "@/lib/math/Quaternion";
 import type { IObservable } from "@/lib/interface/IObservable";
+import Component from "../Component";
 
-export default class Transform implements IObservable<Transform> {
+export default class Transform extends Component implements IObservable<Transform> {
     private _position: Vector3 = Vector3.zeros();
     private _rotation: Vector3 = Vector3.zeros();
     private _scale   : Vector3 = Vector3.ones();
+
+    private _localMatrix: Mat4 = Mat4.identity();
     private _worldMatrix: Mat4 = Mat4.identity();
 
+    private _parentWorldMatrix: Mat4 = Mat4.identity();
+
     constructor() {
+        super();
+
         /** Listen to TRS changes, and recalculate world matrix */
-        this._position.subscribe(() => this.calculateWorldMatrix());
-        this._rotation.subscribe(() => this.calculateWorldMatrix());
-        this._scale.subscribe(() => this.calculateWorldMatrix());
+        this._position.subscribe(() => this.calculateLocalMatrix());
+        this._rotation.subscribe(() => this.calculateLocalMatrix());
+        this._scale.subscribe(() => this.calculateLocalMatrix());
     }
 
     get position(): Vector3 { return this._position; }
@@ -32,8 +39,14 @@ export default class Transform implements IObservable<Transform> {
         this._scale.set(value);
     }
 
-    private calculateWorldMatrix(): void {
-        this._worldMatrix = Mat4.compose(this._position, Quaternion.fromEuler(this._rotation), this._scale);
+    private calculateLocalMatrix(): void {
+        this._localMatrix = Mat4.compose(this._position, Quaternion.fromEuler(this._rotation), this._scale);
+        this.calculateWorldMatrix(this._parentWorldMatrix);
+    }
+
+    calculateWorldMatrix(parentWorldMatrix: Mat4): void {
+        this._parentWorldMatrix = parentWorldMatrix;
+        this._worldMatrix = Mat4.multiply(parentWorldMatrix, this._localMatrix);
         this.notifyDirty();
     }
 
@@ -43,17 +56,17 @@ export default class Transform implements IObservable<Transform> {
 
     translate(translation: Vector3Like): void {
         Vector3.add(this.position, translation, this.position);
-        this.calculateWorldMatrix();
+        this.calculateLocalMatrix();
     }
 
     rotate(rotation: Vector3Like): void {
         Vector3.add(this.rotation, rotation, this.rotation);
-        this.calculateWorldMatrix();
+        this.calculateLocalMatrix();
     }
 
     scaleBy(scale: Vector3Like): void {
         Vector3.multiply(this.scale, scale, this.scale);
-        this.calculateWorldMatrix();
+        this.calculateLocalMatrix();
     }
 
     /** Dirty State Management */
@@ -62,5 +75,5 @@ export default class Transform implements IObservable<Transform> {
         this._dirtyListeners.add(listener); 
         this.notifyDirty();
     }
-    notifyDirty() { this._dirtyListeners.forEach(listener => listener(this)); }
+    private notifyDirty() { this._dirtyListeners.forEach(listener => listener(this)); }
 }

@@ -40,10 +40,6 @@ export default abstract class Application {
         this._layerStack.pushLayer(layer);
     }
 
-    pushOverlay(overlay: AppLayer) {
-        this._layerStack.pushOverlay(overlay);
-    }
-
     run() {
         const gl = glContext.getWebGLRenderingContext();
 

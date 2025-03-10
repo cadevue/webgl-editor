@@ -4,6 +4,7 @@ import Mat4 from "../math/Mat4";
 import Vector2 from "../math/Vector2";
 import type Camera from "../scene/camera/Camera";
 import type Transform from "../scene/component/Transform";
+import type AppScene from "../scene/Scene";
 import { BufferElement, BufferLayout, IndexBuffer, VertexBuffer } from "./Buffer";
 import RenderCommand from "./RenderCommand";
 import Shader from "./Shader";

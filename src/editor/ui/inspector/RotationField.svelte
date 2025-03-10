@@ -1,12 +1,13 @@
 <script lang="ts">
     import { EditorController } from "@/editor/EditorController";
     import { onMount } from "svelte";
+    import { RotateCwSquare } from '@lucide/svelte';
 
     import Vector3 from "@/lib/math/Vector3";
 
     const { target, dragSpeed : propsDragSpeed } : { target: Vector3, dragSpeed?: number } = $props();
 
-    let zInput : HTMLInputElement | null = null;
+    let zInput : HTMLInputElement;
 
     let changeMadeByUI = false;
     let isMounted = false;
@@ -65,11 +66,13 @@
     <div class="flex">
         <div class="flex items-center">
             <label class="text-xs pr-1.5 select-none cursor-ew-resize" for="x"
-                onmouseenter={() => handleMouseEnter(zInput!)}
+                onmouseenter={() => handleMouseEnter(zInput)}
                 onmouseleave={handleMouseLeave}
-            > Z </label>
+            >
+                <RotateCwSquare size=16 />
+            </label>
             <input type="number" class="w-16" step="0.001" id="x" bind:this={zInput}
-                oninput={handleInputChange} onblur={syncUI}
+                oninput={handleInputChange} onblur={syncUI} aria-label="Z-axis rotation"
             />
         </div>
     </div>

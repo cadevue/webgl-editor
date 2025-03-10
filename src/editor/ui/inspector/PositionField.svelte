@@ -6,8 +6,8 @@
 
     const { target } : { target: Vector3 } = $props();
 
-    let xInput : HTMLInputElement | null = null,
-        yInput : HTMLInputElement | null = null;
+    let xInput : HTMLInputElement,
+        yInput : HTMLInputElement;
 
     let changeMadeByUI = false;
     let isMounted = false;

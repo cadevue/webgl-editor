@@ -1,6 +1,7 @@
 <script lang="ts">
     import { EditorController } from "@/editor/EditorController";
     import { onMount } from "svelte";
+    import { Link, Unlink } from '@lucide/svelte';
 
     import Vector3 from "@/lib/math/Vector3";
 
@@ -110,10 +111,15 @@
                 oninput={() => handleInputChange(yInput)} onblur={syncUI}
             />
         </div>
-        <button class="bg-dark-500 text-light px-3 text-xs rounded-md font-mono cursor-pointer"
+        <button class={`text-light ml-1 px-1.5 text-xs rounded-md font-mono 
+            cursor-pointer hover:bg-dark-800 hover:text-light ${isAspectRatioLocked && 'bg-dark-800'}`}
             onclick={handleLockAspectRatio}
         >
-            {isAspectRatioLocked ? "U" : "L"}
+            {#if isAspectRatioLocked}
+                <Unlink size=16 />
+            {:else}
+                <Link size=16 />
+            {/if}
         </button>
     </div>
 </div> 

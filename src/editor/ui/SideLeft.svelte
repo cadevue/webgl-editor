@@ -1,5 +1,13 @@
-<script>
+<script lang="ts">
     import SideLayout from "./layouts/SideLayout.svelte";
+    import { EditorController } from "../EditorController";
+  import NodeTree from "./components/NodeTree.svelte";
+
+    let rootSceneNode = $state(EditorController.ActiveScene.get()?.root);
+    EditorController.ActiveScene.subscribe((scene) => {
+        rootSceneNode = scene?.root;
+    });
+
 </script>
 
 <SideLayout>
@@ -16,7 +24,12 @@
             <h1>Sample</h1>
         </div>
         <div>
-            <h1>Hierarchy</h1>
+            <h1 class="mb-2">Hierarchy</h1>
+            {#if rootSceneNode}
+                {#each rootSceneNode.children as child}
+                    <NodeTree node={child} indent={0} />
+                {/each}
+            {/if}
         </div>
         <p class="absolute bottom-8 text-wrap left-6 right-6">
             <b>Credits</b>:<br> 

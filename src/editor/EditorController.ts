@@ -34,9 +34,11 @@ import { atom } from "nanostores";
 import { type IExposableField } from "./InspectorExpose";
 import { HexToColorRGBA } from "../lib/math/Color";
 import DOMUtils from "@/lib/dom/DOMUtils";
+import Scene from "@/lib/scene/Scene";
 
 // What fields are exposed in the inspector
 const ExposedFields = atom<IExposableField[]>([]);
+const ActiveScene = atom<Scene | null>(null);
 
 // UI Events
 export type UIDragCallback = (event: MouseEvent) => void;
@@ -62,6 +64,7 @@ export const EditorController = {
     // properties
     Config,
     ExposedFields,
+    ActiveScene,
 
     // methods
     Init,

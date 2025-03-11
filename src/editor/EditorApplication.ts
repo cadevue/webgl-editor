@@ -68,10 +68,15 @@ class EditorLayer implements AppLayer {
         this._camera = Camera.createOrtographicCamera(-aspect, aspect, -1, 1, Number.MIN_VALUE, Number.MAX_VALUE);
         this._cameraController = new OrthographicCameraController(aspect, this._camera);
 
-        this.bindProperties();
+        this.attachScene();
+        this.attachNodeProperties();
     }
 
-    private bindProperties() {
+    private attachScene() {
+        EditorController.ActiveScene.set(this._scene);
+    }
+
+    private attachNodeProperties() {
         EditorController.ExposedFields.set([
             new ExposableTransfrom2D(this._texturedSquareNode.transform, "Transform"),
         ]);

@@ -82,9 +82,7 @@ export default class Renderer2D {
 
     private static renderNode(node: SceneNode) {
         let spriteRenderer = node.getComponent(SpriteRenderer);
-        // console.log("Rendering Node:", node.name, "SpriteRenderer:", spriteRenderer);
         if (spriteRenderer) {
-            console.log("Rendering SpriteRenderer of node:", node.name);
             Renderer2D.drawQuad({
                 transform: node.transform,
                 texture: spriteRenderer.texture,

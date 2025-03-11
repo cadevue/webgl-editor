@@ -3,6 +3,7 @@ import Mat4 from "@/lib/math/Mat4";
 import Quaternion from "@/lib/math/Quaternion";
 import type { IObservable } from "@/lib/interface/IObservable";
 import Component from "../Component";
+import type SceneNode from "../SceneNode";
 
 export default class Transform extends Component implements IObservable<Transform> {
     private _position: Vector3 = Vector3.zeros();
@@ -14,8 +15,8 @@ export default class Transform extends Component implements IObservable<Transfor
 
     private _parentWorldMatrix: Mat4 = Mat4.identity();
 
-    constructor() {
-        super();
+    constructor(owner: SceneNode) {
+        super(owner);
 
         /** Listen to TRS changes, and recalculate world matrix */
         this._position.subscribe(() => this.calculateLocalMatrix());

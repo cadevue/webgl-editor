@@ -10,7 +10,7 @@ export default class RenderCommand {
 
     static clear() {
         const gl = glContext.getWebGLRenderingContext();
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.clear(gl.COLOR_BUFFER_BIT);
     }
 
     static setViewport(x: number, y: number, width: number, height: number) {

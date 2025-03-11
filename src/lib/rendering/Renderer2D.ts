@@ -3,8 +3,10 @@ import { ColorRGBA } from "../math/Color";
 import Mat4 from "../math/Mat4";
 import Vector2 from "../math/Vector2";
 import type Camera from "../scene/camera/Camera";
+import SpriteRenderer from "../scene/component/SpriteRenderer";
 import type Transform from "../scene/component/Transform";
 import type AppScene from "../scene/Scene";
+import type SceneNode from "../scene/SceneNode";
 import { BufferElement, BufferLayout, IndexBuffer, VertexBuffer } from "./Buffer";
 import RenderCommand from "./RenderCommand";
 import Shader from "./Shader";
@@ -26,7 +28,6 @@ export default class Renderer2D {
     private static _spriteShader: Shader;
 
     /** Default Values */
-    private static  _defaultTexture: Texture2D;
     private static readonly _vec2One: Vector2 = Vector2.ones();
     private static readonly _vec2Zero: Vector2 = Vector2.zeros();
 
@@ -66,8 +67,6 @@ export default class Renderer2D {
         // Bind Vertex Array and Buffers
         Renderer2D._quadVertexArray.addVertexBuffer(quadVertexBuffer);
         Renderer2D._quadVertexArray.setIndexBuffer(quadIndexBuffer);
-
-        Renderer2D._defaultTexture = new Texture2D({ width: 1, height: 1, color: ColorRGBA.WHITE })
     }
 
     static beginScene(camera: Camera) { 
@@ -77,8 +76,29 @@ export default class Renderer2D {
         Renderer2D._spriteShader.setMat4("u_ViewProjection", this._viewProjectionMatrix);
     }
 
+    static renderScene(scene: AppScene) {
+        Renderer2D.renderNode(scene.root);
+    }
+
+    private static renderNode(node: SceneNode) {
+        let spriteRenderer = node.getComponent(SpriteRenderer);
+        // console.log("Rendering Node:", node.name, "SpriteRenderer:", spriteRenderer);
+        if (spriteRenderer) {
+            console.log("Rendering SpriteRenderer of node:", node.name);
+            Renderer2D.drawQuad({
+                transform: node.transform,
+                texture: spriteRenderer.texture,
+                color: spriteRenderer.color,
+                offset: spriteRenderer.offset,
+                tiling: spriteRenderer.tiling
+            });
+        }
+         
+        node.children.forEach(child => this.renderNode(child));
+    }
+
     static drawQuad({ transform, texture, color, offset, tiling }: QuadProperties) {
-        texture = texture || Renderer2D._defaultTexture;
+        texture = texture || Texture2D.DEFAULT_TEXTURE;
         texture.bind();
         color = color || ColorRGBA.WHITE;
         offset = offset || Renderer2D._vec2Zero;

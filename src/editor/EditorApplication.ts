@@ -23,6 +23,7 @@ import Application from "@/lib/app/Application";
 import type AppLayer from "@/lib/app/Layer";
 import Scene from "@/lib/scene/Scene";
 import SceneNode from "@/lib/scene/SceneNode";
+import SpriteRenderer from "@/lib/scene/component/SpriteRenderer";
 
 class EditorLayer implements AppLayer {
     private _gl : WebGL2RenderingContext;
@@ -45,18 +46,23 @@ class EditorLayer implements AppLayer {
         EditorController.Init();
 
         this._scene = new Scene();
-
-        this._texturedSquareNode = new SceneNode();
-        this._texturedSquareNode.transform.position.set([-0.55, 0, 0]);
-        this._scene.addNode(this._texturedSquareNode);
-
-        this._flatSquareNode = new SceneNode();
-        this._flatSquareNode.transform.position.set([0.55, 0, 0]);
-        this._texturedSquareNode.addChild(this._flatSquareNode);
-
         this._moonwrTex = new Texture2D({
             src: "textures/moonwr.png",
         });
+
+        this._texturedSquareNode = new SceneNode("Textured Square");
+        this._texturedSquareNode.transform.position.set([-0.55, 0, 0]);
+        this._texturedSquareNode.addComponent(SpriteRenderer, {
+            texture: this._moonwrTex,
+        })
+        this._scene.addNode(this._texturedSquareNode);
+
+        this._flatSquareNode = new SceneNode("Flat Square");
+        this._flatSquareNode.transform.position.set([0.55, 0, 0]);
+        this._flatSquareNode.addComponent(SpriteRenderer, {
+            color: this._quadColor,
+        });
+        this._texturedSquareNode.addChild(this._flatSquareNode);
 
         const aspect = gl.canvas.width / gl.canvas.height;
         this._camera = Camera.createOrtographicCamera(-aspect, aspect, -1, 1, Number.MIN_VALUE, Number.MAX_VALUE);
@@ -79,17 +85,7 @@ class EditorLayer implements AppLayer {
 
         /** Draw */
         Renderer2D.beginScene(this._camera);
-
-        Renderer2D.drawQuad({
-            transform: this._flatSquareNode.transform,
-            color: this._quadColor,
-        });
-
-        Renderer2D.drawQuad({
-            transform: this._texturedSquareNode.transform,
-            texture: this._moonwrTex,
-        });
-
+        Renderer2D.renderScene(this._scene);
         Renderer2D.endScene();
     }
 }

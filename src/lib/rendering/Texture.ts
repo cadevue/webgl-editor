@@ -21,6 +21,11 @@ export type TextureSlot =
     WebGLRenderingContextBase['TEXTURE6'] | WebGLRenderingContextBase['TEXTURE7']
 
 export class Texture2D extends Texture {
+    public static get DEFAULT_TEXTURE()
+    {
+        return new Texture2D({ width: 1, height: 1, color: ColorRGBA.WHITE });
+    }
+
     private _texture: WebGLTexture;
     private _width: number;
     private _height: number;

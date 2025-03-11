@@ -1,6 +1,6 @@
 import Input from "../input/Input";
 import RenderCommand from "../rendering/RenderCommand";
-import Renderer3D from "../rendering/Renderer3D";
+// import Renderer3D from "../rendering/Renderer3D";
 import LayerStack from "./LayerStack";
 import DOMUtils from "../dom/DOMUtils";
 import { glContext } from "@/lib/glContext";
@@ -32,7 +32,7 @@ export default abstract class Application {
         }
 
         ShaderLibrary.init();
-        Renderer3D.init();
+        // Renderer3D.init();
         Renderer2D.init();
     }
 

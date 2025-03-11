@@ -1,14 +1,17 @@
+import type { ComponentType } from "./Component";
 import type Component from "./Component";
 import Transform from "./component/Transform";
 
 export default class SceneNode {
     private _children: SceneNode[] = [];
     private _parent: SceneNode | null = null;
-    private _components: Component[] = [
-        new Transform()
-    ];
+    private _name: string = "";
+    private _components: Map<ComponentType, Component> = new Map(
+        [[Transform, new Transform(this)]]
+    );
 
-    constructor() {
+    constructor(name: string = "SceneNode") {
+        this._name = name;
         this.transform.subscribe(() => 
             this._children.forEach(child => child.transform.calculateWorldMatrix(this.transform.worldMatrix))
         );
@@ -23,7 +26,11 @@ export default class SceneNode {
     }
 
     get transform() {
-        return this._components[0] as Transform;
+        return this.getComponent(Transform) as Transform;
+    }
+
+    get name() {
+        return this._name;
     }
 
     addChild(child: SceneNode) {
@@ -32,7 +39,7 @@ export default class SceneNode {
         }
 
         child._parent = this;
-        this._children.push(child);
+        this._children.unshift(child);
         child.transform.calculateWorldMatrix(this.transform.worldMatrix);
     }
 
@@ -44,25 +51,23 @@ export default class SceneNode {
         }
     }
 
-    addComponent(component: Component) {
-        this._components.push(component);
-    }
-
-    getComponent<T extends Component>(type: new () => T): T | null {
-        for (const component of this._components) {
-            if (component instanceof type) {
-                return component as T;
-            }
+    addComponent(component: ComponentType, ...args: any[]) {
+        if (this._components.has(component.constructor as ComponentType)) {
+            throw new Error("Component already exists");
         }
 
-        return null;
+        this._components.set(component as ComponentType, new component(this, ...args));
+    }
+
+    getComponent<T extends Component>(type: new (...args : any[]) => T): T | null {
+        return this._components.get(type) as T || null;
     }
 
     removeComponent(component: Component) {
-        const index = this._components.indexOf(component);
-        if (index !== -1 && index !== 0) { // Do not remove Transform component
-            this._components.splice(index, 1);
+        if (component instanceof Transform) {
+            throw new Error("Cannot remove Transform component");
         }
+        this._components.delete(component.constructor as ComponentType);
     }
 
     removeComponentByType<T extends Component>(type: new () => T) {

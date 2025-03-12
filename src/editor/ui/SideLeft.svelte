@@ -1,7 +1,7 @@
 <script lang="ts">
     import SideLayout from "./layouts/SideLayout.svelte";
     import { EditorController } from "../EditorController";
-  import NodeTree from "./components/NodeTree.svelte";
+    import NodeTree from "./components/NodeTree.svelte";
 
     let rootSceneNode = $state(EditorController.ActiveScene.get()?.root);
     EditorController.ActiveScene.subscribe((scene) => {

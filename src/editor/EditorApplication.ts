@@ -64,6 +64,9 @@ class EditorLayer implements AppLayer {
         });
         this._texturedSquareNode.addChild(this._flatSquareNode);
 
+        this._flatSquareNode.addChild(new SceneNode("Child 1"));
+        this._flatSquareNode.addChild(new SceneNode("Child 2"));
+
         const aspect = gl.canvas.width / gl.canvas.height;
         this._camera = Camera.createOrtographicCamera(-aspect, aspect, -1, 1, Number.MIN_VALUE, Number.MAX_VALUE);
         this._cameraController = new OrthographicCameraController(aspect, this._camera);

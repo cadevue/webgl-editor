@@ -1,6 +1,6 @@
 <script lang="ts">
     import { EditorController } from "@/editor/EditorController";
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
 
     import Vector3 from "@/lib/math/Vector3";
 
@@ -13,8 +13,8 @@
     let isMounted = false;
 
     function syncUI() {
-        xInput!.value = target.x.toFixed(3);
-        yInput!.value = target.y.toFixed(3);
+        xInput.value = target.x.toFixed(3);
+        yInput.value = target.y.toFixed(3);
     }
 
     /** 2-way binding */
@@ -36,8 +36,11 @@
 
     onMount(() => {
         isMounted = true;
-
         syncUI();
+
+        onDestroy(() => {
+            isMounted = false;
+        });
     });
 
     // Application logic listen (subscribe) to changes made by UI
@@ -59,7 +62,7 @@
     }
 
     function handleDrag(e: MouseEvent, input: HTMLInputElement) {
-        input!.value = (parseFloat(input!.value) + e.movementX * 0.01).toFixed(3);
+        input.value = (parseFloat(input.value) + e.movementX * 0.01).toFixed(3);
         handleInputChange();
     }
 </script>
@@ -69,7 +72,7 @@
     <div class="flex gap-2">
         <div class="flex items-center">
             <label class="text-xs pr-1.5 select-none cursor-ew-resize" for="x"
-                onmouseenter={() => handleMouseEnter(xInput!)}
+                onmouseenter={() => handleMouseEnter(xInput)}
                 onmouseleave={handleMouseLeave}
             > X </label>
             <input type="number" class="w-16" step="0.001" id="x" bind:this={xInput} 
@@ -78,7 +81,7 @@
         </div>
         <div class="flex items-center">
             <label class="text-xs pr-1.5 select-none cursor-ew-resize" for="y"
-                onmouseenter={() => handleMouseEnter(yInput!)}
+                onmouseenter={() => handleMouseEnter(yInput)}
                 onmouseleave={handleMouseLeave}
             > Y </label>
             <input type="number"  class="w-16" step="0.001" id="y" bind:this={yInput} 

@@ -1,11 +1,13 @@
-import { EditorController } from "@/editor/EditorController";
 import type { ComponentType } from "./Component";
 import type Component from "./Component";
 import Transform from "./component/Transform";
 
 export default class SceneNode {
+    private static _idCounter: number = 0;
+
     private _children: SceneNode[] = [];
     private _parent: SceneNode | null = null;
+    private _id: number = SceneNode._idCounter++;
     private _name: string = "";
     private _components: Map<ComponentType, Component> = new Map(
         [[Transform, new Transform(this)]]
@@ -32,6 +34,10 @@ export default class SceneNode {
 
     get name() {
         return this._name;
+    }
+
+    get id() {
+        return this._id;
     }
 
     addChild(child: SceneNode) {
@@ -62,6 +68,10 @@ export default class SceneNode {
 
     getComponent<T extends Component>(type: new (...args : any[]) => T): T | null {
         return this._components.get(type) as T || null;
+    }
+
+    getComponents() {
+        return this._components.values();
     }
 
     removeComponent(component: Component) {

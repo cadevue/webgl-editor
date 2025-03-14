@@ -48,21 +48,35 @@ function SetDragTarget({ dragCallback: callback, cursor }: DragTarget) {
 }
 
 import { atom } from "nanostores";
-import { type IInspectorDrawable } from "./InspectorDrawer";
 import { HexToColorRGBA } from "../lib/math/Color";
 import DOMUtils from "@/lib/dom/DOMUtils";
 import Scene from "@/lib/scene/Scene";
 import SceneNode from "@/lib/scene/SceneNode";
+import InspectorDrawerMap from "./drawer/InspectorDrawerMap";
+import type { IInspectorDrawer } from "./drawer/fields/InspectorDrawerBase";
 
 // Editor State
-const ExposedFields = atom<IInspectorDrawable[]>([]);
+const ExposedFields = atom<IInspectorDrawer[]>([]);
 const ActiveScene = atom<Scene | null>(null);
 const SelectedNode = atom<SceneNode | null>(null);
 
 ActiveScene.subscribe(scene => {
     if (scene) {
-        SelectedNode.set(scene.root);
+        SelectedNode.set(null);
     }
+});
+
+SelectedNode.subscribe(node => {
+    if (!node) return;
+    const components = node.getComponents();
+    const drawers : IInspectorDrawer[] = [];
+    for (const component of components) {
+        const drawer = InspectorDrawerMap.get(component.constructor as any);
+        if (drawer) {
+            drawers.push(drawer(component));
+        }
+    }
+    ExposedFields.set(drawers);
 });
 
 const Config = {

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { EditorController } from "@/editor/EditorController";
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import { Link, Unlink } from '@lucide/svelte';
 
     import Vector3 from "@/lib/math/Vector3";
@@ -40,6 +40,10 @@
     onMount(() => {
         isMounted = true;
         syncUI();
+
+        onDestroy(() => {
+            isMounted = false;
+        });
     });
 
     // Application logic listen (subscribe) to changes made by UI

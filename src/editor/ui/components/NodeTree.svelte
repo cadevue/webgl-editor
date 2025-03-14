@@ -29,7 +29,7 @@
             </button>
         {/if}
         <button class={`flex items-center gap-1 px-1.5 py-1 rounded-md w-full
-            ${isHovered || isSelected ? 'bg-dark-800' : ''} `}
+            ${isHovered || isSelected ? 'bg-dark-800' : ''} ${node.children.length > 0 ? '' : 'ml-4'}`}
             onmouseenter={() => isHovered = true}
             onmouseleave={() => isHovered = false}
             role="treeitem"

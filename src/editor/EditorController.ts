@@ -48,14 +48,14 @@ function SetDragTarget({ dragCallback: callback, cursor }: DragTarget) {
 }
 
 import { atom } from "nanostores";
-import { type IExposableField } from "./InspectorExpose";
+import { type IInspectorDrawable } from "./InspectorDrawer";
 import { HexToColorRGBA } from "../lib/math/Color";
 import DOMUtils from "@/lib/dom/DOMUtils";
 import Scene from "@/lib/scene/Scene";
 import SceneNode from "@/lib/scene/SceneNode";
 
 // Editor State
-const ExposedFields = atom<IExposableField[]>([]);
+const ExposedFields = atom<IInspectorDrawable[]>([]);
 const ActiveScene = atom<Scene | null>(null);
 const SelectedNode = atom<SceneNode | null>(null);
 

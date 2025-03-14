@@ -1,8 +1,8 @@
 import type Transform from "@/lib/scene/component/Transform";
-import ExposableField from "./ExposableField";
-import Transform2DField from "../ui/inspector/Transform2DField.svelte";
+import { InspectorDrawerBase } from "./InspectorDrawerBase";
+import Transform2DField from "@/editor/ui/inspector/Transform2DField.svelte";
 
-export default class ExposableTransfrom2D extends ExposableField<Transform> {
+export default class Transform2DInspectorDrawer extends InspectorDrawerBase<Transform> {
     constructor(target: Transform, label?: string) {
         super(
             target,             // Value that will be exposed

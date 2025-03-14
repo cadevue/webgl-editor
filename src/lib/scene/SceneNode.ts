@@ -1,3 +1,4 @@
+import { EditorController } from "@/editor/EditorController";
 import type { ComponentType } from "./Component";
 import type Component from "./Component";
 import Transform from "./component/Transform";
@@ -79,6 +80,4 @@ export default class SceneNode {
             this.removeComponent(component);
         }
     }
-
-
 }

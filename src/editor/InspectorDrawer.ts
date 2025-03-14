@@ -1,12 +1,7 @@
 import type { Component } from "svelte";
 
-// A Node that can be serialized (has properties that can be edited in the inspector)
-export interface IExposable {
-    bindComponents(): void;
-}   
-
 // A node component that can be serialized 
-export interface IExposableField {
+export interface IInspectorDrawable {
     getFieldRenderer(): FieldRenderer;
 }
 

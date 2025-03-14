@@ -10,7 +10,7 @@ import Transform from "@/lib/scene/component/Transform";
 
 /** Editor */
 import { EditorController } from "@/editor/EditorController";
-import ExposableTransfrom2D from "@/editor/fields/ExposableTransform2D";
+import Transform2DInspectorDrawable from "@/editor/drawer/fields/Transform2DInspectorDrawer";
 
 /** Rendering */
 import RenderCommand from "@/lib/rendering/RenderCommand";
@@ -81,7 +81,7 @@ class EditorLayer implements AppLayer {
 
     private attachNodeProperties() {
         EditorController.ExposedFields.set([
-            new ExposableTransfrom2D(this._texturedSquareNode.transform, "Transform"),
+            new Transform2DInspectorDrawable(this._texturedSquareNode.transform, "Transform"),
         ]);
     }
 

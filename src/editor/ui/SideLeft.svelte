@@ -7,7 +7,6 @@
     EditorController.ActiveScene.subscribe((scene) => {
         rootSceneNode = scene?.root;
     });
-
 </script>
 
 <SideLayout>
